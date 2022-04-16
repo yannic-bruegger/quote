@@ -4,7 +4,8 @@
   "info": {
     "singularName": "collection",
     "pluralName": "collections",
-    "displayName": "Collection"
+    "displayName": "Collection",
+    "description": ""
   },
   "options": {
     "draftAndPublish": true
@@ -13,6 +14,11 @@
   "attributes": {
     "name": {
       "type": "string"
+    },
+    "quotes": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::quote.quote"
     }
   }
 }
