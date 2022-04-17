@@ -9,37 +9,65 @@ const collectionId = parseInt(collectionIdAsText, 10);
 
 if (isNaN(collectionId)) throw new Error('Parameter \'id\' is not a number.');
 
-try {
-  let data = (await getQuotesOfCollection(collectionId)).data;
 
-  document.getElementById('name').innerText = data.attributes.name;
+const data = (await getQuotesOfCollection(collectionId)).data;
 
-  const quotes = data.attributes.quotes.data;
+document.getElementById('name').innerText = data.attributes.name;
 
-  let quoteToShow;
-  if (urlParameters.has('quoteId')) {
-    // Specific quote
-    const quoteIdAsText = urlParameters.get('quoteId');
-    const quoteId = parseInt(quoteIdAsText, 10);
+const quotes = data.attributes.quotes.data;
 
-    if (isNaN(collectionId)) throw new Error('Parameter \'quoteId\' is not a number.');
+let currentQuoteIndex;
 
-    let quote = quotes.find((quote) => quote.id === quoteId);
+if (urlParameters.has('quoteId')) {
+  // Specific quote
+  const quoteIdAsText = urlParameters.get('quoteId');
+  const quoteId = parseInt(quoteIdAsText, 10);
 
-    quoteToShow = quote;
-  } else {
-    // Random quote
-    const randomIndex = parseInt(Math.random() * quotes.length);
-    const randomQuote = quotes[randomIndex];
-    quoteToShow = randomQuote;
-  }
+  if (isNaN(collectionId)) throw new Error('Parameter \'quoteId\' is not a number.');
 
-  document.querySelector('#random-quote #id').innerText = `${quoteToShow.id}`;
-  document.querySelector('#random-quote #content').innerText = `${quoteToShow.attributes.content}`;
-  document.querySelector('#random-quote #quoted').innerText = `${quoteToShow.attributes.quoted}`;
+  const quote = quotes.find((quote) => quote.id === quoteId);
 
-} catch(e) {
-  console.error('Unable to get or parse data from collection.', e);
+  showQuote(quote)
+} else {
+  showRandomQuote();
 }
 
+function showNextQuote() {
+  showQuote(quotes[(currentQuoteIndex + 1) % quotes.length]);
+}
 
+function showPreviousQuote() {
+  showQuote(quotes[((currentQuoteIndex - 1 % quotes.length) + quotes.length) % quotes.length]);
+}
+
+function showRandomQuote() {
+  const randomIndex = parseInt(Math.random() * quotes.length);
+  showQuote(quotes[randomIndex])
+}
+
+function showQuote(quote) {
+  currentQuoteIndex = quotes.indexOf(quote);
+  document.querySelector('#index').innerText = `${currentQuoteIndex + 1}`;
+  document.querySelector('#id').innerText = `${quote.id}`;
+  document.querySelector('#content').innerText = `${quote.attributes.content}`;
+  document.querySelector('#quoted').innerText = `${quote.attributes.quoted}`;
+}
+
+document.querySelector('body').addEventListener('keydown', (event) => {
+  switch (event.key) {
+    case 'ArrowRight':
+      showNextQuote();
+      break;
+
+    case 'ArrowLeft':
+      showPreviousQuote();
+      break;
+
+    default:
+      break;
+  }
+});
+
+document.getElementById('prev').addEventListener('click', showPreviousQuote);
+document.getElementById('random').addEventListener('click', showRandomQuote);
+document.getElementById('next').addEventListener('click', showNextQuote);
