@@ -13,52 +13,13 @@ html, body {
   height: 100vh;
   display: flex;
   flex-direction: column;
-  padding: .5em;
   background-color: rgb(246, 246, 249);
   color: rgb(50, 50, 77);
 }
 
-#random-quote {
-  font-size: 1.5rem;
-  flex-grow: 1;
+main {
+  padding: .5em;
+  height: 100%;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-weight: 700;
-}
-
-.button {
-  font-weight: 600;
-  font-size: 2rem;
-  border: none;
-  background: none;
-  cursor: pointer;
-}
-
-.button.navigation {
-  padding: 1rem;
-}
-
-.button.back {
-  margin-right: 1rem;
-}
-
-nav {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-@media only screen and (min-width: 600px) {
-  nav {
-    justify-content: center;
-  }
-}
-
-#collection-info {
-  color: #000000aa;
-  display: flex;
-  align-items: center;
-  font-size: .7em;
 }

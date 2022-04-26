@@ -6,24 +6,32 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script src="collection.js" type="module"></script>
   <link rel="stylesheet" href="../style.css">
+  <link rel="stylesheet" href="../navbar.css">
   <link rel="stylesheet" href="collection.css">
   <title>Document</title>
 </head>
 <body>
-  <div id="collection-info">
-    <button class="button back" onclick="window.history.go(-1)"><</button>
-    <span id="name"></span>/#<span id="index"></span><span id="id" style="display: none;"></span>
-  </div>
-  <div id="random-quote">
-    <div>    
-      <div id="content"></div>
-      - <span id="quoted"></span>
-    </div>
-  </div>
   <nav>
-    <button id="prev" class="button navigation">←</button>
-    <button id="random" class="button navigation">↻</button>
-    <button id="next" class="button navigation">→</button>
+    <div class="logo">Quote</div>
+    <div style="flex-grow: 1"></div>
+    <div class="profile">YB</div>
   </nav>
+  <main>
+    <div id="collection-info">
+      <button class="button back" onclick="window.history.go(-1)"><</button>
+      <span id="name"></span>/#<span id="index"></span><span id="id" style="display: none;"></span>
+    </div>
+    <div id="random-quote">
+      <div>    
+        <div id="content"></div>
+        - <span id="quoted"></span>
+      </div>
+    </div>
+    <div class="navigation">
+      <button id="prev" class="button navigation">←</button>
+      <button id="random" class="button navigation">↻</button>
+      <button id="next" class="button navigation">→</button>
+    </div>
+  </main>
 </body>
 </html>
