@@ -1,4 +1,4 @@
-import { getQuotesOfCollection } from './quotes-api.js';
+import { getQuotesOfCollection } from '../lib/quotes-api.js';
 
 const urlParameters = new URLSearchParams(window.location.search);
 
