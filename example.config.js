@@ -1,3 +1,4 @@
-export default {
-  API_URL: 'YOUR API URL',
-}
+const ONE_DAY_IN_SECONDS = 60*60*24;
+
+export const API_URL = 'YOUR API URL';
+export const LOGIN_EXPIRATION_IN_SECONDS = ONE_DAY_IN_SECONDS;

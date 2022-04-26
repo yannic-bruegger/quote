@@ -17,5 +17,5 @@ async function tryLogin(event) {
   const password = document.querySelector('#password').value;
   const res = await login(username, password);
   storeAuthenticatedUserAsCookie(res);
-  console.log(res);
+  window.location.href = '/';
 }
