@@ -4,10 +4,31 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="navbar.css">
+  <link rel="stylesheet" href="collection.css">
+  <script src="/lib/navbar.js" type="module"></script>
+  <script src="/collections.js" type="module"></script>
   <title>Document</title>
 </head>
 <body>
-  <h1>Client test</h1>
-  <a href="collection.html?id=1">Collection #1</a>
+  <main>
+    <div class="headline">
+      <h1>My collections</h1>
+      <div class="spacer"></div>
+      <button>+ create new collection</button>
+    </div>
+    <div class="collections">
+      <template id="collection-template">
+        <div class="collection">
+          <div class="name">Test</div>
+          <div style="flex-grow: 1"></div>
+          <div class="quotes">(24 quotes)</div>  
+          <button class="add-quote">A</button>
+          <button class="settings">B</button> 
+        </div>
+      </template>
+    </div>
+  </main>
 </body>
 </html>
