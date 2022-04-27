@@ -10,17 +10,21 @@
   <title>Document</title>
 </head>
 <body>
-  <form class="login-container" onsubmit="tryLogin">
-    <div class="input-container">
-      <label for="email">Email</label>
-      <input id="email" type="email" required>
-    </div>
-    <div class="input-container">
-      <label for="password">Password</label>
-      <input id="password" type="password" required>
-    </div>
-    <input type="submit" value="Log in" id="login">
-  </form>
-  <button id="test">Test</button>
+  <div class="login-error hidden">
+    Login failed. Please check if the credentials are correct.
+  </div>
+  <main>
+    <form class="login-container" onsubmit="tryLogin">
+      <div class="input-container">
+        <label for="email">Email</label>
+        <input id="email" type="email" required>
+      </div>
+      <div class="input-container">
+        <label for="password">Password</label>
+        <input id="password" type="password" required>
+      </div>
+      <input type="submit" value="Log in" id="login">
+    </form>
+  </main>
 </body>
 </html>

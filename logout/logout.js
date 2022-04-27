@@ -5,4 +5,4 @@ import {
 
 if(isAuthenticated) logout();
 
-window.location.href = '/'
+window.location.href = '/login'
