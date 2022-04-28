@@ -15,8 +15,10 @@
   <main>
     <div class="headline">
       <h1>My collections</h1>
-      <div class="spacer"></div>
-      <button>+ create new collection</button>
+      <div class="button-group">
+        <button onclick="window.location.href = 'new-collection'">+ create new collection</button>
+        <button onclick="window.location.href = 'new-quote'">+ create new quote</button>
+      </div>
     </div>
     <div class="collections">
       <template id="collection-template">
@@ -24,8 +26,6 @@
           <div class="name">Test</div>
           <div style="flex-grow: 1"></div>
           <div class="quotes">(24 quotes)</div>  
-          <button class="add-quote">A</button>
-          <button class="settings">B</button> 
         </div>
       </template>
     </div>
