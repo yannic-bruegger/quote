@@ -7,7 +7,7 @@ main {
   display: flex;
   flex-direction: column;
   gap: 1em;
-  width: 400px;
+  width: 350px;
   box-shadow: rgba(33, 33, 52, 0.1) 0px 1px 4px;
   background-color: #ffffff;
   border-radius: 5px;
