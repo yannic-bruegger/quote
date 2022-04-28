@@ -30,6 +30,16 @@ main {
 .headline {
   font-size: 1.1em;
   display: flex;
+  flex-direction: column;
+}
+
+.button-group {
+  display: flex;
+  gap: .5em;
+}
+
+.button-group * {
+  width: 100%;
 }
 
 .headline h1 {

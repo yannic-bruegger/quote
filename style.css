@@ -42,7 +42,7 @@ label {
   font-weight: 600;
 }
 
-input, select {
+input, select, button {
   height: 3em;
   outline: none;
   background-color: #ffffff;
@@ -62,11 +62,18 @@ textarea {
   height: 200px;
 }
 
-input:active, input:focus, textarea:active, textarea:focus, select:active, select:focus {
+input:active,
+input:focus,
+textarea:active,
+textarea:focus,
+select:active,
+select:focus,
+button:active,
+button:focus {
   outline: #0e54bc solid 2px;
 }
 
-input[type="submit"] {
+input[type="submit"], button {
   margin-top: 1.1em;
   cursor: pointer;
 }
