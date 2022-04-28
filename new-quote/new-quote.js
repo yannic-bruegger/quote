@@ -1,0 +1,23 @@
+import { getToken } from '../lib/auth.js';
+import { createQuote, getMyCollections } from '../lib/quotes-api.js';
+
+async function tryCreateQuote() {
+  const collection = document.querySelector('#collection').value;
+  const content = document.querySelector('#content').value;
+  const quoted = document.querySelector('#quoted').value;
+  console.log(await createQuote(getToken(), {content, quoted, collection}));
+  window.location.href = '/';
+}
+
+document.querySelector('#create-quote').addEventListener('submit', (event) => {
+  event.preventDefault();
+  tryCreateQuote()
+});
+
+const reply = await getMyCollections(getToken());
+for (const collection of reply.data) {
+  const option = document.createElement('option');
+  option.value = collection.id;
+  option.innerText = collection.attributes.name;
+  document.querySelector('#collection').appendChild(option);
+}

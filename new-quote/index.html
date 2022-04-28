@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="../style.css">
+  <link rel="stylesheet" href="../navbar.css">
+  <link rel="stylesheet" href="new-quote.css">
+  <script src="/lib/navbar.js" type="module"></script>
+  <script src="new-quote.js" type="module"></script>
+  <title>Document</title>
+</head>
+<body>
+  <main>
+    <form id="create-quote">
+      <div class="input-container">
+        <label for="collection">Collection</label>
+        <select id="collection">
+        </select>
+      </div>
+      <div class="input-container">
+        <label for="content">Quote</label>
+        <textarea type="text" id="content" name="content" autofocus required></textarea>
+      </div>
+      <div class="input-container">
+        <label for="quoted">Quoted</label>
+        <input type="text" id="quoted" name="quoted" autofocus required>
+      </div>
+      <input type="submit" value="Create quote">
+    </form>
+  </main>
+</body>
+</html>

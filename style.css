@@ -42,7 +42,7 @@ label {
   font-weight: 600;
 }
 
-input {
+input, select {
   height: 3em;
   outline: none;
   background-color: #ffffff;
@@ -52,7 +52,17 @@ input {
   margin: 4px 0 0 0;
 }
 
-input:active, input:focus {
+textarea {
+  outline: none;
+  background-color: #ffffff;
+  border: 1px solid rgb(220, 220, 228);
+  border-radius: 4px;
+  padding: .5em 1em;
+  margin: 4px 0 0 0;
+  height: 200px;
+}
+
+input:active, input:focus, textarea:active, textarea:focus, select:active, select:focus {
   outline: #0e54bc solid 2px;
 }
 
