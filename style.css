@@ -27,6 +27,12 @@ main {
   flex-direction: column;
 }
 
+form {
+  display: flex;
+  flex-direction: column;
+  gap: .6em;
+}
+
 .spacer {
   flex-grow: 1;
 }
