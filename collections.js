@@ -6,13 +6,15 @@ if(!isAuthenticated()) window.location.href = 'login';
 const collections = (await getMyCollections(getToken())).data;
 
 collections.forEach((collection) => {
-  console.log(collection)
   const clone = document.querySelector('template#collection-template').content.cloneNode(true);
   clone.querySelector('.name').innerText = collection.attributes.name;
   clone.querySelector('.quotes').innerText = `(${collection.attributes.quotes.data.length} quotes)`;
-  console.log(clone.querySelector('.add-quote'))
-  clone.querySelector('.collection').addEventListener('click', () => {
+  clone.querySelector('.collection').addEventListener('click', (e) => {
     window.location.href = `collection/?id=${collection.id}`
   });
+  clone.querySelector('.open-settings-button ').addEventListener('click', (e) => {
+    e.stopPropagation();
+    window.location.href = `collection-settings/?id=${collection.id}`
+  });
   document.querySelector('.collections').appendChild(clone);
-})
+});

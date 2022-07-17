@@ -52,6 +52,13 @@ input, select, button {
   margin: 4px 0 0 0;
 }
 
+.icon {
+  padding: 0 0;
+  margin: 0 0 0 0;
+  border: 0;
+  background-color: transparent;
+}
+
 textarea {
   outline: none;
   background-color: #ffffff;
@@ -76,4 +83,17 @@ button:focus {
 input[type="submit"], button {
   margin-top: 1.1em;
   cursor: pointer;
+}
+
+.material-symbols-outlined {
+  font-variation-settings:
+  'FILL' 1,
+  'wght' 400,
+  'GRAD' 0,
+  'opsz' 48;
+}
+
+.red {
+  background-color: #ffb3b3;
+  border: 1px solid rgb(161, 47, 47);
 }

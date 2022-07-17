@@ -1,4 +1,4 @@
-import { getQuotesOfCollection } from '../lib/quotes-api.js';
+import { getCollection, getQuotesOfCollection } from '../lib/quotes-api.js';
 
 const urlParameters = new URLSearchParams(window.location.search);
 
@@ -10,11 +10,10 @@ const collectionId = parseInt(collectionIdAsText, 10);
 if (isNaN(collectionId)) throw new Error('Parameter \'id\' is not a number.');
 
 
-const data = (await getQuotesOfCollection(collectionId)).data;
+const quotes = (await getQuotesOfCollection(collectionId));
+const collection = (await getCollection(collectionId));
 
-document.getElementById('name').innerText = data.attributes.name;
-
-const quotes = data.attributes.quotes.data;
+document.getElementById('name').innerText = collection.attributes.name;
 
 let currentQuoteIndex;
 
