@@ -19,7 +19,7 @@ function renderCollections(collection, type) {
     clone.querySelector('.collection').addEventListener('click', (e) => {
       window.location.href = `collection/?id=${elm.id}`
     });
-    if (type !== "Owns") {
+    if (type !== "owned") {
       clone.querySelector('.open-settings-button ').remove();
     } else {
       clone.querySelector('.open-settings-button ').addEventListener('click', (e) => {
