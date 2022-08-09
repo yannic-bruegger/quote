@@ -8,18 +8,52 @@
   <link rel="stylesheet" href="../navbar.css">
   <script src="/lib/navbar.js" type="module"></script>
   <script src="collection-settings.js" type="module"></script>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
   <title>Collection Settings</title>
 </head>
 <body>
   <main>
-    <form  id="create-collection">
+    <form id="create-collection">
       <div class="input-container">
         <label for="name">Title</label>
         <input type="text" id="name" name="name" autofocus required>
       </div>
+      <div class="input-container">
+        <label for="moderators">Moderators</label>
+        <input type="text" id="moderator" name="moderator" list="available-moderators">
+      </div>
+      <datalist id="available-moderators">
+        <option value="Edge">
+        <option value="Firefox">
+        <option value="Chrome">
+        <option value="Opera">
+        <option value="Safari">
+      </datalist>
+      <ul class="users" id="moderators">
+        <template id="user">
+          <li>
+            <span class="username">Yannic</span>
+            <button class="icon remove-moderator"><span class="material-symbols-outlined">close</span></button>
+          </li>
+        </template>
+      </ul>
+      <fieldset>
+        <legend>Danger Zone</legend>
+        <div class="input-container">
+          <label for="name">Owner</label>
+          <input type="text" id="owner" name="owner" list="available-owners" required>
+        </div>
+        <datalist id="available-owners">
+          <option value="Edge">
+          <option value="Firefox">
+          <option value="Chrome">
+          <option value="Opera">
+          <option value="Safari">
+        </datalist>
+        <input type="button" class="red" value="Delete collection">
+      </fieldset>
       <input type="submit" value="Update">
     </form>
-    <input type="button" value="Delete collection">
   </main>
 </body>
 </html>
