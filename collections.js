@@ -21,10 +21,14 @@ function renderCollections(collection, type) {
     clone.querySelector('.collection').addEventListener('click', (e) => {
       window.location.href = `collection/?id=${elm.id}`
     });
-    clone.querySelector('.open-settings-button ').addEventListener('click', (e) => {
-      e.stopPropagation();
-      window.location.href = `collection-settings/?id=${elm.id}`
-    });
+    if (type !== "Owns") {
+      clone.querySelector('.open-settings-button ').remove();
+    } else {
+      clone.querySelector('.open-settings-button ').addEventListener('click', (e) => {
+        e.stopPropagation();
+        window.location.href = `collection-settings/?id=${elm.id}`
+      });
+    }
     document.querySelector('.collections').appendChild(clone);
   });
 }
