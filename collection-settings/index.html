@@ -20,15 +20,9 @@
       </div>
       <div class="input-container">
         <label for="moderators">Moderators</label>
-        <input type="text" id="moderator" name="moderator" list="available-moderators">
+        <input type="search" id="moderator" name="moderator" list="available-moderators">
       </div>
-      <datalist id="available-moderators">
-        <option value="Edge">
-        <option value="Firefox">
-        <option value="Chrome">
-        <option value="Opera">
-        <option value="Safari">
-      </datalist>
+      <datalist id="available-moderators"></datalist>
       <ul class="users" id="moderators">
         <template id="user">
           <li>
@@ -39,18 +33,14 @@
       </ul>
       <fieldset>
         <legend>Danger Zone</legend>
+        <!--
         <div class="input-container">
           <label for="name">Owner</label>
           <input type="text" id="owner" name="owner" list="available-owners" required>
         </div>
-        <datalist id="available-owners">
-          <option value="Edge">
-          <option value="Firefox">
-          <option value="Chrome">
-          <option value="Opera">
-          <option value="Safari">
-        </datalist>
-        <input type="button" class="red" value="Delete collection">
+        <datalist id="available-owners"></datalist>
+        -->
+        <input id="delete" type="button" class="red" value="Delete collection">
       </fieldset>
       <input type="submit" value="Update">
     </form>
