@@ -5,17 +5,15 @@ if(!isAuthenticated()) window.location.href = 'login';
 
 const collections = (await getMyCollections(getToken()));
 
-if (collections.owns      ) renderCollections(collections.owns, "Owns");
-if (collections.moderates ) renderCollections(collections.moderates, "Moderates");
-if (collections.follows   ) renderCollections(collections.follows, "Following");
+if (collections.owns      ) renderCollections(collections.owns, "owned");
+if (collections.moderates ) renderCollections(collections.moderates, "moderated");
+if (collections.follows   ) renderCollections(collections.follows, "followed");
 
 function renderCollections(collection, type) {
   console.log(collection);
 
-  const clone = document.querySelector('template#collection-template').content.cloneNode(true);
-  clone.querySelector('.type').innerText = type;
-
   collection.forEach((elm) => {
+    const clone = document.querySelector('template#collection-template').content.cloneNode(true);
     clone.querySelector('.name').innerText = elm.name;
     // clone.querySelector('.quotes').innerText = `(${elm.attributes.quotes.data.length} quotes)`;
     clone.querySelector('.collection').addEventListener('click', (e) => {
@@ -29,6 +27,6 @@ function renderCollections(collection, type) {
         window.location.href = `collection-settings/?id=${elm.id}`
       });
     }
-    document.querySelector('.collections').appendChild(clone);
+    document.querySelector(`#${type}`).appendChild(clone);
   });
 }

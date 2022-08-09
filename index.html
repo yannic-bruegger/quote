@@ -22,20 +22,26 @@
       </div>
     </div>
     <div class="collections">
+      <details id="owned" open>
+        <summary class="type">Owned</summary>
+      </details>
+      <details  id="moderated" open>
+        <summary class="type">Moderated</summary>
+      </details>
+      <details  id="followed" open>
+        <summary class="type">Followed</summary>
+      </details>
       <template id="collection-template">
-        <details open>
-          <summary class="type"></summary>
-          <div class="collection">
-            <div class="name"></div>
-            <div style="flex-grow: 1"></div>
-            <div class="quotes"></div>
-            <button class="open-settings-button icon">
-              <span class="material-symbols-outlined">
-                settings
-              </span>
-            </button>
-          </div>
-        </details>
+        <div class="collection">
+          <div class="name"></div>
+          <div style="flex-grow: 1"></div>
+          <div class="quotes"></div>
+          <button class="open-settings-button icon">
+            <span class="material-symbols-outlined">
+              settings
+            </span>
+          </button>
+        </div>
       </template>
     </div>
   </main>
