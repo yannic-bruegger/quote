@@ -15,9 +15,10 @@ document.querySelector('#create-quote').addEventListener('submit', (event) => {
 });
 
 const reply = await getMyCollections(getToken());
-for (const collection of reply.data) {
+
+for (const collection of (reply.owns.concat(reply.moderates))) {
   const option = document.createElement('option');
   option.value = collection.id;
-  option.innerText = collection.attributes.name;
+  option.innerText = collection.name;
   document.querySelector('#collection').appendChild(option);
 }
