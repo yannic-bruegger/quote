@@ -3,18 +3,28 @@ import { getMyCollections } from './lib/quotes-api.js';
 
 if(!isAuthenticated()) window.location.href = 'login';
 
-const collections = (await getMyCollections(getToken())).data;
+const collections = (await getMyCollections(getToken()));
 
-collections.forEach((collection) => {
+if (collections.owns      ) renderCollections(collections.owns, "Owns");
+if (collections.moderates ) renderCollections(collections.moderates, "Moderates");
+if (collections.follows   ) renderCollections(collections.follows, "Following");
+
+function renderCollections(collection, type) {
+  console.log(collection);
+
   const clone = document.querySelector('template#collection-template').content.cloneNode(true);
-  clone.querySelector('.name').innerText = collection.attributes.name;
-  clone.querySelector('.quotes').innerText = `(${collection.attributes.quotes.data.length} quotes)`;
-  clone.querySelector('.collection').addEventListener('click', (e) => {
-    window.location.href = `collection/?id=${collection.id}`
+  clone.querySelector('.type').innerText = type;
+
+  collection.forEach((elm) => {
+    clone.querySelector('.name').innerText = elm.name;
+    // clone.querySelector('.quotes').innerText = `(${elm.attributes.quotes.data.length} quotes)`;
+    clone.querySelector('.collection').addEventListener('click', (e) => {
+      window.location.href = `collection/?id=${elm.id}`
+    });
+    clone.querySelector('.open-settings-button ').addEventListener('click', (e) => {
+      e.stopPropagation();
+      window.location.href = `collection-settings/?id=${elm.id}`
+    });
+    document.querySelector('.collections').appendChild(clone);
   });
-  clone.querySelector('.open-settings-button ').addEventListener('click', (e) => {
-    e.stopPropagation();
-    window.location.href = `collection-settings/?id=${collection.id}`
-  });
-  document.querySelector('.collections').appendChild(clone);
-});
+}

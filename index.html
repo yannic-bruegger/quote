@@ -23,16 +23,19 @@
     </div>
     <div class="collections">
       <template id="collection-template">
-        <div class="collection">
-          <div class="name"></div>
-          <div style="flex-grow: 1"></div>
-          <div class="quotes"></div>
-          <button class="open-settings-button icon">
-            <span class="material-symbols-outlined">
-              settings
-            </span>
-          </button>
-        </div>
+        <details open>
+          <summary class="type"></summary>
+          <div class="collection">
+            <div class="name"></div>
+            <div style="flex-grow: 1"></div>
+            <div class="quotes"></div>
+            <button class="open-settings-button icon">
+              <span class="material-symbols-outlined">
+                settings
+              </span>
+            </button>
+          </div>
+        </details>
       </template>
     </div>
   </main>
