@@ -52,6 +52,10 @@ function showQuote(quote) {
   document.querySelector('#quoted').innerText = `${quote.attributes.quoted}`;
 }
 
+function editQuote() {
+  window.location.href = `${window.location.origin}/edit-quote/?id=${quotes[currentQuoteIndex].id}`
+}
+
 document.querySelector('body').addEventListener('keydown', (event) => {
   switch (event.key) {
     case 'ArrowRight':
@@ -70,3 +74,4 @@ document.querySelector('body').addEventListener('keydown', (event) => {
 document.getElementById('prev').addEventListener('click', showPreviousQuote);
 document.getElementById('random').addEventListener('click', showRandomQuote);
 document.getElementById('next').addEventListener('click', showNextQuote);
+document.getElementById('edit').addEventListener('click', editQuote);

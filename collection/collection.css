@@ -38,7 +38,15 @@
 
 #collection-info {
   color: #000000aa;
-  display: flex;
   align-items: center;
   font-size: .7em;
 }
+
+header{
+  display: flex;
+  justify-content: space-between;
+  align-content: space-between;
+  flex-direction: wrap;
+  width: 100%;
+  padding: .5rem 1rem;
+} 

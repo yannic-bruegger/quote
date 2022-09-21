@@ -73,8 +73,10 @@ document.querySelector('form').addEventListener('submit', async (e) => {
 
 document.querySelector('#delete').addEventListener('click', async (e) => {
   e.preventDefault();
-  await deleteCollection(collectionId, getToken());
-  history.back();
+  if (confirm('Are you sure you want to delete this quote?')) {
+    await deleteCollection(collectionId, getToken());
+    window.location.href = `/`;
+  }
 });
 
 /*
