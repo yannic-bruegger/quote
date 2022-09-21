@@ -1,4 +1,6 @@
-import { getCollection, getQuotesOfCollection } from '../lib/quotes-api.js';
+import { getToken } from '../lib/auth.js';
+import { getMyRoleForCollection } from '../lib/helper.js';
+import { getCollection, getCollectionModerators, getCollectionOwner, getMe, getQuotesOfCollection } from '../lib/quotes-api.js';
 
 const urlParameters = new URLSearchParams(window.location.search);
 
@@ -74,4 +76,23 @@ document.querySelector('body').addEventListener('keydown', (event) => {
 document.getElementById('prev').addEventListener('click', showPreviousQuote);
 document.getElementById('random').addEventListener('click', showRandomQuote);
 document.getElementById('next').addEventListener('click', showNextQuote);
-document.getElementById('edit').addEventListener('click', editQuote);
+
+
+showModeratorsMenu();
+
+async function showModeratorsMenu() {
+  const myRole = await getMyRoleForCollection(collectionId, getToken());
+
+  if (myRole.isModerator || myRole.isOwner) {
+    const openSettingsButton = `
+      <button id="edit" class="open-settings-button icon">
+        <span class="material-symbols-outlined">
+          edit
+        </span>
+      </button>
+    `;
+    document.querySelector('.moderators-menu').innerHTML = openSettingsButton;
+    document.querySelector('.profile').addEventListener('click', () => window.location.href = '/account-settings');
+    document.getElementById('edit').addEventListener('click', editQuote);
+  }
+}
