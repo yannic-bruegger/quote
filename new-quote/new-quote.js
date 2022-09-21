@@ -5,7 +5,7 @@ async function tryCreateQuote() {
   const collection = document.querySelector('#collection').value;
   const content = document.querySelector('#content').value;
   const quoted = document.querySelector('#quoted').value;
-  console.log(await createQuote(getToken(), {content, quoted, collection}));
+  await createQuote(getToken(), {content, quoted, collection});
   window.location.href = '/';
 }
 

@@ -73,7 +73,7 @@ document.querySelector('form').addEventListener('submit', async (e) => {
 
 document.querySelector('#delete').addEventListener('click', async (e) => {
   e.preventDefault();
-  if (confirm('Are you sure you want to delete this quote?')) {
+  if (confirm('Are you sure you want to delete this collection?')) {
     await deleteCollection(collectionId, getToken());
     window.location.href = `/`;
   }

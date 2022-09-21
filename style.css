@@ -126,3 +126,7 @@ ul.users li {
   align-items: center;
   gap: .5em;
 }
+
+fieldset {
+  margin-bottom: 1.5em;
+}
