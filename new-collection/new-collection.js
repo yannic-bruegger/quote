@@ -28,8 +28,7 @@ updateModerators(moderators);
 
 async function tryCreateCollection() {
   const name = document.querySelector('#name').value;
-  console.log('mod-id', moderators.map(mod => mod.id))
-  console.log(await createCollection(getToken(), name, moderators.map(mod => mod.id)));
+  await createCollection(getToken(), name, moderators.map(mod => mod.id));
   window.location.href = '/';
 }
 
