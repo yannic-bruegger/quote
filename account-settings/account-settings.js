@@ -36,3 +36,5 @@ document.querySelector('#change-account-info').addEventListener('submit', async 
     console.error(error);
   }
 });
+
+document.querySelector('#logout').addEventListener('click', () => window.location.href = '/logout');
