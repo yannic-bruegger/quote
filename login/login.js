@@ -13,7 +13,7 @@ if(user.isAuthenticated) {
 
 async function tryLogin(event) {
   event.preventDefault();
-  const username = document.querySelector('#email').value;
+  const username = document.querySelector('#username').value;
   const password = document.querySelector('#password').value;
   try {
     const res = await login(username, password);
