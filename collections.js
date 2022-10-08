@@ -10,8 +10,6 @@ if (collections.moderates ) renderCollections(collections.moderates, "moderated"
 if (collections.follows   ) renderCollections(collections.follows, "followed");
 
 function renderCollections(collection, type) {
-  console.log(collection);
-
   collection.forEach((elm) => {
     const clone = document.querySelector('template#collection-template').content.cloneNode(true);
     clone.querySelector('.name').innerText = elm.name;
