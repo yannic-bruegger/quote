@@ -79,14 +79,16 @@ document.getElementById('random').addEventListener('click', showRandomQuote);
 document.getElementById('next').addEventListener('click', showNextQuote);
 
 document.getElementById('share').addEventListener('click', toggleModal);
-// document.querySelector('.modal-container').addEventListener('click', toggleModal);
+document.querySelector('.modal-container').addEventListener('click', toggleModal);
 
-document.querySelector('#share-quote').addEventListener('click', async () => {
+document.querySelector('#share-quote').addEventListener('click', async (event) => {
+  event.stopPropagation();
   await shareQuote(collection.id, quotes[currentQuoteIndex]);
   toggleModal();
 });
 
-document.querySelector('#share-collection').addEventListener('click', async () => {
+document.querySelector('#share-collection').addEventListener('click', async (event) => {
+  event.stopPropagation();
   await shareCollection(collection);
   toggleModal();
 });
