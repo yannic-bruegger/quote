@@ -60,12 +60,8 @@ header{
 .modal-container {
   transition: cubic-bezier(0.075, 0.82, 0.165, 1) 1s all;
   opacity: 0;
-  display: none;
-}
-
-.modal-container[visible] {
-  display: block;
-  opacity: 1;
+  backdrop-filter: blur(0px);
+  background-color: #00000000;
   position: absolute;
   top: 0;
   left: 0;
@@ -74,8 +70,12 @@ header{
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #00000033;
+}
+
+.modal-container[visible] {
+  opacity: 1;
   backdrop-filter: blur(5px);
+  background-color: #00000033;
 }
 
 .modal {
