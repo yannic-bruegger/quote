@@ -1,7 +1,7 @@
 import { isAuthenticated, getToken } from './lib/auth.js';
 import { getMyCollections } from './lib/quotes-api.js';
 
-if(!isAuthenticated()) window.location.href = 'login';
+if(!isAuthenticated()) window.location.href = 'login/';
 
 const collections = (await getMyCollections(getToken()));
 

@@ -92,7 +92,7 @@ async function showModeratorsMenu() {
       </button>
     `;
     document.querySelector('.moderators-menu').innerHTML = openSettingsButton;
-    document.querySelector('.profile').addEventListener('click', () => window.location.href = '/account-settings');
+    document.querySelector('.profile').addEventListener('click', () => window.location.href = '/account-settings/');
     document.getElementById('edit').addEventListener('click', editQuote);
   }
 }

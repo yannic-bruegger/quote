@@ -32,4 +32,4 @@ document.querySelector('#change-account-info').addEventListener('submit', async 
   }
 });
 
-document.querySelector('#logout').addEventListener('click', () => window.location.href = '/logout');
+document.querySelector('#logout').addEventListener('click', () => window.location.href = '/logout/');
