@@ -40,11 +40,9 @@ document.querySelector('#create-collection').addEventListener('submit', (event) 
 function updateModerators(moderators) {
   document.querySelectorAll('#moderators li').forEach((li) => li.remove());
   moderators.forEach((moderator) => {
-    console.log(moderator);
     const clone = document.querySelector('template#user').content.cloneNode(true)
     clone.querySelector('.username').innerText = moderator.attributes.username;
     clone.querySelector('.remove-moderator').addEventListener('click', (e) => {
-      console.log(moderator);
       moderators.splice(moderators.indexOf(moderator), 1);
       updateModerators(moderators);
       e.preventDefault();

@@ -1,6 +1,7 @@
 import { getToken } from '../lib/auth.js';
 import { getMyRoleForCollection } from '../lib/helper.js';
 import { getCollection, getCollectionModerators, getCollectionOwner, getMe, getQuotesOfCollection } from '../lib/quotes-api.js';
+import { shareCollection, shareQuote } from '../lib/share.js'
 
 const urlParameters = new URLSearchParams(window.location.search);
 
@@ -77,6 +78,24 @@ document.getElementById('prev').addEventListener('click', showPreviousQuote);
 document.getElementById('random').addEventListener('click', showRandomQuote);
 document.getElementById('next').addEventListener('click', showNextQuote);
 
+document.getElementById('share').addEventListener('click', toggleModal);
+document.querySelector('.modal-container').addEventListener('click', toggleModal);
+
+document.querySelector('#share-quote').addEventListener('click', async (event) => {
+  event.stopPropagation();
+  await shareQuote(collection.id, quotes[currentQuoteIndex]);
+  toggleModal();
+});
+
+document.querySelector('#share-collection').addEventListener('click', async (event) => {
+  event.stopPropagation();
+  await shareCollection(collection);
+  toggleModal();
+});
+
+function toggleModal() {
+  document.querySelector('.modal-container').toggleAttribute('visible');
+}
 
 showModeratorsMenu();
 
