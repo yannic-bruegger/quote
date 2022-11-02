@@ -6,6 +6,7 @@
   align-items: center;
   justify-content: center;
   font-weight: 700;
+  padding-bottom: 8rem;
 }
 
 .button {
@@ -28,6 +29,10 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
 }
 
 @media only screen and (min-width: 600px) {
@@ -107,4 +112,8 @@ header{
   border-radius: 0;
   background-color: transparent;
   border: 0;
+}
+
+.moderators-menu {
+  display: flex;
 }

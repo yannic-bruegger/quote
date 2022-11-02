@@ -92,6 +92,7 @@ input[type="submit"], input[type="button"], button {
   display: flex;
   align-items: center;
   justify-content: center;
+  color: rgb(50, 50, 77);
 }
 
 .material-symbols-outlined {

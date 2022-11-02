@@ -59,6 +59,10 @@ function editQuote() {
   window.location.href = `${window.location.origin}/edit-quote/?id=${quotes[currentQuoteIndex].id}`
 }
 
+function addQuote() {
+  window.location.href = `${window.location.origin}/new-quote/?collectionId=${collectionId}`
+}
+
 document.querySelector('body').addEventListener('keydown', (event) => {
   switch (event.key) {
     case 'ArrowRight':
@@ -104,6 +108,12 @@ async function showModeratorsMenu() {
 
   if (myRole.isModerator || myRole.isOwner) {
     const openSettingsButton = `
+      <button id="add" class="open-settings-button icon">
+        <span class="material-symbols-outlined">
+          add
+        </span>
+      </button>
+      
       <button id="edit" class="open-settings-button icon">
         <span class="material-symbols-outlined">
           edit
@@ -113,5 +123,6 @@ async function showModeratorsMenu() {
     document.querySelector('.moderators-menu').innerHTML = openSettingsButton;
     document.querySelector('.profile').addEventListener('click', () => window.location.href = '/account-settings/');
     document.getElementById('edit').addEventListener('click', editQuote);
+    document.getElementById('add').addEventListener('click', addQuote);
   }
 }

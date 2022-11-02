@@ -1,6 +1,9 @@
 import { getToken } from '../lib/auth.js';
 import { createQuote, getMyCollections } from '../lib/quotes-api.js';
 
+
+
+
 async function tryCreateQuote() {
   const collection = document.querySelector('#collection').value;
   const content = document.querySelector('#content').value;
@@ -21,4 +24,12 @@ for (const collection of (reply.owns.concat(reply.moderates))) {
   option.value = collection.id;
   option.innerText = collection.name;
   document.querySelector('#collection').appendChild(option);
+}
+
+const urlParameters = new URLSearchParams(window.location.search);
+const collectionId = parseInt(urlParameters.get('collectionId'), 10);
+
+if (urlParameters.has('collectionId')) {
+  document.getElementById('collection').value = collectionId;
+  console.log("value", document.getElementById('collection').value);
 }
