@@ -4,17 +4,17 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <link rel="stylesheet" href="../variables.css">
   <link rel="stylesheet" href="../style.css">
-  <link rel="stylesheet" href="register.css">
   <script src="register.js" type="module"></script>
   <title>Document</title>
 </head>
 <body>
-  <div class="register-error hidden">
+  <div class="auth-error hidden">
     Registration failed. Please try again with a different username.
   </div>
-  <main>
-    <form class="login-container" onsubmit="tryRegister">
+  <main class="auth">
+    <form class="auth-container" onsubmit="tryRegister">
       <div class="input-container">
         <label for="username">Username</label>
         <input id="username" type="text" required>
@@ -29,7 +29,7 @@
       </div>
       <input type="submit" value="Create an account" id="register">
     </form>
-    <span class="login-text">Alreay have an account? Log in <a href="/login/">here</a>.</span>
+    <span class="auth-text">Alreay have an account? Log in <a href="/login/">here</a>.</span>
   </main>
 </body>
 </html>
