@@ -1,15 +1,14 @@
 import { getToken } from '../lib/auth.js';
 import { createQuote, getMyCollections } from '../lib/quotes-api.js';
-
-
-
+import { successMessage } from '../lib/success-message.js';
 
 async function tryCreateQuote() {
   const collection = document.querySelector('#collection').value;
   const content = document.querySelector('#content').value;
   const quoted = document.querySelector('#quoted').value;
-  await createQuote(getToken(), {content, quoted, collection});
-  window.location.href = '/';
+  const quote = await createQuote(getToken(), {content, quoted, collection});
+  successMessage('Quote created successfully');
+  setTimeout(function(){ window.location.href = `/collection/?id=${collection}&quoteId=${quote.data.id}` }, 300);
 }
 
 document.querySelector('#create-quote').addEventListener('submit', (event) => {

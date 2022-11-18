@@ -131,3 +131,20 @@ ul.users li {
 fieldset {
   margin-bottom: 1.5em;
 }
+
+#success-message {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#success-message h2 {
+  font-size: 2rem;
+  text-align: center;
+}

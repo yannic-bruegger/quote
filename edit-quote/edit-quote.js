@@ -1,5 +1,6 @@
 import { getToken } from '../lib/auth.js';
 import { updateQuote, getSingleQuote, deleteQuote } from '../lib/quotes-api.js';
+import { successMessage } from '../lib/success-message.js';
 
 const urlParameters = new URLSearchParams(window.location.search);
 
@@ -20,7 +21,8 @@ async function tryUpdateQuote() {
   const content = document.querySelector('#content').value;
   const quoted = document.querySelector('#quoted').value;
   console.log(await updateQuote(getToken(), {quoteId, content, quoted, collectionId}));
-  window.location.href = `/collection/?id=${collectionId}&quoteId=${quoteId}`;
+  successMessage('Quote updated successfully');
+  setTimeout(function(){ window.location.href = `/collection/?id=${collectionId}&quoteId=${quoteId}`; }, 300);
 }
 
 document.querySelector('#edit-quote').addEventListener('submit', (event) => {
