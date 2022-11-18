@@ -20,9 +20,9 @@ async function tryLogin(event) {
     storeAuthenticatedUserAsCookie(res);
     window.location.href = '/';
   } catch {
-    document.querySelector('.login-error').classList.remove('hidden');
+    document.querySelector('.auth-error').classList.remove('hidden');
     setTimeout(() => {
-      document.querySelector('.login-error').classList.add('hidden');
+      document.querySelector('.auth-error').classList.add('hidden');
     }, 1000 * 5)
   }
 }
