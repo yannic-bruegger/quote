@@ -117,3 +117,7 @@ header{
 .moderators-menu {
   display: flex;
 }
+
+#add-bookmark.hidden, #remove-bookmark.hidden {
+  display: none;
+}
