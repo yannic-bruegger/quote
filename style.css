@@ -1,5 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;500;600&display=swap');
 
+/* Genarl Styles */
+
 * {
   margin: 0;
   padding: 0;
@@ -15,8 +17,8 @@ html, body {
   width: 100%;
   display: flex;
   flex-direction: column;
-  background-color: rgb(246, 246, 249);
-  color: rgb(50, 50, 77);
+  background-color: var(--body-background);
+  color: var(--body-color);
 }
 
 main {
@@ -43,6 +45,21 @@ form {
   flex-direction: column;
 }
 
+.input-select {
+  position: relative;
+}
+
+.input-select::after {
+  content: "";
+  width: 0.8em;
+  height: 0.5em;
+  position: absolute;
+  right: .75rem;
+  bottom: .75rem;
+  background-color: var(--body-color);
+  clip-path: polygon(100% 0%, 0 0%, 50% 100%);
+}
+
 label {
   font-size: .75em;
   font-weight: 600;
@@ -51,11 +68,13 @@ label {
 input, select, button {
   height: 3em;
   outline: none;
-  background-color: #ffffff;
-  border: 1px solid rgb(220, 220, 228);
-  border-radius: 4px;
+  background-color: var(--light);
+  color: var(--body-color);
+  border: none;
+  border-radius: .25rem;
   padding: 0 1em;
   margin: 4px 0 0 0;
+  appearance: none;
 }
 
 .icon {
@@ -67,9 +86,10 @@ input, select, button {
 
 textarea {
   outline: none;
-  background-color: #ffffff;
-  border: 1px solid rgb(220, 220, 228);
-  border-radius: 4px;
+  background-color: var(--light);
+  color: var(--body-color);
+  border: none;
+  border-radius: .25rem;
   padding: .5em 1em;
   margin: 4px 0 0 0;
   height: 200px;
@@ -83,7 +103,7 @@ select:active,
 select:focus,
 button:active,
 button:focus {
-  outline: #0e54bc solid 2px;
+  outline: none;
 }
 
 input[type="submit"], input[type="button"], button {
@@ -92,7 +112,8 @@ input[type="submit"], input[type="button"], button {
   display: flex;
   align-items: center;
   justify-content: center;
-  color: rgb(50, 50, 77);
+  color: var(--body-color);
+  border: 1px solid var(--outline);
 }
 
 .material-symbols-outlined {
@@ -104,8 +125,9 @@ input[type="submit"], input[type="button"], button {
 }
 
 .red {
-  background-color: #ffb3b3;
-  border: 1px solid rgb(161, 47, 47);
+  background-color: rgb(255, 179, 179);
+  border: 1px solid rgb(161, 47, 47) !important;
+  color: rgb(161, 47, 47) !important;
 }
 
 fieldset {
@@ -119,7 +141,7 @@ ul.users {
 }
 
 ul.users li {
-  background-color: white;
+  background-color: var(--light);
   padding: .1em 1em;
   border-radius: 5px;
   display: flex;
@@ -132,13 +154,15 @@ fieldset {
   margin-bottom: 1.5em;
 }
 
+/* Success and Error Messages */
+
 #success-message {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background: #fff;
+  background: var(--light);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -147,4 +171,107 @@ fieldset {
 #success-message h2 {
   font-size: 2rem;
   text-align: center;
+}
+
+/* Navbar */
+
+nav {
+  height: 3.5em;
+  background-color: var(--light);
+  border-bottom: 1px solid var(--light);
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 1em;
+  padding: 1em;
+  border-bottom-left-radius: .5rem;
+  border-bottom-right-radius: .5rem;
+}
+
+.profile {
+  background-color: var(--body-color);
+  color: var(--body-background);
+  width: 36px;
+  height: 36px;
+  border-radius: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.logo {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.logo svg {
+  height: 25px;
+  width: auto;
+  fill: var(--body-color)
+}
+
+/* Colleciont Styles */
+
+main.landing {
+  gap: .5em;
+}
+
+.collection {
+  background-color: var(--light);
+  padding: 32px 24px;
+  border-radius: .25rem;
+  display: flex;
+  cursor: pointer; 
+  user-select: none;
+  gap: 1em;
+}
+
+.collection:not(:last-child) {
+  margin-bottom: .5rem;
+}
+
+.collection .name {
+  font-weight: 600;
+}
+
+.collection .quotes {
+  font-weight: 400;
+  font-size: .9em;
+}
+
+.collection button {
+  width: 2em;
+  height: 2em;
+}
+
+.headline {
+  font-size: 1.1em;
+  display: flex;
+  flex-direction: column;
+}
+
+.button-group {
+  display: flex;
+  gap: .5em;
+}
+
+.button-group * {
+  width: 100%;
+}
+
+.headline h1 {
+  font-size: inherit;
+}
+
+.collections {
+  display: flex;
+  flex-direction: column;
+  gap: .8em;
+}
+
+details:not(:has(.collection)) {
+  display: none;
 }

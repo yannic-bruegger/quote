@@ -42,7 +42,7 @@
 }
 
 #collection-info {
-  color: #000000aa;
+  color: var(--body-color);
   align-items: center;
   font-size: .7em;
 }
@@ -67,7 +67,6 @@ header{
   align-items: center;
   justify-content: center;
 }
-
 
 .modal-container {
   z-index: -10;
@@ -97,12 +96,12 @@ header{
   width: 80%;
   flex-direction: column;
   border-radius: 5px;
-  background-color: #ffffff;
-  box-shadow: rgba(33, 33, 52, 0.1) 0px 1px 10px;
+  background-color: var(--light);
+  box-shadow: rgba(33, 33, 52, 0.1) .125rem .125rem .5rem;
 }
 
 .modal button:first-child {
-  border-bottom: 1px solid #efefef;
+  border-bottom: 1px solid var(--outline);
 }
 
 .modal button {
