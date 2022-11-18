@@ -275,3 +275,46 @@ main.landing {
 details:not(:has(.collection)) {
   display: none;
 }
+
+/* Login / Register */
+
+main.auth {
+  align-items: center;
+  justify-content: center;
+}
+
+.auth-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+  width: 100%;
+  max-width: 22rem;
+  background-color: var(--body-background);
+  border-radius: 5px;
+  padding: 1.5em;
+}
+
+.auth-error {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  padding: 1em 2em;
+  background-color: #ebd6e0;
+  border: 1px solid #cc87a8;
+  color: #9f2f65;
+  opacity: 10;
+}
+
+.auth-error.hidden {
+  opacity: 0;
+}
+
+.auth-text {
+  font-size: .8em;
+  margin-top: 1em;
+}
+
+.auth-text a {
+  color: rgb(52, 152, 219);
+}

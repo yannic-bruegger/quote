@@ -6,16 +6,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
   <link rel="stylesheet" href="../variables.css">
   <link rel="stylesheet" href="../style.css">
-  <link rel="stylesheet" href="login.css">
   <script src="login.js" type="module"></script>
   <title>Document</title>
 </head>
 <body>
-  <div class="login-error hidden">
+  <div class="auth-error hidden">
     Login failed. Please check if the credentials are correct.
   </div>
-  <main>
-    <form class="login-container" onsubmit="tryLogin">
+  <main class="auth">
+    <form class="auth-container" onsubmit="tryLogin">
       <div class="input-container">
         <label for="username">Username</label>
         <input id="username" type="text" required>
@@ -26,7 +25,7 @@
       </div>
       <input type="submit" value="Log in" id="login">
     </form>
-    <span class="register-text">Or create a new account <a href="/register/">here</a>.</span>
+    <span class="auth-text">Or create a new account <a href="/register/">here</a>.</span>
   </main>
 </body>
 </html>
