@@ -21,9 +21,9 @@ async function tryRegister(event) {
     storeAuthenticatedUserAsCookie(res);
     window.location.href = '/';
   } catch {
-    document.querySelector('.register-error').classList.remove('hidden');
+    document.querySelector('.auth-error').classList.remove('hidden');
     setTimeout(() => {
-      document.querySelector('.register-error').classList.add('hidden');
+      document.querySelector('.auth-error').classList.add('hidden');
     }, 1000 * 5)
   }
 }
