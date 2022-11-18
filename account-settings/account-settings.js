@@ -5,6 +5,7 @@ const me = await getMe(getToken());
 
 document.querySelector('#displayname').value = me.displayname;
 document.querySelector('#email').value = me.email;
+document.querySelector('#username').value = me.username;
 
 document.querySelector('#change-password').addEventListener('submit', async (e) => {
   e.preventDefault();
