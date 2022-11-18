@@ -1,5 +1,6 @@
 import { getToken } from '../lib/auth.js';
 import { createCollection, getUsers, getUserByName } from '../lib/quotes-api.js';
+import { successMessage } from '../lib/success-message.js';
 
 const users = await getUsers(getToken());
 const moderators = [];
@@ -28,8 +29,9 @@ updateModerators(moderators);
 
 async function tryCreateCollection() {
   const name = document.querySelector('#name').value;
-  await createCollection(getToken(), name, moderators.map(mod => mod.id));
-  window.location.href = '/';
+  const collection = await createCollection(getToken(), name, moderators.map(mod => mod.id));
+  successMessage('Collection created successfully');
+  setTimeout(function(){ window.location.href = `/collection/?id=${collection.data.id}` }, 300);
 }
 
 document.querySelector('#create-collection').addEventListener('submit', (event) => {
