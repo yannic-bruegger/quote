@@ -1,6 +1,14 @@
 import { getToken } from '../lib/auth.js';
 import { getMyRoleForCollection } from '../lib/helper.js';
-import { getCollection, getCollectionModerators, getCollectionOwner, getMe, getQuotesOfCollection } from '../lib/quotes-api.js';
+import { 
+  getCollection,
+  getCollectionModerators,
+  getCollectionOwner,
+  getMe,
+  getQuotesOfCollection,
+  bookmarkCollection,
+  removeBookmarkedCollection,
+} from '../lib/quotes-api.js';
 import { shareCollection, shareQuote } from '../lib/share.js'
 
 const urlParameters = new URLSearchParams(window.location.search);
@@ -49,6 +57,7 @@ function showRandomQuote() {
 
 function showQuote(quote) {
   currentQuoteIndex = quotes.indexOf(quote);
+  if(currentQuoteIndex < 0) return;
   document.querySelector('#index').innerText = `${currentQuoteIndex + 1}`;
   document.querySelector('#id').innerText = `${quote.id}`;
   document.querySelector('#content').innerText = `${quote.attributes.content}`;
@@ -100,6 +109,40 @@ document.querySelector('#share-collection').addEventListener('click', async (eve
 function toggleModal() {
   document.querySelector('.modal-container').toggleAttribute('visible');
 }
+
+
+/* BOOKMARKING */
+
+function updateBookmarkButtons(isFollower) {
+  if (isFollower) {
+    document.getElementById('add-bookmark').classList.add('hidden');
+    document.getElementById('remove-bookmark').classList.remove('hidden');
+  } else {
+    document.getElementById('add-bookmark').classList.remove('hidden');
+    document.getElementById('remove-bookmark').classList.add('hidden');
+  }
+}
+
+function addBookmark() {
+  document.getElementById('add-bookmark').classList.add('hidden');
+  document.getElementById('remove-bookmark').classList.remove('hidden');
+  bookmarkCollection(collectionId, getToken());
+}
+
+function removeBookmark() { 
+  document.getElementById('add-bookmark').classList.remove('hidden');
+  document.getElementById('remove-bookmark').classList.add('hidden');
+  removeBookmarkedCollection(collectionId, getToken())
+}
+
+document.getElementById('add-bookmark').addEventListener('click', addBookmark);
+document.getElementById('remove-bookmark').addEventListener('click', removeBookmark);
+
+const myRole = await getMyRoleForCollection(collectionId, getToken());
+updateBookmarkButtons(myRole.isFollower);
+
+
+/* MODERATORS MENU */
 
 showModeratorsMenu();
 
