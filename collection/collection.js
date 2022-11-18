@@ -113,8 +113,10 @@ function toggleModal() {
 
 /* BOOKMARKING */
 
-function updateBookmarkButtons(isFollower) {
-  if (isFollower) {
+function updateBookmarkButtons(roles) {
+  if(roles.isModerator || roles.isOwner) return;
+  
+  if (roles.isFollower) {
     document.getElementById('add-bookmark').classList.add('hidden');
     document.getElementById('remove-bookmark').classList.remove('hidden');
   } else {
@@ -139,8 +141,7 @@ document.getElementById('add-bookmark').addEventListener('click', addBookmark);
 document.getElementById('remove-bookmark').addEventListener('click', removeBookmark);
 
 const myRole = await getMyRoleForCollection(collectionId, getToken());
-updateBookmarkButtons(myRole.isFollower);
-
+updateBookmarkButtons(myRole);
 
 /* MODERATORS MENU */
 
