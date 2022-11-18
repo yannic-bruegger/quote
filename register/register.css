@@ -14,7 +14,7 @@ main {
   padding: 1.5em;
 }
 
-.login-error {
+.register-error {
   position: fixed;
   top: 0;
   left: 0;
@@ -26,11 +26,11 @@ main {
   opacity: 10;
 }
 
-.login-error.hidden {
+.register-error.hidden {
   opacity: 0;
 }
 
-.register-text {
+.login-text {
   font-size: .8em;
   margin-top: 1em;
 }

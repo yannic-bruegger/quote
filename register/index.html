@@ -5,27 +5,31 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
   <link rel="stylesheet" href="../style.css">
-  <link rel="stylesheet" href="login.css">
-  <script src="login.js" type="module"></script>
+  <link rel="stylesheet" href="register.css">
+  <script src="register.js" type="module"></script>
   <title>Document</title>
 </head>
 <body>
-  <div class="login-error hidden">
-    Login failed. Please check if the credentials are correct.
+  <div class="register-error hidden">
+    Registration failed. Please try again with a different username.
   </div>
   <main>
-    <form class="login-container" onsubmit="tryLogin">
+    <form class="login-container" onsubmit="tryRegister">
       <div class="input-container">
         <label for="username">Username</label>
         <input id="username" type="text" required>
       </div>
       <div class="input-container">
+        <label for="email">Email</label>
+        <input id="email" type="email" required>
+      </div>
+      <div class="input-container">
         <label for="password">Password</label>
         <input id="password" type="password" required>
       </div>
-      <input type="submit" value="Log in" id="login">
+      <input type="submit" value="Create an account" id="register">
     </form>
-    <span class="register-text">Or create a new account <a href="/register/">here</a>.</span>
+    <span class="login-text">Alreay have an account? Log in <a href="/login/">here</a>.</span>
   </main>
 </body>
 </html>
