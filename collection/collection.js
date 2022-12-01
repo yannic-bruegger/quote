@@ -37,25 +37,29 @@ if (urlParameters.has('quoteId')) {
 
   const quote = quotes.find((quote) => quote.id === quoteId);
 
-  showQuote(quote)
+  showQuote(quote, collectionId)
 } else {
   showRandomQuote();
 }
 
 function showNextQuote() {
-  showQuote(quotes[(currentQuoteIndex + 1) % quotes.length]);
+  showQuote(quotes[(currentQuoteIndex + 1) % quotes.length], collectionId);
 }
 
 function showPreviousQuote() {
-  showQuote(quotes[((currentQuoteIndex - 1 % quotes.length) + quotes.length) % quotes.length]);
+  showQuote(quotes[((currentQuoteIndex - 1 % quotes.length) + quotes.length) % quotes.length], collectionId);
 }
 
 function showRandomQuote() {
   const randomIndex = parseInt(Math.random() * quotes.length);
-  showQuote(quotes[randomIndex])
+  showQuote(quotes[randomIndex], collectionId)
 }
 
-function showQuote(quote) {
+function showQuote(quote, collectionId) {
+  const url = new URL(window.location.href);
+  url.searchParams.set('id', collectionId);
+  url.searchParams.set('quoteId', quote.id);
+  window.history.replaceState({}, quote.id, url);
   currentQuoteIndex = quotes.indexOf(quote);
   if(currentQuoteIndex < 0) return;
   document.querySelector('#index').innerText = `${currentQuoteIndex + 1}`;
