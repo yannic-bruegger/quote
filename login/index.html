@@ -8,9 +8,12 @@
   <link rel="stylesheet" href="../style.css">
   <script src="login.js" type="module"></script>
   <link rel="manifest" href="/manifest.json" />
+  <script src="../lib/web-components/cookies-notification/cookies-notification.js" defer></script>
+  <link rel="stylesheet" href="../lib/web-components/cookies-notification/style.css">
   <title>Quotes - Login</title>
 </head>
 <body>
+  <cookie-notification></cookie-notification>
   <div class="auth-error hidden">
     Login failed. Please check if the credentials are correct.
   </div>
