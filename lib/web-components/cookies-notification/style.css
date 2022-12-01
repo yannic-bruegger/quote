@@ -4,6 +4,8 @@ cookie-notification {
 
 dialog::backdrop {
   backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
+  background-color: #00000033;
 }
 
 dialog {
