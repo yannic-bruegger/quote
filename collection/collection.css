@@ -61,11 +61,12 @@ header{
 }
 
 .menu button {
-  width: 30px;
-  height: 30px;
+  width: 1.5rem;
+  height: 1.5rem;
   display: flex;
   align-items: center;
   justify-content: center;
+  margin-left: .5rem;
 }
 
 .modal-container {

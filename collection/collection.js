@@ -1,4 +1,4 @@
-import { getToken } from '../lib/auth.js';
+import { getToken, isAuthenticated } from '../lib/auth.js';
 import { getMyRoleForCollection } from '../lib/helper.js';
 import { 
   getCollection,
@@ -114,7 +114,7 @@ function toggleModal() {
 /* BOOKMARKING */
 
 function updateBookmarkButtons(roles) {
-  if(roles.isModerator || roles.isOwner) return;
+  if(roles.isModerator || roles.isOwner || !isAuthenticated()) return;
   
   if (roles.isFollower) {
     document.getElementById('add-bookmark').classList.add('hidden');
@@ -153,15 +153,11 @@ async function showModeratorsMenu() {
   if (myRole.isModerator || myRole.isOwner) {
     const openSettingsButton = `
       <button id="add" class="open-settings-button icon">
-        <span class="material-symbols-outlined">
-          add
-        </span>
+        <span class="icon-add"></span>
       </button>
       
       <button id="edit" class="open-settings-button icon">
-        <span class="material-symbols-outlined">
-          edit
-        </span>
+        <span class="icon-edit"></span>
       </button>
     `;
     document.querySelector('.moderators-menu').innerHTML = openSettingsButton;
