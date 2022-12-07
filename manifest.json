@@ -3,7 +3,13 @@
   "id": "/",
   "name": "Quote",
   "short_name": "Quote",
-  "start_url": ".",
+  "scope_url": "https://quoteapp.de/",
+  "intent_filters": {
+    "scope_url_scheme": "https",
+    "scope_url_host": "quoteapp.de",
+    "scope_url_path": "/"
+  },
+  "start_url": "https://quoteapp.de/",
   "display": "standalone",
   "background_color": "#f6f6f9",
   "description": "An app to store quotes in collections and moderate them with your peers.",
