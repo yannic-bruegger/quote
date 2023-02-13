@@ -52,7 +52,17 @@ availableModerators.forEach(user => {
   document.querySelector('#available-moderators').appendChild(option);
 });
 
-document.querySelector('#moderator').addEventListener('change', async (newVal) => {
+document.querySelector('#moderator').addEventListener('change', async (e) => {
+  changeHandler(e);
+});
+
+document.querySelector('#moderator').addEventListener('keydown', async (e) => {
+  if(e.key !== 'Enter') return;
+  changeHandler(e)
+});
+
+async function changeHandler(e) {
+  e.preventDefault();
   const res = await getUserByName(document.querySelector('#moderator').value, getToken());
   document.querySelector('#moderator').value = '';
   if(res.length === 0) {
@@ -61,7 +71,7 @@ document.querySelector('#moderator').addEventListener('change', async (newVal) =
     moderators.push(res[0]);
   }
   updateModerators(moderators);
-});
+}
 
 updateModerators(moderators);
 
