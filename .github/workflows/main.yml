@@ -1,13 +1,12 @@
-name: Update CACHE_VERSION_HASH on Merge
+name: Update CACHE_VERSION_HASH
 
 on:
-  pull_request:
-    types:
-      - closed
+  push:
+    branches:
+      - main
 
 jobs:
   update-hash:
-    if: github.event.pull_request.merged == true && github.event.pull_request.base.ref == 'main'
     runs-on: ubuntu-latest
 
     steps:
