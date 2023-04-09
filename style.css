@@ -364,6 +364,7 @@ main.landing {
 
 .collection .name {
   font-weight: 600;
+  font-size: .25rem;
 }
 
 .collection .quotes {
