@@ -482,3 +482,28 @@ footer a {
   margin-left: 1.5rem;
   margin-bottom: 1rem;
 }
+
+@media screen and (min-width: 900px) and (min-height: 1200px) {
+  html {
+    background-color: var(--html-background);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+  }
+
+  body {
+    max-width: 600px;
+    min-width: 600px;
+    max-height: 900px;
+    min-height: 900px;
+    position: relative;
+    width: 50vw;
+    height: 80vh;
+  }
+  
+}
