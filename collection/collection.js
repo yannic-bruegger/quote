@@ -64,8 +64,14 @@ function showQuote(quote, collectionId) {
   if(currentQuoteIndex < 0) return;
   document.querySelector('#index').innerText = `${currentQuoteIndex + 1}`;
   document.querySelector('#id').innerText = `${quote.id}`;
-  document.querySelector('#content').innerText = `${quote.attributes.content}`;
-  document.querySelector('#quoted').innerText = `${quote.attributes.quoted}`;
+
+  const quoteWrapper = document.getElementById("random-quote");
+  quoteWrapper.innerHTML = `
+    <div>    
+      <div id="content">${quote.attributes.content}</div>
+      - <span id="quoted">${quote.attributes.quoted}</span>
+    </div>
+  `;
 }
 
 function editQuote() {
