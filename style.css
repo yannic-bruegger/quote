@@ -138,8 +138,13 @@ html, body {
   color: var(--body-color);
 }
 
+body:not(.scroll) {
+  overflow: hidden;
+  touch-action: none;
+}
+
 main {
-  padding: 1.5em;
+  padding: 1.5rem;
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -148,7 +153,7 @@ main {
 form {
   display: flex;
   flex-direction: column;
-  gap: .6em;
+  gap: .6rem;
 }
 
 .spacer {
@@ -167,8 +172,8 @@ form {
 
 .input-select::after {
   content: "";
-  width: 0.8em;
-  height: 0.5em;
+  width: 0.8rem;
+  height: 0.5rem;
   position: absolute;
   right: .75rem;
   bottom: .75rem;
@@ -177,20 +182,21 @@ form {
 }
 
 label {
-  font-size: .75em;
+  font-size: .75rem;
   font-weight: 600;
 }
 
 input, select, button {
-  height: 3em;
+  height: 3rem;
   outline: none;
   background-color: var(--light);
   color: var(--body-color);
   border: none;
   border-radius: .25rem;
-  padding: 0 1em;
+  padding: 0 1rem;
   margin: 4px 0 0 0;
   appearance: none;
+  font-size: 1rem;
 }
 
 .icon {
@@ -207,9 +213,10 @@ textarea {
   color: var(--body-color);
   border: none;
   border-radius: .25rem;
-  padding: .5em 1em;
+  padding: .5em 1rem;
   margin: 4px 0 0 0;
   height: 200px;
+  font-size: 1rem;
 }
 
 input:active,
@@ -224,7 +231,7 @@ button:focus {
 }
 
 input[type="submit"], input[type="button"], button {
-  margin-top: 1.1em;
+  margin-top: 1.1rem;
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -248,27 +255,27 @@ input[type="submit"], input[type="button"], button {
 }
 
 fieldset {
-  padding: 1em;
+  padding: 1rem;
 }
 
 ul.users {
   display: flex;
-  gap: 1em;
+  gap: 1rem;
   list-style: none;
 }
 
 ul.users li {
   background-color: var(--light);
-  padding: .1em 1em;
+  padding: .1em 1rem;
   border-radius: 5px;
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: .5em;
+  gap: .5rem;
 }
 
 fieldset {
-  margin-bottom: 1.5em;
+  margin-bottom: 1.5rem;
 }
 
 /* Success and Error Messages */
@@ -293,14 +300,14 @@ fieldset {
 /* Navbar */
 
 nav {
-  height: 3.5em;
+  height: 3.5rem;
   background-color: var(--light);
   border-bottom: 1px solid var(--light);
   display: flex;
   flex-direction: row;
   align-items: center;
-  gap: 1em;
-  padding: 1em;
+  gap: 1rem;
+  padding: 1rem;
   border-bottom-left-radius: .5rem;
   border-bottom-right-radius: .5rem;
 }
@@ -333,7 +340,7 @@ nav {
 /* Colleciont Styles */
 
 main.landing {
-  gap: .5em;
+  gap: .5rem;
 }
 
 .collection {
@@ -343,7 +350,7 @@ main.landing {
   display: flex;
   cursor: pointer; 
   user-select: none;
-  gap: 1em;
+  gap: 1rem;
   position: relative;
 }
 
@@ -361,12 +368,12 @@ main.landing {
 
 .collection .quotes {
   font-weight: 400;
-  font-size: .9em;
+  font-size: .9rem;
 }
 
 .collection button {
-  width: 2em;
-  height: 2em;
+  width: 2rem;
+  height: 2rem;
   position: absolute;
   right: 1rem;
   top: 50%;
@@ -374,14 +381,14 @@ main.landing {
 }
 
 .headline {
-  font-size: 1.1em;
+  font-size: 1.1rem;
   display: flex;
   flex-direction: column;
 }
 
 .button-group {
   display: flex;
-  gap: .5em;
+  gap: .5rem;
 }
 
 .button-group * {
@@ -395,7 +402,7 @@ main.landing {
 .collections {
   display: flex;
   flex-direction: column;
-  gap: .8em;
+  gap: .8rem;
 }
 
 details:not(:has(.collection)) {
@@ -412,12 +419,12 @@ main.auth {
 .auth-container {
   display: flex;
   flex-direction: column;
-  gap: 1em;
+  gap: 1rem;
   width: 100%;
   max-width: 22rem;
   background-color: var(--body-background);
   border-radius: 5px;
-  padding: 1.5em;
+  padding: 1.5rem;
 }
 
 .auth-error {
@@ -425,7 +432,7 @@ main.auth {
   top: 0;
   left: 0;
   width: 100%;
-  padding: 1em 2em;
+  padding: 1em 2rem;
   background-color: #ebd6e0;
   border: 1px solid #cc87a8;
   color: #9f2f65;
@@ -437,8 +444,8 @@ main.auth {
 }
 
 .auth-text {
-  font-size: .8em;
-  margin-top: 1em;
+  font-size: .8rem;
+  margin-top: 1rem;
 }
 
 .auth-text a {
@@ -450,14 +457,27 @@ footer {
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 1em;
-  padding: 1em;
+  gap: 1rem;
+  padding: 1rem;
   border-radius: 5px;
-  margin-top: 1em;
+  margin-top: 1rem;
 }
 
 footer a {
   color: var(--body-color);
   text-decoration: none;
   opacity: .5;
+}
+
+.impress h1, .impress h2, .impress h3 {
+  margin-bottom: .5rem;
+}
+
+.impress p {
+  margin-bottom: 1rem;
+}
+
+.impress ul {
+  margin-left: 1.5rem;
+  margin-bottom: 1rem;
 }
