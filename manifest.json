@@ -3,22 +3,22 @@
   "id": "/",
   "name": "Quote",
   "short_name": "Quote",
-  "scope_url": "https://quoteapp.de/",
+  "scope_url": "https://www.quoteapp.de/",
   "intent_filters": {
     "scope_url_scheme": "https",
     "scope_url_host": "quoteapp.de",
     "scope_url_path": "/"
   },
-  "start_url": "https://quoteapp.de/",
+  "start_url": "https://www.quoteapp.de/",
   "display": "standalone",
   "background_color": "#f6f6f9",
   "description": "An app to store quotes in collections and moderate them with your peers.",
   "icons": [{
-    "src": "assets/app-images/ios/256.png",
-    "sizes": "256x256",
+    "src": "assets/app-images/android/android-launchericon-192-192.png",
+    "sizes": "192x192",
     "type": "image/png"
   }, {
-    "src": "assets/app-images/ios/512.png",
+    "src": "assets/app-images/android/android-launchericon-512-512.png",
     "sizes": "512x512",
     "type": "image/png"
   }],
