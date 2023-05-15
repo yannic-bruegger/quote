@@ -1,4 +1,4 @@
-const cacheVersion = '1-' + process.env.CACHE_VERSION_HASH;
+const cacheVersion = '1-' + 'process.env.CACHE_VERSION_HASH';
 const currentCache = {
   offline: 'offline-cache-' + cacheVersion
 };
@@ -9,6 +9,7 @@ this.addEventListener('install', event => {
     caches.open(currentCache.offline).then(function (cache) {
       return cache.addAll([
         "style.css",
+        "variables.css",
         offlineUrl
       ]);
     })
