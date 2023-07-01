@@ -1,0 +1,105 @@
+@import url('https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap');
+@import url('./icon-font.css');
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: inherit;
+}
+  
+:root {
+  --black: #333333;
+  --white: #FFFFFF;
+  --gray: #F6F5F9;
+  --blue-gradient: linear-gradient(0deg, rgba(56, 103, 214, 1) 0%, rgba(69, 211, 242, 1) 100%);
+  --green-gradient: linear-gradient(0deg, rgba(28, 182, 100, 1) 0%, rgba(234, 251, 46, 1) 100%);
+  --orange-gradient: linear-gradient(0deg, rgba(255, 122, 32, 1) 0%, rgba(249, 194, 112, 1) 100%);
+  --pink-gradient: linear-gradient(0deg, rgba(255, 26, 66, 1) 0%, rgba(244, 120, 255, 1) 100%);
+  --purple-grdient: linear-gradient(0deg, rgba(56, 103, 214, 1) 0%, rgba(213, 39, 206, 1) 100%);
+  --teal-gradient: linear-gradient(0deg, rgba(9, 167, 159, 1) 0%, rgba(84, 172, 222, 1) 100%);
+  
+  --lato: 'Lato', sans-serif;
+  --shadow: 0px 4px 9px 0px rgba(124, 21, 255, 0.05);
+  
+  --app-padding-lr: 24px;
+  --background: var(--gray);
+  --foreground: var(--white);
+  --text-primary: var(--black);
+  --text-muted: #c7c7d2;
+  --radius: 12px;
+
+  font-family: var(--lato);
+  background-color: var(--background);
+  color: var(--text-primary);
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  height: 100%;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+.blue-gradient {
+  background: var(--blue-gradient);
+}
+
+.green-gradient {
+  background: var(--green-gradient);
+}
+
+.orange-gradient {
+  background: var(--orange-gradient);
+}
+
+.pink-gradient {
+  background: var(--pink-gradient);
+}
+
+.purple-gradient {
+  background: var(--purple-gradient);
+}
+
+.teal-gradient {
+  background: var(--teal-gradient);
+}
+
+button {
+  background: none;
+  border: none;
+}
+
+button.default {
+  width: 100%;
+  background-color: var(--foreground);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: row;
+  gap: 16px;
+  flex-grow: 1;
+
+  &.small {
+    min-width: 48px;;
+    min-height: 48px;
+    width: auto;
+    flex-grow: 0;
+  }
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+
+  &:active {
+    color: inherit;
+  }
+}
+
