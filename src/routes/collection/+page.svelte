@@ -5,6 +5,16 @@
   import { Themes, NavBarState } from "../../constants";
 
   const data: any[] = [
+    {id: 0, quote: "Hello world 0!", quotedBy: "Author 0"},
+    {id: 1, quote: "Hello world 1!", quotedBy: "Author 1"},
+    {id: 2, quote: "Hello world 2!", quotedBy: "Author 2"},
+    {id: 3, quote: "Hello world 3!", quotedBy: "Author 3"},
+    {id: 5, quote: "Hello world 4!", quotedBy: "Author 4"},
+    {id: 6, quote: "Hello world 5!", quotedBy: "Author 5"},
+    {id: 7, quote: "Hello world 6!", quotedBy: "Author 6"},
+    {id: 8, quote: "Hello world 7!", quotedBy: "Author 7"},
+    {id: 10, quote: "Hello world 8!", quotedBy: "Author 8"},
+    {id: 12, quote: "Hello world 9!", quotedBy: "Author 9"},
   ]
 
   // Start Index (altough traks index of current none carusel quote)
@@ -329,7 +339,7 @@
 
 <div class="actions">
   <button class="default small"><span class="icon-plus"></span></button>
-  <button class="default small"><span class="icon-shuffle"></span></button>
+  <button class="default small" disabled={data.length === 0}><span class="icon-shuffle"></span></button>
   <button id="prev" class="default" disabled={data.length === 0}><span class="icon-chevron-left"></span></button>
   <button id="next" class="default" disabled={data.length === 0}><span class="icon-chevron-right"></span></button>
 </div>
