@@ -33,7 +33,7 @@
   <div class="actions">
     <button class="default">
         <span class="icon-plus"></span>
-        <span>Create Collection</span>
+        <a href="/new-collection">Create Collection</a>
     </button>
   </div>
 </div>
