@@ -35,6 +35,7 @@
 		justify-content: space-between;
     align-items: center;
     padding: 12px var(--app-padding-lr);
+		height:  64px;
 	}
 
 	h1 {
