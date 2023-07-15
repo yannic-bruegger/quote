@@ -116,6 +116,7 @@ input[type="text"], input[type="search"] {
   box-shadow: 0px 0px 4px 0px rgba(41, 69, 138, 0.25) inset;
 }
 
-input[type="text"]:read-only {
+input[type="text"]:read-only, input[type="button"]:disabled {
+  user-select: none;
   opacity: .4;
 }
