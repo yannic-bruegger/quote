@@ -23,7 +23,9 @@
 	<h1 class={`${theme}`}>{ title }</h1>
 
 	{#if state === NavBarState.MAIN}
+	<a href="/users/me">
 		<img src="https://randomuser.me/api/portraits/men/62.jpg" alt="user" />
+	</a>
 	{/if}
 </header>
 

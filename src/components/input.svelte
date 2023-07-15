@@ -5,13 +5,21 @@
   export let value: string = '';
   export let theme: Themes = Themes.PINK_GRADIENT;
   export let placeholder: string = '';
-  export let autofocus: boolean;
+  export let autofocus: boolean | undefined;
+  export let readonly: boolean = false;
 </script>
 
 <div class="input-group">
   <label class={`${theme}`} for="input">{label}</label>
   <!-- svelte-ignore a11y-autofocus -->
-  <input autofocus={autofocus} id="input" type="text" bind:value={value} placeholder={placeholder}>
+  <input
+    autofocus={autofocus}
+    id="input"
+    type="text"
+    bind:value={value}
+    placeholder={placeholder}
+    readonly={readonly}
+  >
 </div>
 
 <style scoped>
