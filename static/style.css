@@ -44,28 +44,34 @@ body {
   height: 100vh;
 }
 
+.colored-text {
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
 .blue-gradient {
-  background: var(--blue-gradient);
+  background-image: var(--blue-gradient);
 }
 
 .green-gradient {
-  background: var(--green-gradient);
+  background-image: var(--green-gradient);
 }
 
 .orange-gradient {
-  background: var(--orange-gradient);
+  background-image: var(--orange-gradient);
 }
 
 .pink-gradient {
-  background: var(--pink-gradient);
+  background-image: var(--pink-gradient);
 }
 
 .purple-gradient {
-  background: var(--purple-gradient);
+  background-image: var(--purple-gradient);
 }
 
 .teal-gradient {
-  background: var(--teal-gradient);
+  background-image: var(--teal-gradient);
 }
 
 button {
@@ -84,7 +90,10 @@ button.default {
   justify-content: center;
   flex-direction: row;
   gap: 16px;
-  flex-grow: 1;
+
+  &.grow {
+    flex-grow: 1;
+  }
 
   &.small {
     min-width: 48px;;
@@ -107,16 +116,30 @@ input {
   all: unset;
 }
 
-input[type="text"], input[type="search"] {
+input[type="text"],
+input[type="search"],
+input[type="email"],
+input[type="password"] {
   all: unset;
   padding: 1rem 1rem ;
   background-color: var(--foreground, #FFFFFF);
   border-radius: 12px;
   border-radius: 0.75rem;
   box-shadow: 0px 0px 4px 0px rgba(41, 69, 138, 0.25) inset;
+  text-align: left;
 }
 
-input[type="text"]:read-only, button:disabled {
+input:read-only, button:disabled {
   user-select: none;
   opacity: .4;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  padding: 1em;
+  gap: 1em;
+  flex-grow: 1;
+  overflow-x: scroll;
+  align-items: center;
 }

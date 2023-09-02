@@ -1,24 +1,30 @@
-<script lang="ts">
-	import { Themes } from "../constants";
+<script context="module" lang="ts">
+  export type HTMLInputElementType = 'button' | 'checkbox' | 'color' | 'date' | 'datetime-local' | 'email' | 'file' | 'hidden' | 'image' | 'month' | 'number' | 'password' | 'radio' | 'range' | 'reset' | 'search' | 'submit' | 'tel' | 'text' | 'time' | 'url' | 'week';
+</script>
 
-  export let label: string = 'Label';
+<script lang="ts">
+	import { Themes } from '../constants';
+
+  export let label: string | undefined;
   export let value: string = '';
   export let theme: Themes = Themes.PINK_GRADIENT;
   export let placeholder: string = '';
   export let autofocus: boolean | undefined;
   export let readonly: boolean = false;
+  export let type: HTMLInputElementType = 'text';
 </script>
 
 <div class="input-group">
-  <label class={`${theme}`} for="input">{label}</label>
+  {#if label}
+    <label class={`${theme}`} for="input">{label}</label>
+  {/if}
   <!-- svelte-ignore a11y-autofocus -->
   <input
     autofocus={autofocus}
-    id="input"
-    type="text"
-    bind:value={value}
+    type={type}
     placeholder={placeholder}
     readonly={readonly}
+    value={value}
   >
 </div>
 
