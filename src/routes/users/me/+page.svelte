@@ -48,7 +48,7 @@
     height: 15rem;
     box-shadow: var(--shadow);
     & img {
-      border-radius: 0.75rem;
+      border-radius: 0.375rem;
       width: 100%;
       height: 100%;
       box-shadow: var(--shadow);
