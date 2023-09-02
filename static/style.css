@@ -17,6 +17,14 @@
   --pink-gradient: linear-gradient(180deg, rgba(255, 26, 66, 1) 0%, rgba(244, 120, 255, 1) 100%);
   --purple-gradient: linear-gradient(180deg, #3867D6 0%, rgba(213, 39, 206, 0.50) 100%);
   --teal-gradient: linear-gradient(180deg, #09A79F 0%, rgba(84, 172, 222, 0.50) 100%);
+
+
+  --blue-gradient-90: linear-gradient(90deg, rgba(56, 103, 214, 1) 0%, rgba(69, 211, 242, 1) 100%);
+  --green-gradient-90: linear-gradient(90deg, rgba(28, 182, 100, 1) 0%, rgba(234, 251, 46, 1) 100%);
+  --orange-gradient-90: linear-gradient(90deg, rgba(255, 122, 32, 1) 0%, rgba(249, 194, 112, 1) 100%);
+  --pink-gradient-90: linear-gradient(90deg, rgba(255, 26, 66, 1) 0%, rgba(244, 120, 255, 1) 100%);
+  --purple-gradient-90: linear-gradient(90deg, #3867D6 0%, rgba(213, 39, 206, 0.50) 100%);
+  --teal-gradient-90: linear-gradient(90deg, #09A79F 0%, rgba(84, 172, 222, 0.50) 100%);
   
   --lato: 'Lato', sans-serif;
   --shadow: 0px 4px 9px 0px rgba(124, 21, 255, 0.05);

@@ -18,7 +18,7 @@
 	];
 
 	// Start Index (altough traks index of current none carusel quote)
-	let currentQuoteIndex = Math.floor(Math.random() * data.length);
+	let currentQuoteIndex = 0;
 
 	// Single
 	let singleQuote: any = {};
@@ -46,28 +46,114 @@
 		}
 	}
 
+  let isNewest = false;
+  let timeoutId : any = 0;
+
+
 	onMount(() => {
 		const buttonPrev = <HTMLButtonElement>document.querySelector('button#prev');
 		const buttonNext = <HTMLButtonElement>document.querySelector('button#next');
 
 		buttonPrev.addEventListener('click', () => {
-			if (data.length > 4) {
-				slidePrev();
-				updateCurrentQuotes('prev');
-			} else {
-				showPrev();
-			}
+			navigatePrev();
 		});
 
 		buttonNext.addEventListener('click', () => {
-			if (data.length > 4) {
-				slideNext();
-				updateCurrentQuotes('next');
-			} else {
-				showNext();
-			}
+      if (isNewest) {
+        isNewest = false;
+      } else {
+        navigateNext();
+      }
 		});
+
+    buttonNext.addEventListener('mousedown', function(e) {
+      timeoutId = setTimeout(navigateToNewest, 1000);
+      buttonNext.classList.toggle('animation-active');
+    });
+
+    buttonNext.addEventListener('mouseup', function() {
+      clearTimeout(timeoutId);
+      if (buttonNext.classList.contains('animation-active')) {
+        buttonNext.classList.toggle('animation-active');
+      }
+    });
+
+    buttonNext.addEventListener('touchstart', function() {
+      timeoutId = setTimeout(navigateToNewest, 1000);
+      buttonNext.classList.toggle('animation-active');
+    });
+
+    buttonNext.addEventListener('touchend', function() {
+      clearTimeout(timeoutId);
+      if (buttonNext.classList.contains('animation-active')) {
+        buttonNext.classList.toggle('animation-active');
+      }
+    });
+
+    function navigateToNewest() {
+      console.log('navigateToNewest');
+
+      isNewest = true;
+
+      let newQuotes = [];
+
+      newQuotes.push(data[data.length - 1]);
+      newQuotes.push(data[0]);
+      newQuotes.push(data[1]);
+      newQuotes.push(data[data.length - 3]);
+      newQuotes.push(data[data.length - 2]);
+      
+      let newCurrentCaruselQuoteIndex = currentCaruselQuoteIndex;
+      currentQuotes.length = 0;
+
+      newQuotes.forEach((quote) => {
+        if (newCurrentCaruselQuoteIndex < 4) {
+          newCurrentCaruselQuoteIndex++;
+        } else {
+          newCurrentCaruselQuoteIndex = 0;
+        }
+
+        currentQuotes[newCurrentCaruselQuoteIndex] = quote;
+      });
+
+      navigateNext();
+
+      if (buttonNext.classList.contains('animation-active')) {
+        buttonNext.classList.toggle('animation-active');
+      }
+    }
 	});
+
+  function navigatePrev() {
+    if (data.length > 4) {
+      slidePrev();
+      updateCurrentQuotes('prev');
+    } else {
+      showPrev();
+    }
+  }
+
+  function navigateNext() {
+    if (data.length > 4) {
+      slideNext();
+      updateCurrentQuotes('next');
+    } else {
+      showNext();
+    }
+  }
+
+  function onKeyDown(e : KeyboardEvent) {
+    switch(e.key) {
+      case 'ArrowLeft':
+        navigatePrev();
+        break;
+      case 'ArrowRight':
+          navigateNext();
+        break;
+        default:
+          break;
+    }
+  }
 
 	function slideNext() {
 		const outerLeftQuote = <HTMLDivElement>document.querySelector('.outer-left-quote'); // 1
@@ -264,9 +350,11 @@
 
 		singleQuote = data[currentQuoteIndex];
 	}
-</script>
 
+
+</script>
 <Header title="Collection X" theme={Themes.PINK_GRADIENT} state={NavBarState.SUB} />
+<svelte:window on:keydown|preventDefault={onKeyDown} />
 <div class="quotes">
 	{#if data.length > 4}
 		<div
@@ -317,7 +405,7 @@
 	<div class="actions primary-actions">
 		<button class="default small" disabled={data.length === 0}><span class="icon-shuffle" /></button>
 		<button id="prev" class="default" disabled={data.length === 0}><span class="icon-chevron-left" /></button>
-		<button id="next" class="default" disabled={data.length === 0}><span class="icon-chevron-right" /></button>
+		<button id="next" class="default left-right-animation" disabled={data.length === 0}><span class="icon-chevron-right" /></button>
 	</div>
 
 	<div class="actions secondary-actions">
@@ -368,7 +456,7 @@
       background-color: var(--foreground);
       box-shadow: var(--shadow);
       animation: translateXReset 8s infinite;
-      opacity: .5;
+      opacity: .75;
     }
 
 		.actions {
@@ -380,6 +468,30 @@
 			gap: 12px;
       width: 100%;
       scroll-snap-align: start;
+
+      .left-right-animation {
+        position: relative;
+        overflow: hidden;
+        span {
+          position: relative;
+          z-index: 2;
+        }
+        &:before {
+          content: "";
+          position: absolute;
+          background: var(--green-gradient-90);
+          bottom: 0;
+          left: 0;
+          right: 100%;
+          top: 0;
+          z-index: 1;
+          transition-duration: 0.8s;
+        }
+
+        &.animation-active:before {
+          right: 0;
+        }
+      }
 		}
 	}
 
