@@ -10,7 +10,7 @@
   state={NavBarState.MAIN}
 >
 </Header>
-<div class="container">
+<div class="collection-container">
   <div class="collections">
     <Collection
       name="XYZ"
@@ -31,7 +31,7 @@
   </div>
 
   <div class="actions">
-    <button class="default">
+    <button class="default grow">
         <span class="icon-plus"></span>
         <a href="/new-collection">Create Collection</a>
     </button>
@@ -39,7 +39,7 @@
 </div>
 
 <style scoped>
-  .container {
+  .collection-container {
     display: flex;
     flex-direction: column;
     padding: var(--app-padding-lr);
