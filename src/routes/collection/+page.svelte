@@ -46,114 +46,184 @@
 		}
 	}
 
-  let isNewest = false;
-  let timeoutId : any = 0;
-
+	let navigationHappend = false;
+	let timeoutId: any = 0;
 
 	onMount(() => {
 		const buttonPrev = <HTMLButtonElement>document.querySelector('button#prev');
 		const buttonNext = <HTMLButtonElement>document.querySelector('button#next');
+		const buttonRandom = <HTMLButtonElement>document.querySelector('button#random');
+		const navHint = <HTMLSpanElement>document.querySelector('span#nav-hint');
+
+		navHint.addEventListener('click', () => {
+			console.log('click');
+
+			const actionsWrapper = <HTMLDivElement>document.querySelector('div#actions-wrapper');
+				actionsWrapper.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+			if (actionsWrapper.scrollLeft === 0) {
+				actionsWrapper.scrollTo({ left: actionsWrapper.scrollWidth, behavior: 'smooth' });
+			} else {
+				actionsWrapper.scrollTo({ left: 0, behavior: 'smooth' });
+			}
+		});
+
+		buttonRandom.addEventListener('click', () => {
+			redrawQuotes('random');
+		});
 
 		buttonPrev.addEventListener('click', () => {
-			navigatePrev();
+			if (navigationHappend) {
+				navigationHappend = false;
+			} else {
+				navigatePrev();
+			}
 		});
 
 		buttonNext.addEventListener('click', () => {
-      if (isNewest) {
-        isNewest = false;
-      } else {
-        navigateNext();
-      }
+			if (navigationHappend) {
+				navigationHappend = false;
+			} else {
+				navigateNext();
+			}
 		});
 
-    buttonNext.addEventListener('mousedown', function(e) {
-      timeoutId = setTimeout(navigateToNewest, 1000);
-      buttonNext.classList.toggle('animation-active');
-    });
+		buttonNext.addEventListener('mousedown', function (e) {
+			timeoutId = setTimeout(() => {redrawQuotes('newest')}, 1000);
+			buttonNext.classList.toggle('animation-inactive');
+		});
 
-    buttonNext.addEventListener('mouseup', function() {
-      clearTimeout(timeoutId);
-      if (buttonNext.classList.contains('animation-active')) {
-        buttonNext.classList.toggle('animation-active');
-      }
-    });
+		buttonNext.addEventListener('mouseup', function () {
+			clearTimeout(timeoutId);
+			if (!buttonNext.classList.contains('animation-inactive')) {
+				buttonNext.classList.toggle('animation-inactive');
+			}
+		});
 
-    buttonNext.addEventListener('touchstart', function() {
-      timeoutId = setTimeout(navigateToNewest, 1000);
-      buttonNext.classList.toggle('animation-active');
-    });
+		buttonNext.addEventListener('touchstart', function () {
+			timeoutId = setTimeout(() => {redrawQuotes('newest')}, 1000);
+			buttonNext.classList.toggle('animation-inactive');
+		});
 
-    buttonNext.addEventListener('touchend', function() {
-      clearTimeout(timeoutId);
-      if (buttonNext.classList.contains('animation-active')) {
-        buttonNext.classList.toggle('animation-active');
-      }
-    });
+		buttonNext.addEventListener('touchend', function () {
+			clearTimeout(timeoutId);
+			if (!buttonNext.classList.contains('animation-inactive')) {
+				buttonNext.classList.toggle('animation-inactive');
+			}
+		});
 
-    function navigateToNewest() {
-      console.log('navigateToNewest');
+		function redrawQuotes(type : string) {
+			let newQuotes = [];
+			let newCurrentCaruselQuoteIndex = currentCaruselQuoteIndex;
 
-      isNewest = true;
+			navigationHappend = true;
 
-      let newQuotes = [];
+			switch (type) {
+				case 'newest':
+					newQuotes.push(data[data.length - 1]);
+					newQuotes.push(data[0]);
+					newQuotes.push(data[1]);
+					newQuotes.push(data[data.length - 3]);
+					newQuotes.push(data[data.length - 2]);
+					break;
 
-      newQuotes.push(data[data.length - 1]);
-      newQuotes.push(data[0]);
-      newQuotes.push(data[1]);
-      newQuotes.push(data[data.length - 3]);
-      newQuotes.push(data[data.length - 2]);
-      
-      let newCurrentCaruselQuoteIndex = currentCaruselQuoteIndex;
-      currentQuotes.length = 0;
+				case 'oldest':
+					newQuotes.push(data[0]);
+					newQuotes.push(data[1]);
+					newQuotes.push(data[2]);
+					newQuotes.push(data[data.length - 2]);
+					newQuotes.push(data[data.length - 1]);
+					break;
 
-      newQuotes.forEach((quote) => {
-        if (newCurrentCaruselQuoteIndex < 4) {
-          newCurrentCaruselQuoteIndex++;
-        } else {
-          newCurrentCaruselQuoteIndex = 0;
-        }
+				case 'random':
+					let randomIndex = Math.floor(Math.random() * data.length);
+					
+					newQuotes.push(data[randomIndex]);
 
-        currentQuotes[newCurrentCaruselQuoteIndex] = quote;
-      });
+					if (randomIndex + 1 < data.length - 1 && randomIndex > 2) {
+						newQuotes.push(data[randomIndex + 1]);
+						newQuotes.push(data[randomIndex + 2]);
+						newQuotes.push(data[randomIndex - 2]);
+						newQuotes.push(data[randomIndex - 1]);
+					} else if (randomIndex < data.length - 1 && randomIndex > 2) {
+						newQuotes.push(data[randomIndex + 1]);
+						newQuotes.push(data[0]);
+						newQuotes.push(data[randomIndex - 2]);
+						newQuotes.push(data[randomIndex - 1]);
+					} else if (randomIndex === 2) {
+						newQuotes.push(data[randomIndex + 1]);
+						newQuotes.push(data[randomIndex + 2]);
+						newQuotes.push(data[0]);
+						newQuotes.push(data[1]);
+					} else if (randomIndex === 1) {
+						newQuotes.push(data[randomIndex + 1]);
+						newQuotes.push(data[randomIndex + 2]);
+						newQuotes.push(data[data.length - 1]);
+						newQuotes.push(data[0]);
+					} else if (randomIndex === 0) {
+						newQuotes.push(data[1]);
+						newQuotes.push(data[2]);
+						newQuotes.push(data[data.length - 2]);
+						newQuotes.push(data[data.length - 1]);
+					} else {
+						newQuotes.push(data[0]);
+						newQuotes.push(data[1]);
+						newQuotes.push(data[randomIndex - 2]);
+						newQuotes.push(data[randomIndex - 1]);
+					}
+					break;
+			}
 
-      navigateNext();
+			currentQuotes.length = 0;
 
-      if (buttonNext.classList.contains('animation-active')) {
-        buttonNext.classList.toggle('animation-active');
-      }
-    }
+			newQuotes.forEach((quote) => {
+				if (newCurrentCaruselQuoteIndex < 4) {
+					newCurrentCaruselQuoteIndex++;
+				} else {
+					newCurrentCaruselQuoteIndex = 0;
+				}
+
+				currentQuotes[newCurrentCaruselQuoteIndex] = quote;
+			});
+
+			navigateNext();
+
+			if (!buttonNext.classList.contains('animation-inactive')) {
+				buttonNext.classList.toggle('animation-inactive');
+			}
+		}
 	});
 
-  function navigatePrev() {
-    if (data.length > 4) {
-      slidePrev();
-      updateCurrentQuotes('prev');
-    } else {
-      showPrev();
-    }
-  }
+	function navigatePrev() {
+		if (data.length > 4) {
+			slidePrev();
+			updateCurrentQuotes('prev');
+		} else {
+			showPrev();
+		}
+	}
 
-  function navigateNext() {
-    if (data.length > 4) {
-      slideNext();
-      updateCurrentQuotes('next');
-    } else {
-      showNext();
-    }
-  }
+	function navigateNext() {
+		if (data.length > 4) {
+			slideNext();
+			updateCurrentQuotes('next');
+		} else {
+			showNext();
+		}
+	}
 
-  function onKeyDown(e : KeyboardEvent) {
-    switch(e.key) {
-      case 'ArrowLeft':
-        navigatePrev();
-        break;
-      case 'ArrowRight':
-          navigateNext();
-        break;
-        default:
-          break;
-    }
-  }
+	function onKeyDown(e: KeyboardEvent) {
+		switch (e.key) {
+			case 'ArrowLeft':
+				navigatePrev();
+				break;
+			case 'ArrowRight':
+				navigateNext();
+				break;
+			default:
+				break;
+		}
+	}
 
 	function slideNext() {
 		const outerLeftQuote = <HTMLDivElement>document.querySelector('.outer-left-quote'); // 1
@@ -350,9 +420,8 @@
 
 		singleQuote = data[currentQuoteIndex];
 	}
-
-
 </script>
+
 <Header title="Collection X" theme={Themes.PINK_GRADIENT} state={NavBarState.SUB} />
 <svelte:window on:keydown|preventDefault={onKeyDown} />
 <div class="quotes">
@@ -401,11 +470,13 @@
 	{/if}
 </div>
 
-<div class="actions-wrapper hint-active">
+<div id="actions-wrapper">
+	<span id="nav-hint"></span>
+
 	<div class="actions primary-actions">
-		<button class="default small" disabled={data.length === 0}><span class="icon-shuffle" /></button>
+		<button id="random" class="default small" disabled={data.length === 0}><span class="icon-shuffle" /></button>
 		<button id="prev" class="default" disabled={data.length === 0}><span class="icon-chevron-left" /></button>
-		<button id="next" class="default left-right-animation" disabled={data.length === 0}><span class="icon-chevron-right" /></button>
+		<button id="next" class="default left-right-animation animation-inactive" disabled={data.length === 0}><span class="icon-chevron-right" /></button>
 	</div>
 
 	<div class="actions secondary-actions">
@@ -422,81 +493,107 @@
 		overflow: hidden;
 	}
 
-  @keyframes translateXReset {
-  0%, 92%, 96%, 100% {
-      width: .75rem;
-  }
-  94%, 98% {
-      width: 1.5rem;
-  }
-}
-	.actions-wrapper {
-    position: relative;
+	@keyframes animateWidthPulse {
+		0%,
+		92%,
+		96%,
+		100% {
+			width: 0.75rem;
+		}
+		94%,
+		98% {
+			width: 1.5rem;
+		}
+	}
+
+	@keyframes animateNavigaionBump {
+		0%,
+		20%,
+		60%,
+		100% {
+			transform: translateX(0);
+		}
+		40%,
+		80% {
+			transform: translateX(-1rem);
+		}
+	}
+	#actions-wrapper {
+		position: relative;
 		display: flex;
 		overflow-x: scroll;
 		scroll-snap-type: x mandatory;
 
-    /* disable scrollbars */
-    -ms-overflow-style: none;  /* IE and Edge */
-    scrollbar-width: none; /* Firefox */
-    &::-webkit-scrollbar {
-      display: none; /* Chrome, Safari, Opera*/
-    }
+		/* disable scrollbars */
+		-ms-overflow-style: none; /* IE and Edge */
+		scrollbar-width: none; /* Firefox */
+		&::-webkit-scrollbar {
+			display: none; /* Chrome, Safari, Opera*/
+		}
 
-    &.hint-active::after {
-      content: "";
-      position: absolute;
-      right: 0;
-      top: 50%;
-      transform: translateY(-50%) translateX(50%);
-      display: block;
-      height: 2.5rem;
-      width: .75rem;
-      border-radius: .5rem;
-      background-color: var(--foreground);
-      box-shadow: var(--shadow);
-      animation: translateXReset 8s infinite;
-      opacity: .75;
-    }
+		#nav-hint {
+			position: absolute;
+			right: 0;
+			top: 50%;
+			transform: translateY(-50%) translateX(50%);
+			height: 2.5rem;
+			width: 2rem;
+
+			&::after {
+				content: '';
+				position: absolute;
+				right: 50%;
+				transform: translateX(50%);
+				display: block;
+				height: 100%;
+				border-radius: 0.5rem;
+				background-color: var(--foreground);
+				box-shadow: var(--shadow);
+				animation: animateWidthPulse 10s infinite;
+				opacity: 0.75;
+			}
+		}
 
 		.actions {
 			display: flex;
-      flex: 0 0 auto;
+			flex: 0 0 auto;
 			flex-direction: row;
 			flex-grow: 0;
 			padding: var(--app-padding-lr);
 			gap: 12px;
-      width: 100%;
-      scroll-snap-align: start;
+			width: 100%;
+			scroll-snap-align: start;
+			animation: animateNavigaionBump 1s linear 3s 1;
 
-      .left-right-animation {
-        position: relative;
-        overflow: hidden;
-        span {
-          position: relative;
-          z-index: 2;
-        }
-        &:before {
-          content: "";
-          position: absolute;
-          background: var(--green-gradient-90);
-          bottom: 0;
-          left: 0;
-          right: 100%;
-          top: 0;
-          z-index: 1;
-          transition-duration: 0.8s;
-        }
+			.left-right-animation {
+				position: relative;
+				overflow: hidden;
+				span {
+					position: relative;
+					z-index: 2;
 
-        &.animation-active:before {
-          right: 0;
-        }
-      }
+					color: var(--foreground);
+					mix-blend-mode: difference;
+				}
+				&:before {
+					content: '';
+					position: absolute;
+					background: var(--blue-gradient-90);
+					bottom: 0;
+					left: 0;
+					right: 0;
+					top: 0;
+					z-index: 1;
+					transition-delay: 0.2s;
+					transition-duration: 0.8s;
+				}
+
+				&.animation-inactive:before {
+					right: 100%;
+				}
+			}
 		}
 	}
-
-
-
 
 	.quote-wrapper {
 		position: absolute;
