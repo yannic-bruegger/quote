@@ -1,13 +1,20 @@
 <script lang="ts">
 	import Input from '../../components/input.svelte';
+  import { authenticate } from '../../api/api';
+  let username = '';
+  let password = '';
+  async function loginButtonPresses() {
+    const response = await authenticate(username, password);
+    console.log(response);
+  }
 </script>
 
 <div class="signin-container">
   <div class="contents">
     <h1 class="colored-text blue-gradient">Sign in</h1>
-    <Input autofocus="{true}" placeholder="Email"></Input>
-    <input type="password" placeholder="Password">
-    <button class="default">Login</button>
+    <input type="email" placeholder="Email" bind:value={username}/>
+    <input type="password" placeholder="Password" bind:value={password}/>
+    <button class="default" on:click={loginButtonPresses}>Login</button>
     <p>You don't have an account?<br><a href="/signup" class="colored-text blue-gradient">Register now</a></p>
   </div>
 </div>
