@@ -1,6 +1,7 @@
 <script lang="ts">
-	import { Themes, NavBarState } from "../constants";
+	import { Themes, NavBarState } from "$lib/constants";
 	import { goto } from '$app/navigation';
+	import user from '$lib/user'
 
 	export let title: string;
 	export let theme: Themes;
@@ -24,7 +25,7 @@
 
 	{#if state === NavBarState.MAIN}
 	<a href="/users/me">
-		<img src="https://randomuser.me/api/portraits/men/62.jpg" alt="user" />
+		<img src="{$user.profilePicture ? $user.profilePicture : `https://ui-avatars.com/api/?name=${$user?.displayName}`}" alt="user" />
 	</a>
 	{/if}
 </header>

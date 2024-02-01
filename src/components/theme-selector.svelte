@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { Themes } from "../constants";
+  import { Themes } from "$lib/constants";
   const themes = Object.values(Themes);
   export let userSelected = themes[0];
   export let theme: Themes = Themes.PINK_GRADIENT;

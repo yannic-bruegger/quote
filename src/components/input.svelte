@@ -3,7 +3,7 @@
 </script>
 
 <script lang="ts">
-	import { Themes } from '../constants';
+	import { Themes } from '$lib/constants';
 
   export let label: string | undefined;
   export let value: string = '';

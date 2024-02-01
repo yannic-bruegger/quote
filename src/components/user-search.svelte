@@ -1,6 +1,6 @@
 <script lang="ts">
-	import { Themes } from "../constants";
-	import type { Follower } from "../types";
+	import { Themes } from "$lib/constants";
+	import type { Follower } from "$lib/types";
   export let label: string = 'Label';
   export let theme: Themes = Themes.PINK_GRADIENT;
   let search = '';

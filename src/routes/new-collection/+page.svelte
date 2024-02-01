@@ -1,7 +1,7 @@
 <script lang="ts">
   import Header from "../../components/header.svelte";
-  import { Themes, NavBarState } from "../../constants";
-  import type { Collection } from "../../types";
+  import { Themes, NavBarState } from "$lib/constants";
+  import type { Collection } from "$lib/types";
   import CollectionComponent from "../../components/collection.svelte";
   import ThemeSelector from "../../components/theme-selector.svelte";
   import Input from "../../components/input.svelte";
@@ -9,29 +9,11 @@
 	import UserSearch from "../../components/user-search.svelte";
 
   let newCollection: Collection = {
+    id: undefined,
     name: '',
     theme: Themes.PINK_GRADIENT,
     quotes: [],
-    followers: [
-      { displayName: 'Yannic', email: "yannic.bruegger@gmail.com", username: "yannic", profilePicture: 'https://picsum.photos/300/300?random=1', isModerator: true },
-      { displayName: 'Jan', email: "jan@koll.de", username: "jan", profilePicture: 'https://picsum.photos/300/300?random=2', isModerator: false },
-      { displayName: 'Jan', email: "jan@koll.de", username: "jan", profilePicture: 'https://picsum.photos/300/300?random=2', isModerator: false },
-      { displayName: 'Jan', email: "jan@koll.de", username: "jan", profilePicture: 'https://picsum.photos/300/300?random=2', isModerator: false },
-      { displayName: 'Jan', email: "jan@koll.de", username: "jan", profilePicture: 'https://picsum.photos/300/300?random=2', isModerator: false },
-      { displayName: 'Jan', email: "jan@koll.de", username: "jan", profilePicture: 'https://picsum.photos/300/300?random=2', isModerator: false },
-      { displayName: 'Jan', email: "jan@koll.de", username: "jan", profilePicture: 'https://picsum.photos/300/300?random=2', isModerator: false },
-      { displayName: 'Jan', email: "jan@koll.de", username: "jan", profilePicture: 'https://picsum.photos/300/300?random=2', isModerator: false },
-      { displayName: 'Jan', email: "jan@koll.de", username: "jan", profilePicture: 'https://picsum.photos/300/300?random=2', isModerator: false },
-      { displayName: 'Jan', email: "jan@koll.de", username: "jan", profilePicture: 'https://picsum.photos/300/300?random=2', isModerator: false },
-      { displayName: 'Jan', email: "jan@koll.de", username: "jan", profilePicture: 'https://picsum.photos/300/300?random=2', isModerator: false },
-      { displayName: 'Jan', email: "jan@koll.de", username: "jan", profilePicture: 'https://picsum.photos/300/300?random=2', isModerator: false },
-      { displayName: 'Jan', email: "jan@koll.de", username: "jan", profilePicture: 'https://picsum.photos/300/300?random=2', isModerator: false },
-      { displayName: 'Jan', email: "jan@koll.de", username: "jan", profilePicture: 'https://picsum.photos/300/300?random=2', isModerator: false },
-      { displayName: 'Jan', email: "jan@koll.de", username: "jan", profilePicture: 'https://picsum.photos/300/300?random=2', isModerator: false },
-      { displayName: 'Jan', email: "jan@koll.de", username: "jan", profilePicture: 'https://picsum.photos/300/300?random=2', isModerator: false },
-      { displayName: 'Jan', email: "jan@koll.de", username: "jan", profilePicture: 'https://picsum.photos/300/300?random=2', isModerator: false },
-      { displayName: 'Jan', email: "jan@koll.de", username: "jan", profilePicture: 'https://picsum.photos/300/300?random=2', isModerator: false },
-    ],
+    followers: [],
   }
 </script>
 
