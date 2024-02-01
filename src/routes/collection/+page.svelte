@@ -17,6 +17,8 @@
 		{ id: 12, quote: 'Hello world 9!', quotedBy: 'Author 9' }
 	];
 
+	const quoteWrapperClasses = 'quote-wrapper not-delete'
+
 	// Start Index (altough traks index of current none carusel quote)
 	let currentQuoteIndex = 0;
 
@@ -48,16 +50,30 @@
 
 	let navigationHappend = false;
 	let timeoutId: any = 0;
+	let quoteActionClass = '';
+	let visuallyCenterQuote: HTMLDivElement;
 
 	onMount(() => {
+		const actionsWrapper = <HTMLDivElement>document.querySelector('div#actions-wrapper');
+		const confirmDismissActionsWrapper = <HTMLDivElement>document.querySelector('div#confirm-dismiss-actions-wrapper');
+		visuallyCenterQuote = <HTMLDivElement>document.querySelector('div.center-quote');
+
 		const buttonPrev = <HTMLButtonElement>document.querySelector('button#prev');
 		const buttonNext = <HTMLButtonElement>document.querySelector('button#next');
 		const buttonRandom = <HTMLButtonElement>document.querySelector('button#random');
+
 		const navHint = <HTMLSpanElement>document.querySelector('span#nav-hint');
 
-		navHint.addEventListener('click', () => {
-			console.log('click');
+		const buttonAdd = <HTMLButtonElement>document.querySelector('button#add');
+		const buttonEdit = <HTMLButtonElement>document.querySelector('button#edit');
+		const buttonDelete = <HTMLButtonElement>document.querySelector('button#delete');
 
+		const buttonDismiss = <HTMLButtonElement>document.querySelector('button#dismiss');
+		const buttonConfirm = <HTMLButtonElement>document.querySelector('button#confirm');
+
+		const deleteMessage = <HTMLDivElement>document.querySelector('div#delete-message');
+
+		navHint.addEventListener('click', () => {
 			const actionsWrapper = <HTMLDivElement>document.querySelector('div#actions-wrapper');
 				actionsWrapper.scrollIntoView({ behavior: 'smooth', block: 'center' });
 
@@ -110,6 +126,81 @@
 			if (!buttonNext.classList.contains('animation-inactive')) {
 				buttonNext.classList.toggle('animation-inactive');
 			}
+		});
+
+		buttonAdd.addEventListener('click', () => {
+			actionsWrapper.classList.toggle('visible');
+			confirmDismissActionsWrapper.classList.toggle('invisible');
+			quoteActionClass = 'add';
+		});
+
+		buttonEdit.addEventListener('click', () => {
+			actionsWrapper.classList.toggle('visible');
+			confirmDismissActionsWrapper.classList.toggle('invisible');
+			let editQuote = <HTMLInputElement>visuallyCenterQuote.querySelector('.quote .content');
+
+			if (editQuote) {
+				editQuote.setAttribute('contenteditable', 'true');
+				editQuote.focus();
+			}
+
+			console.log(editQuote);
+			
+
+
+			
+			quoteActionClass = 'edit';
+		});
+
+		buttonDelete.addEventListener('click', () => {
+			actionsWrapper.classList.toggle('visible');
+			confirmDismissActionsWrapper.classList.toggle('invisible');
+			visuallyCenterQuote.classList.toggle('not-delete');
+			deleteMessage.classList.toggle('invisible');
+			quoteActionClass = 'delete';
+		});
+
+		buttonDismiss.addEventListener('click', () => {
+			actionsWrapper.classList.toggle('visible');
+			confirmDismissActionsWrapper.classList.toggle('invisible');
+
+			switch (quoteActionClass) {
+				case 'add':
+					console.log('add');
+					break;
+				case 'edit':
+					console.log('edit');
+					break;
+				case 'delete':
+					console.log('delete');
+					visuallyCenterQuote.classList.toggle('not-delete');
+					deleteMessage.classList.toggle('invisible');
+					break;
+			}
+
+			quoteActionClass = '';
+		});
+
+		buttonConfirm.addEventListener('click', () => {
+			actionsWrapper.classList.toggle('visible');
+			confirmDismissActionsWrapper.classList.toggle('invisible');
+
+			switch (quoteActionClass) {
+				case 'add':
+					console.log('add');
+					break;
+				case 'edit':
+					console.log('edit');
+					break;
+				case 'delete':
+					console.log('delete');
+					visuallyCenterQuote.classList.toggle('not-delete');
+					deleteMessage.classList.toggle('invisible');
+					navigateNext();
+					break;
+			}
+
+			quoteActionClass = '';
 		});
 
 		function redrawQuotes(type : string) {
@@ -186,6 +277,8 @@
 				currentQuotes[newCurrentCaruselQuoteIndex] = quote;
 			});
 
+			// navigationHappend is needed to listen to next click
+			navigationHappend = false;
 			navigateNext();
 
 			if (!buttonNext.classList.contains('animation-inactive')) {
@@ -231,6 +324,7 @@
 		const centerQuote = <HTMLDivElement>document.querySelector('.center-quote'); // 3
 		const rightQuote = <HTMLDivElement>document.querySelector('.right-quote'); // 4
 		const outerRightQuote = <HTMLDivElement>document.querySelector('.outer-right-quote'); // 5
+		visuallyCenterQuote = rightQuote;
 
 		outerLeftQuote.classList.add('outer-right-quote');
 		outerLeftQuote.style.display = 'none';
@@ -276,6 +370,7 @@
 		const centerQuote = <HTMLDivElement>document.querySelector('.center-quote');
 		const rightQuote = <HTMLDivElement>document.querySelector('.right-quote');
 		const outerRightQuote = <HTMLDivElement>document.querySelector('.outer-right-quote');
+		visuallyCenterQuote = leftQuote;
 
 		outerLeftQuote.classList.add('left-quote');
 		outerLeftQuote.style.left = '-100%';
@@ -407,8 +502,6 @@
 		} else {
 			currentQuoteIndex = 0;
 		}
-
-		singleQuote = data[currentQuoteIndex];
 	}
 
 	function showPrev() {
@@ -427,50 +520,54 @@
 <div class="quotes">
 	{#if data.length > 4}
 		<div
-			class="outer-left-quote quote-wrapper"
+			class="outer-left-quote {quoteWrapperClasses}"
 			style="left: -200%; right: 200%; margin-right: -1rem;"
 		>
 			<Quote quote={currentQuotes[0].quote} quoted={currentQuotes[0].quotedBy} />
 		</div>
 
-		<div class="left-quote quote-wrapper" style="left: -100%; right: 100%; margin-right: -1rem;">
+		<div class="left-quote {quoteWrapperClasses}" style="left: -100%; right: 100%; margin-right: -1rem;">
 			<Quote quote={currentQuotes[1].quote} quoted={currentQuotes[1].quotedBy} />
 		</div>
 
-		<div class="center-quote quote-wrapper" style="left: 0; right: 0">
+		<div class="center-quote {quoteWrapperClasses}" style="left: 0; right: 0">
 			<Quote quote={currentQuotes[2].quote} quoted={currentQuotes[2].quotedBy} />
 		</div>
 
-		<div class="right-quote quote-wrapper" style="left: 100%; right: -100%; margin-left: -1rem;">
+		<div class="right-quote {quoteWrapperClasses}" style="left: 100%; right: -100%; margin-left: -1rem;">
 			<Quote quote={currentQuotes[3].quote} quoted={currentQuotes[3].quotedBy} />
 		</div>
 
 		<div
-			class="outer-right-quote quote-wrapper"
+			class="outer-right-quote {quoteWrapperClasses}"
 			style="left: 200%; right: -200%; margin-left: -1rem;"
 		>
 			<Quote quote={currentQuotes[4].quote} quoted={currentQuotes[4].quotedBy} />
 		</div>
 	{:else if data.length > 0}
-		<div class="left-quote quote-wrapper" style="left: -100%; right: 100%; margin-right: -1rem;">
+		<div class="left-quote {quoteWrapperClasses}" style="left: -100%; right: 100%; margin-right: -1rem;">
 			<Quote quote={''} quoted={''} />
 		</div>
 
-		<div class="center-quote quote-wrapper" style="left: 0; right: 0">
+		<div class="center-quote {quoteWrapperClasses}" style="left: 0; right: 0">
 			<Quote quote={singleQuote.quote} quoted={singleQuote.quotedBy} />
 		</div>
 
-		<div class="right-quote quote-wrapper" style="left: 100%; right: -100%; margin-left: -1rem;">
+		<div class="right-quote {quoteWrapperClasses}" style="left: 100%; right: -100%; margin-left: -1rem;">
 			<Quote quote={''} quoted={''} />
 		</div>
 	{:else}
-		<div class="center-quote quote-wrapper" style="left: 0; right: 0">
+		<div class="center-quote {quoteWrapperClasses}" style="left: 0; right: 0">
 			<p class="nothing-here">Looks like there are no quotes here yet. Be the first to add one!</p>
 		</div>
 	{/if}
+
+	<div id="delete-message" class="invisible">
+		<p class="pink-gradient colored-text"><b>Delete?</b> Are you sure?</p>
+	</div>
 </div>
 
-<div id="actions-wrapper">
+<div id="actions-wrapper" class="visible">
 	<span id="nav-hint"></span>
 
 	<div class="actions primary-actions">
@@ -480,9 +577,16 @@
 	</div>
 
 	<div class="actions secondary-actions">
-		<button class="default small"><span class="icon-plus" /></button>
-		<button class="default small"><span class="icon-edit" /></button>
-		<button class="default small"><span class="icon-delete pink-gradient colored-text" /></button>
+		<button id="add" class="default small"><span class="icon-plus" /></button>
+		<button id="edit" class="default small"><span class="icon-edit" /></button>
+		<button id="delete" class="default small"><span class="icon-delete pink-gradient colored-text" /></button>
+	</div>
+</div>
+
+<div id="confirm-dismiss-actions-wrapper" class="invisible">
+	<div class="actions">
+		<button id="dismiss" class="default"><span class="icon-dismiss pink-gradient colored-text"></span></button>
+		<button id="confirm" class="default"><span class="icon-check green-gradient colored-text"></span></button>
 	</div>
 </div>
 
@@ -518,8 +622,35 @@
 			transform: translateX(-1rem);
 		}
 	}
+
 	#actions-wrapper {
 		position: relative;
+		transition: opacity 250ms ease;
+		opacity: 0;
+
+		&.visible {
+			opacity: 1;
+		}
+
+		.actions {
+			animation: animateNavigaionBump 1s linear 3s 1;
+		}
+	}
+
+	#confirm-dismiss-actions-wrapper {
+		position: fixed;
+		bottom: -6rem;
+		left: 0;
+		right: 0;
+		
+		transition: bottom 250ms cubic-bezier(0, 0.5, 0.5, 1.25);
+
+		&:not(.invisible) {
+			bottom: 0;
+		}
+	}
+
+	#actions-wrapper, #confirm-dismiss-actions-wrapper {
 		display: flex;
 		overflow-x: scroll;
 		scroll-snap-type: x mandatory;
@@ -563,7 +694,6 @@
 			gap: 12px;
 			width: 100%;
 			scroll-snap-align: start;
-			animation: animateNavigaionBump 1s linear 3s 1;
 
 			.left-right-animation {
 				position: relative;
@@ -586,6 +716,7 @@
 					z-index: 1;
 					transition-delay: 0.2s;
 					transition-duration: 0.8s;
+					border-radius: var(--radius);
 				}
 
 				&.animation-inactive:before {
@@ -604,6 +735,7 @@
 		margin: var(--app-padding-lr);
 		display: flex;
 		box-sizing: border-box;
+		z-index: 1;
 
 		transition-duration: 200ms;
 		transition-property: all;
@@ -611,6 +743,40 @@
 
 		&:not(.center-quote) {
 			scale: 0.98;
+		}
+
+		&.center-quote {
+			&:not(.not-delete) {
+				scale: 0.95;
+				transform: translateY(-1.5rem);
+				&::after {
+					content: '';
+					position: absolute;
+					top: -.25rem;
+					right: -.25rem;
+					bottom: -.25rem;
+					left: -.25rem;
+					z-index: 1;
+					background: var(--pink-gradient);
+					border-radius: var(--radius);
+				}
+			}
+		}
+	}
+
+	#delete-message {
+		position: absolute;
+		bottom: .5rem;
+		left: 3rem;
+		right: 3rem;
+		text-align: center;
+		transform: translateY(-100%);
+		z-index: 0;
+		font-size: 1.125rem;
+		display: block;
+
+		&.invisible {
+			display: none;
 		}
 	}
 
@@ -620,16 +786,4 @@
 		color: var(--text-primary);
 		text-align: center;
 	}
-
-	// .quote-spacer {
-	//   min-width: 100px;
-	//   height: 100%;
-	//   display: block;
-	//   background-color: red;
-	//   border-radius: var(--radius);
-	//   background-color: var(--foreground);
-	//   background-image: url('/watermark.svg');
-	//   background-size: cover;
-	//   opacity: 0;
-	// }
 </style>

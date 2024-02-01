@@ -1,11 +1,13 @@
 <script lang="ts">
   export let quote: string;
   export let quoted: string;
+
+  let value = "Edit me";
 </script>
 
 <div class="quote">
-  <p class="content">{quote}</p>
-  <p class="quoted">{quoted}</p>
+  <p class="content" contenteditable="true" bind:textContent={quote}>{quote}</p>
+  <p class="quoted" contenteditable="true" bind:textContent={quoted}>{quoted}</p>
 </div>
 
 <style lang="scss">
@@ -22,6 +24,7 @@
     padding: 32px;
     min-width: 80vw;
     scroll-snap-align: center;
+    z-index: 2;
   }
 
   .content {
