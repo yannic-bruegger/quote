@@ -9,7 +9,8 @@ interface User {
   blocked:     boolean;
   createdAt:   Date;
   updatedAt:   Date;
-  displayname: string;
+  displayName: string;
+  profilePicture: string;
 }
 
 const user = writable<User | null>(null);

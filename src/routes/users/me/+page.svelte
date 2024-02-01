@@ -1,20 +1,16 @@
 <script lang="ts">
-  import { Themes } from "../../../constants";
-  import { NavBarState } from "../../../constants";
+  import { Themes } from "$lib/constants";
+  import { NavBarState } from "$lib/constants";
   import Input from "../../../components/input.svelte";
   import Header from "../../../components/header.svelte";
-  import type { User } from "../../../types";
+  import user from '$lib/user';
+	import { goto } from "$app/navigation";
 
   const theme = Themes.PINK_GRADIENT;
 
-  const me: User = {
-    displayName: 'Yannic',
-    email: 'yannic@bruegger.dev',
-    profilePicture: 'https://picsum.photos/300/300?random=1',
-    username: 'yannic',
-  }
-
   const passPlaceholder = "**********";
+
+  if (!$user) goto('/signin')
 </script>
 
 <Header
@@ -24,11 +20,11 @@
 ></Header>
 <div class="form-container">
   <div class="profile-picture-wrapper">
-    <img src={me.profilePicture} alt="That's me!">
+    <img src={$user.profilePicture ? $user.profilePicture : `https://ui-avatars.com/api/?name=${$user?.displayName}`} alt="That's me!">
   </div>
-  <Input label="Display Name" theme={theme} autofocus={false} placeholder="" bind:value={me.displayName}></Input>
-  <Input label="Email" theme={theme} autofocus={false} placeholder="" bind:value={me.email}></Input>
-  <Input label="Username" theme={theme} autofocus={false} placeholder="" bind:value={me.username}></Input>
+  <Input label="Display Name" theme={theme} autofocus={false} placeholder="" bind:value={$user.displayName}></Input>
+  <Input label="Email" theme={theme} autofocus={false} placeholder="" bind:value={$user.email}></Input>
+  <Input label="Username" theme={theme} autofocus={false} placeholder="" bind:value={$user.username}></Input>
   <Input label="Password" theme={theme} autofocus={false} placeholder="" value={passPlaceholder} readonly={true}></Input>
 </div>
 <div class="button-group">

@@ -1,6 +1,7 @@
 import type { Themes } from './constants';
 
 export type User = {
+  id: string
   username: string,
   email: string,
   displayName: string,
@@ -15,6 +16,7 @@ export type Quote = {
 }
 
 export type Collection = {
+  id: string | undefined
   name: string,
   theme: Themes,
   quotes: Array<Quote>,

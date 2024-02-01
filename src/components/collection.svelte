@@ -1,11 +1,15 @@
 <script lang="ts">
-	import { Themes } from "../constants";
+	import { Themes } from "$lib/constants";
 
   export let name: string = "Collection Name";
-  export let description: string = "Collection Description";
+  export let description: string = '';
   export let theme: Themes = Themes.BLUE_GRADIENT;
   export let showMenu: boolean = false;
-  export let link: string | null = "/collection";
+  export let id: string = '';
+  
+  let link: string= `/collections/${id}`;
+
+  if (!theme) theme = Themes.BLUE_GRADIENT;
 </script>
 
 <a href={link}>
@@ -35,6 +39,7 @@
     border-radius: var(--radius);
     background-color: var(--foreground);
     box-shadow: var(--shadow);
+    min-height: 70px;
   }
 
   .color-indicator {
@@ -45,6 +50,9 @@
   }
 
   .details {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
     flex-grow: 1;
     h1 {
       font-size: 20px;

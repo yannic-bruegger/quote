@@ -1,7 +1,22 @@
-<script>
+<script lang="ts">
+  import { onMount } from 'svelte';
   import Collection from "../components/collection.svelte";
   import Header from "../components/header.svelte";
-	import { Themes, NavBarState } from "../constants";
+	import { Themes, NavBarState } from "$lib/constants";
+  import { getMyCollections } from '$lib/api'
+
+  let ownedCollections: Array<Collection> = [];
+  let moderatedCollections: Array<Collection> = [];
+  let followedCollections: Array<Collection> = [];
+
+  onMount(async () => {
+    const bearerToken = localStorage.getItem('token');
+    if (!bearerToken) throw Error('Could not load bearer token from local storage.')
+    const {owns, moderates, follows} = await getMyCollections(bearerToken)
+    ownedCollections = owns;
+    moderatedCollections = moderates;
+    followedCollections = follows
+  })
 </script>
 
 <Header
@@ -12,22 +27,30 @@
 </Header>
 <div class="collection-container">
   <div class="collections">
-    <Collection
-      name="XYZ"
-      description="12 Quotes"
-      theme={Themes.GREEN_GRADIENT}
-      showMenu
-    ></Collection>
-    <Collection
-      name="XYZ"
-      description="12 Quotes"
-      theme={Themes.GREEN_GRADIENT}
-    ></Collection>
-    <Collection
-      name="XYZ"
-      description="12 Quotes"
-      theme={Themes.GREEN_GRADIENT}
-    ></Collection>
+    {#each ownedCollections as ownedCollection }
+      <Collection
+        id="{ownedCollection.id}"
+        name="{ownedCollection.name}"
+        theme={ownedCollection.theme}
+        showMenu
+      ></Collection>
+    {/each}
+    {#each moderatedCollections as moderatedCollection }
+      <Collection
+        id="{moderatedCollection.id}"
+        name="{moderatedCollection.name}"
+        description="12 Quotes"
+        theme={moderatedCollection.theme}
+      ></Collection>
+    {/each}
+    {#each followedCollections as followedCollection }
+      <Collection
+        id="{followedCollection.id}"
+        name="{followedCollection.name}"
+        description="12 Quotes"
+        theme={followedCollection.theme}
+      ></Collection>
+    {/each}
   </div>
 
   <div class="actions">
