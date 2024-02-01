@@ -1,11 +1,14 @@
 <script lang="ts">
-	import Input from '../../components/input.svelte';
-  import { authenticate } from '../../api/api';
+	import { goto } from '$app/navigation'
+  import { authenticate, getOwnUser } from '$lib/api';
+  import user from '$lib/user' 
   let username = '';
   let password = '';
   async function loginButtonPresses() {
     const response = await authenticate(username, password);
-    console.log(response);
+    localStorage.setItem('token', response.jwt);
+    $user = response.user;
+    goto('/');
   }
 </script>
 

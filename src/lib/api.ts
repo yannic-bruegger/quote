@@ -12,7 +12,21 @@ export async function authenticate(username: string, password: string) {
     }),
   });
 
-  if(reply.status === 400) throw Error(reply.statusText);
+  if (!reply.ok) throw Error(reply.statusText);
+  const data = await reply.json();
+  return data;
+}
+
+export async function getOwnUser(bearerToken: string) {
+  const reply = await fetch(`${PUBLIC_API_URL}/users/me`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${bearerToken}`
+    },
+  })
+
+  if (!reply.ok) throw Error(reply.statusText);
   const data = await reply.json();
   return data;
 }
