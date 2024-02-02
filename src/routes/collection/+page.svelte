@@ -17,7 +17,8 @@
 		{ id: 12, quote: 'Hello world 9!', quotedBy: 'Author 9' }
 	];
 
-	const quoteWrapperClasses = 'quote-wrapper not-delete'
+	
+	const quoteWrapperClasses = 'quote-wrapper not-delete not-editable not-add';
 
 	// Start Index (altough traks index of current none carusel quote)
 	let currentQuoteIndex = 0;
@@ -132,17 +133,20 @@
 		buttonAdd.addEventListener('click', () => {
 			actionsWrapper.classList.toggle('visible');
 			confirmDismissActionsWrapper.classList.toggle('invisible');
+			visuallyCenterQuote.classList.toggle('not-add');
+
+			editedQuote = visuallyCenterQuote.cloneNode(true) as HTMLDivElement;
+			editableContentOnOff(true, 'add');
 			quoteActionClass = 'add';
 		});
 
 		buttonEdit.addEventListener('click', () => {
 			actionsWrapper.classList.toggle('visible');
 			confirmDismissActionsWrapper.classList.toggle('invisible');
+			visuallyCenterQuote.classList.toggle('not-editable');
 
 			editedQuote = visuallyCenterQuote.cloneNode(true) as HTMLDivElement;
-			
 			editableContentOnOff(true);
-			
 			quoteActionClass = 'edit';
 		});
 
@@ -160,15 +164,23 @@
 
 			switch (quoteActionClass) {
 				case 'add':
+					editableContentOnOff(false);
+
+					visuallyCenterQuote = <HTMLDivElement>document.querySelector('.center-quote');
+					visuallyCenterQuote.replaceWith(editedQuote);
+					visuallyCenterQuote = <HTMLDivElement>document.querySelector('.center-quote');
+						
+					visuallyCenterQuote.classList.toggle('not-add');
 					console.log('add');
 					break;
 				case 'edit':
 					editableContentOnOff(false);
 					
-					visuallyCenterQuote = <HTMLDivElement>document.querySelector('.center-quote') 
+					visuallyCenterQuote = <HTMLDivElement>document.querySelector('.center-quote');
 					visuallyCenterQuote.replaceWith(editedQuote);
-					visuallyCenterQuote = <HTMLDivElement>document.querySelector('.center-quote') 
-					
+					visuallyCenterQuote = <HTMLDivElement>document.querySelector('.center-quote');
+
+					visuallyCenterQuote.classList.toggle('not-editable');
 					console.log('edit');
 					break;
 				case 'delete':
@@ -187,10 +199,13 @@
 
 			switch (quoteActionClass) {
 				case 'add':
+					editableContentOnOff(false);
+					visuallyCenterQuote.classList.toggle('not-add');
 					console.log('add');
 					break;
 				case 'edit':
 					editableContentOnOff(false);
+					visuallyCenterQuote.classList.toggle('not-editable');
 					console.log('edit');
 					break;
 				case 'delete':
@@ -204,7 +219,7 @@
 			quoteActionClass = '';
 		});
 
-		function editableContentOnOff(state: boolean) {
+		function editableContentOnOff(state: boolean, type?: string) {
 			let editQuote = <HTMLInputElement>visuallyCenterQuote.querySelector('.quote .content');
 			let editQuoted = <HTMLInputElement>visuallyCenterQuote.querySelector('.quote .quoted');
 
@@ -212,6 +227,12 @@
 				editQuote.setAttribute('contenteditable', state ? 'true' : 'false');
 				editQuoted.setAttribute('contenteditable', state ? 'true' : 'false');
 				editQuote.focus();
+			}
+
+			if (type === 'add') {
+				editQuote.textContent = '';
+				editQuoted.textContent = '';
+				editQuote.placeholder = 'Quote';
 			}
 		}
 
@@ -745,9 +766,9 @@
 		}
 
 		&.center-quote {
-			&:not(.not-delete) {
+
+			&:not(.not-delete), &:not(.not-editable), &:not(.not-add) {
 				scale: 0.95;
-				transform: translateY(-1.5rem);
 				&::after {
 					content: '';
 					position: absolute;
@@ -756,8 +777,26 @@
 					bottom: -.25rem;
 					left: -.25rem;
 					z-index: 1;
-					background: var(--pink-gradient);
 					border-radius: var(--radius);
+				}
+
+			}
+
+			&:not(.not-add) {
+				&::after {
+					background: var(--green-gradient);
+				}
+			}
+
+			&:not(.not-editable) {
+				&::after {
+					background: var(--blue-gradient);
+				}
+			}
+			&:not(.not-delete) {
+				transform: translateY(-1.5rem);
+				&::after {
+					background: var(--pink-gradient);
 				}
 			}
 		}
