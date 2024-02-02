@@ -1,13 +1,11 @@
 <script lang="ts">
   export let quote: string;
   export let quoted: string;
-
-  let value = "Edit me";
 </script>
 
 <div class="quote">
-  <p class="content" contenteditable="true" bind:textContent={quote}>{quote}</p>
-  <p class="quoted" contenteditable="true" bind:textContent={quoted}>{quoted}</p>
+  <p class="content" contenteditable="false" bind:textContent={quote}>{quote}</p>
+  <p class="quoted" contenteditable="false" bind:textContent={quoted}>{quoted}</p> 
 </div>
 
 <style lang="scss">

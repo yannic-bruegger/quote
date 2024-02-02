@@ -43,6 +43,7 @@
 	let timeoutId: any = 0;
 	let quoteActionClass = '';
 	let visuallyCenterQuote: HTMLDivElement;
+	let editedQuote: HTMLDivElement;
 
 	onMount(() => {
 		const actionsWrapper = <HTMLDivElement>document.querySelector('div#actions-wrapper');
@@ -128,17 +129,10 @@
 		buttonEdit.addEventListener('click', () => {
 			actionsWrapper.classList.toggle('visible');
 			confirmDismissActionsWrapper.classList.toggle('invisible');
-			let editQuote = <HTMLInputElement>visuallyCenterQuote.querySelector('.quote .content');
 
-			if (editQuote) {
-				editQuote.setAttribute('contenteditable', 'true');
-				editQuote.focus();
-			}
-
-			console.log(editQuote);
+			editedQuote = visuallyCenterQuote.cloneNode(true) as HTMLDivElement;
 			
-
-
+			editableContentOnOff(true);
 			
 			quoteActionClass = 'edit';
 		});
@@ -160,6 +154,12 @@
 					console.log('add');
 					break;
 				case 'edit':
+					editableContentOnOff(false);
+					
+					visuallyCenterQuote = <HTMLDivElement>document.querySelector('.center-quote') 
+					visuallyCenterQuote.replaceWith(editedQuote);
+					visuallyCenterQuote = <HTMLDivElement>document.querySelector('.center-quote') 
+					
 					console.log('edit');
 					break;
 				case 'delete':
@@ -181,6 +181,7 @@
 					console.log('add');
 					break;
 				case 'edit':
+					editableContentOnOff(false);
 					console.log('edit');
 					break;
 				case 'delete':
@@ -193,6 +194,17 @@
 
 			quoteActionClass = '';
 		});
+
+		function editableContentOnOff(state: boolean) {
+			let editQuote = <HTMLInputElement>visuallyCenterQuote.querySelector('.quote .content');
+			let editQuoted = <HTMLInputElement>visuallyCenterQuote.querySelector('.quote .quoted');
+
+			if (editQuote && editQuoted) {
+				editQuote.setAttribute('contenteditable', state ? 'true' : 'false');
+				editQuoted.setAttribute('contenteditable', state ? 'true' : 'false');
+				editQuote.focus();
+			}
+		}
 
 		function redrawQuotes(type : string) {
 			let newQuotes = [];
@@ -293,19 +305,6 @@
 			updateCurrentQuotes('next');
 		} else {
 			showNext();
-		}
-	}
-
-	function onKeyDown(e: KeyboardEvent) {
-		switch (e.key) {
-			case 'ArrowLeft':
-				navigatePrev();
-				break;
-			case 'ArrowRight':
-				navigateNext();
-				break;
-			default:
-				break;
 		}
 	}
 
@@ -507,7 +506,7 @@
 </script>
 
 <Header title="Collection X" theme={Themes.PINK_GRADIENT} state={NavBarState.SUB} />
-<svelte:window on:keydown|preventDefault={onKeyDown} />
+
 <div class="quotes">
 	{#if data.length > 4}
 		<div
