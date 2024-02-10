@@ -3,10 +3,33 @@
 	import Quote from '../../../components/quote.svelte';
 	import Header from '../../../components/header.svelte';
 	import { Themes, NavBarState } from '$lib/constants';
+	import { getQuotesOfCollection } from '$lib/api'
 
-	export let data;
+	import type { PageData } from './$types';
+	
+	export let data: PageData;
 
-	let quotes = [];
+	function initCurrentQuotes(quotes: any, startIndex: number) {
+		console.log(quotes, startIndex);
+		
+		if (quotes.length > 4) {
+			for (let i = -2; i <= 2; i++) {
+				let index = startIndex + i;
+
+				if (index < 0) {
+					index += quotes.length;
+				} else if (index >= quotes.length) {
+					index -= quotes.length;
+				}
+
+				currentQuotes.push(quotes[index]);
+			}
+		} else {
+			singleQuote = quotes[startIndex];
+		}
+	}
+	
+	const quoteWrapperClasses = 'quote-wrapper not-delete not-editable not-add';
 
 	// Start Index (altough traks index of current none carusel quote)
 	let currentQuoteIndex = 0;
@@ -18,37 +41,42 @@
 	let currentQuotes: any[] = [];
 	let currentCaruselQuoteIndex = 2;
 
-	initCurrentQuotes(quotes, currentQuoteIndex);
-	function initCurrentQuotes(data: any, startIndex: number) {
-		if (data.length > 4) {
-			for (let i = -2; i <= 2; i++) {
-				let index = startIndex + i;
-
-				if (index < 0) {
-					index += data.length;
-				} else if (index >= data.length) {
-					index -= data.length;
-				}
-
-				currentQuotes.push(data[index]);
-			}
-		} else {
-			singleQuote = data[startIndex];
-		}
-	}
-
 	let navigationHappend = false;
 	let timeoutId: any = 0;
+	let quoteActionClass = '';
+	let visuallyCenterQuote: HTMLDivElement;
+	let editedQuote: HTMLDivElement;
 
-	onMount(() => {
+	let quotes: any[] = [];
+
+	onMount(async () => {
+
+		quotes = await getQuotesOfCollection(data.id);
+
+		currentQuoteIndex = Math.round(Math.random() * quotes.length);
+
+		initCurrentQuotes(quotes, currentQuoteIndex);
+		
+		const actionsWrapper = <HTMLDivElement>document.querySelector('div#actions-wrapper');
+		const confirmDismissActionsWrapper = <HTMLDivElement>document.querySelector('div#confirm-dismiss-actions-wrapper');
+		visuallyCenterQuote = <HTMLDivElement>document.querySelector('div.center-quote');
+
 		const buttonPrev = <HTMLButtonElement>document.querySelector('button#prev');
 		const buttonNext = <HTMLButtonElement>document.querySelector('button#next');
 		const buttonRandom = <HTMLButtonElement>document.querySelector('button#random');
+
 		const navHint = <HTMLSpanElement>document.querySelector('span#nav-hint');
 
-		navHint.addEventListener('click', () => {
-			console.log('click');
+		const buttonAdd = <HTMLButtonElement>document.querySelector('button#add');
+		const buttonEdit = <HTMLButtonElement>document.querySelector('button#edit');
+		const buttonDelete = <HTMLButtonElement>document.querySelector('button#delete');
 
+		const buttonDismiss = <HTMLButtonElement>document.querySelector('button#dismiss');
+		const buttonConfirm = <HTMLButtonElement>document.querySelector('button#confirm');
+
+		const deleteMessage = <HTMLDivElement>document.querySelector('div#delete-message');
+
+		navHint.addEventListener('click', () => {
 			const actionsWrapper = <HTMLDivElement>document.querySelector('div#actions-wrapper');
 				actionsWrapper.scrollIntoView({ behavior: 'smooth', block: 'center' });
 
@@ -103,6 +131,112 @@
 			}
 		});
 
+		buttonAdd.addEventListener('click', () => {
+			actionsWrapper.classList.toggle('visible');
+			confirmDismissActionsWrapper.classList.toggle('invisible');
+			visuallyCenterQuote.classList.toggle('not-add');
+
+			editedQuote = visuallyCenterQuote.cloneNode(true) as HTMLDivElement;
+			editableContentOnOff(true, 'add');
+			quoteActionClass = 'add';
+		});
+
+		buttonEdit.addEventListener('click', () => {
+			actionsWrapper.classList.toggle('visible');
+			confirmDismissActionsWrapper.classList.toggle('invisible');
+			visuallyCenterQuote.classList.toggle('not-editable');
+
+			editedQuote = visuallyCenterQuote.cloneNode(true) as HTMLDivElement;
+			editableContentOnOff(true);
+			quoteActionClass = 'edit';
+		});
+
+		buttonDelete.addEventListener('click', () => {
+			actionsWrapper.classList.toggle('visible');
+			confirmDismissActionsWrapper.classList.toggle('invisible');
+			visuallyCenterQuote.classList.toggle('not-delete');
+			deleteMessage.classList.toggle('invisible');
+			quoteActionClass = 'delete';
+		});
+
+		buttonDismiss.addEventListener('click', () => {
+			actionsWrapper.classList.toggle('visible');
+			confirmDismissActionsWrapper.classList.toggle('invisible');
+
+			switch (quoteActionClass) {
+				case 'add':
+					editableContentOnOff(false);
+
+					visuallyCenterQuote = <HTMLDivElement>document.querySelector('.center-quote');
+					visuallyCenterQuote.replaceWith(editedQuote);
+					visuallyCenterQuote = <HTMLDivElement>document.querySelector('.center-quote');
+						
+					visuallyCenterQuote.classList.toggle('not-add');
+					console.log('add');
+					break;
+				case 'edit':
+					editableContentOnOff(false);
+					
+					visuallyCenterQuote = <HTMLDivElement>document.querySelector('.center-quote');
+					visuallyCenterQuote.replaceWith(editedQuote);
+					visuallyCenterQuote = <HTMLDivElement>document.querySelector('.center-quote');
+
+					visuallyCenterQuote.classList.toggle('not-editable');
+					console.log('edit');
+					break;
+				case 'delete':
+					console.log('delete');
+					visuallyCenterQuote.classList.toggle('not-delete');
+					deleteMessage.classList.toggle('invisible');
+					break;
+			}
+
+			quoteActionClass = '';
+		});
+
+		buttonConfirm.addEventListener('click', () => {
+			actionsWrapper.classList.toggle('visible');
+			confirmDismissActionsWrapper.classList.toggle('invisible');
+
+			switch (quoteActionClass) {
+				case 'add':
+					editableContentOnOff(false);
+					visuallyCenterQuote.classList.toggle('not-add');
+					console.log('add');
+					break;
+				case 'edit':
+					editableContentOnOff(false);
+					visuallyCenterQuote.classList.toggle('not-editable');
+					console.log('edit');
+					break;
+				case 'delete':
+					console.log('delete');
+					visuallyCenterQuote.classList.toggle('not-delete');
+					deleteMessage.classList.toggle('invisible');
+					navigateNext();
+					break;
+			}
+
+			quoteActionClass = '';
+		});
+
+		function editableContentOnOff(state: boolean, type?: string) {
+			let editQuote = <HTMLInputElement>visuallyCenterQuote.querySelector('.quote .content');
+			let editQuoted = <HTMLInputElement>visuallyCenterQuote.querySelector('.quote .quoted');
+
+			if (editQuote && editQuoted) {
+				editQuote.setAttribute('contenteditable', state ? 'true' : 'false');
+				editQuoted.setAttribute('contenteditable', state ? 'true' : 'false');
+				editQuote.focus();
+			}
+
+			if (type === 'add') {
+				editQuote.textContent = '';
+				editQuoted.textContent = '';
+				editQuote.placeholder = 'Quote';
+			}
+		}
+
 		function redrawQuotes(type : string) {
 			let newQuotes = [];
 			let newCurrentCaruselQuoteIndex = currentCaruselQuoteIndex;
@@ -111,56 +245,56 @@
 
 			switch (type) {
 				case 'newest':
-					newQuotes.push(data[data.length - 1]);
-					newQuotes.push(data[0]);
-					newQuotes.push(data[1]);
-					newQuotes.push(data[data.length - 3]);
-					newQuotes.push(data[data.length - 2]);
+					newQuotes.push(quotes[quotes.length - 1]);
+					newQuotes.push(quotes[0]);
+					newQuotes.push(quotes[1]);
+					newQuotes.push(quotes[quotes.length - 3]);
+					newQuotes.push(quotes[quotes.length - 2]);
 					break;
 
 				case 'oldest':
-					newQuotes.push(data[0]);
-					newQuotes.push(data[1]);
-					newQuotes.push(data[2]);
-					newQuotes.push(data[data.length - 2]);
-					newQuotes.push(data[data.length - 1]);
+					newQuotes.push(quotes[0]);
+					newQuotes.push(quotes[1]);
+					newQuotes.push(quotes[2]);
+					newQuotes.push(quotes[quotes.length - 2]);
+					newQuotes.push(quotes[quotes.length - 1]);
 					break;
 
 				case 'random':
-					let randomIndex = Math.floor(Math.random() * data.length);
+					let randomIndex = Math.floor(Math.random() * quotes.length);
 					
-					newQuotes.push(data[randomIndex]);
+					newQuotes.push(quotes[randomIndex]);
 
-					if (randomIndex + 1 < data.length - 1 && randomIndex > 2) {
-						newQuotes.push(data[randomIndex + 1]);
-						newQuotes.push(data[randomIndex + 2]);
-						newQuotes.push(data[randomIndex - 2]);
-						newQuotes.push(data[randomIndex - 1]);
-					} else if (randomIndex < data.length - 1 && randomIndex > 2) {
-						newQuotes.push(data[randomIndex + 1]);
-						newQuotes.push(data[0]);
-						newQuotes.push(data[randomIndex - 2]);
-						newQuotes.push(data[randomIndex - 1]);
+					if (randomIndex + 1 < quotes.length - 1 && randomIndex > 2) {
+						newQuotes.push(quotes[randomIndex + 1]);
+						newQuotes.push(quotes[randomIndex + 2]);
+						newQuotes.push(quotes[randomIndex - 2]);
+						newQuotes.push(quotes[randomIndex - 1]);
+					} else if (randomIndex < quotes.length - 1 && randomIndex > 2) {
+						newQuotes.push(quotes[randomIndex + 1]);
+						newQuotes.push(quotes[0]);
+						newQuotes.push(quotes[randomIndex - 2]);
+						newQuotes.push(quotes[randomIndex - 1]);
 					} else if (randomIndex === 2) {
-						newQuotes.push(data[randomIndex + 1]);
-						newQuotes.push(data[randomIndex + 2]);
-						newQuotes.push(data[0]);
-						newQuotes.push(data[1]);
+						newQuotes.push(quotes[randomIndex + 1]);
+						newQuotes.push(quotes[randomIndex + 2]);
+						newQuotes.push(quotes[0]);
+						newQuotes.push(quotes[1]);
 					} else if (randomIndex === 1) {
-						newQuotes.push(data[randomIndex + 1]);
-						newQuotes.push(data[randomIndex + 2]);
-						newQuotes.push(data[data.length - 1]);
-						newQuotes.push(data[0]);
+						newQuotes.push(quotes[randomIndex + 1]);
+						newQuotes.push(quotes[randomIndex + 2]);
+						newQuotes.push(quotes[quotes.length - 1]);
+						newQuotes.push(quotes[0]);
 					} else if (randomIndex === 0) {
-						newQuotes.push(data[1]);
-						newQuotes.push(data[2]);
-						newQuotes.push(data[data.length - 2]);
-						newQuotes.push(data[data.length - 1]);
+						newQuotes.push(quotes[1]);
+						newQuotes.push(quotes[2]);
+						newQuotes.push(quotes[quotes.length - 2]);
+						newQuotes.push(quotes[quotes.length - 1]);
 					} else {
-						newQuotes.push(data[0]);
-						newQuotes.push(data[1]);
-						newQuotes.push(data[randomIndex - 2]);
-						newQuotes.push(data[randomIndex - 1]);
+						newQuotes.push(quotes[0]);
+						newQuotes.push(quotes[1]);
+						newQuotes.push(quotes[randomIndex - 2]);
+						newQuotes.push(quotes[randomIndex - 1]);
 					}
 					break;
 			}
@@ -177,6 +311,8 @@
 				currentQuotes[newCurrentCaruselQuoteIndex] = quote;
 			});
 
+			// navigationHappend is needed to listen to next click
+			navigationHappend = false;
 			navigateNext();
 
 			if (!buttonNext.classList.contains('animation-inactive')) {
@@ -186,7 +322,7 @@
 	});
 
 	function navigatePrev() {
-		if (data.length > 4) {
+		if (quotes.length > 4) {
 			slidePrev();
 			updateCurrentQuotes('prev');
 		} else {
@@ -195,24 +331,11 @@
 	}
 
 	function navigateNext() {
-		if (data.length > 4) {
+		if (quotes.length > 4) {
 			slideNext();
 			updateCurrentQuotes('next');
 		} else {
 			showNext();
-		}
-	}
-
-	function onKeyDown(e: KeyboardEvent) {
-		switch (e.key) {
-			case 'ArrowLeft':
-				navigatePrev();
-				break;
-			case 'ArrowRight':
-				navigateNext();
-				break;
-			default:
-				break;
 		}
 	}
 
@@ -222,6 +345,7 @@
 		const centerQuote = <HTMLDivElement>document.querySelector('.center-quote'); // 3
 		const rightQuote = <HTMLDivElement>document.querySelector('.right-quote'); // 4
 		const outerRightQuote = <HTMLDivElement>document.querySelector('.outer-right-quote'); // 5
+		visuallyCenterQuote = rightQuote;
 
 		outerLeftQuote.classList.add('outer-right-quote');
 		outerLeftQuote.style.display = 'none';
@@ -267,6 +391,7 @@
 		const centerQuote = <HTMLDivElement>document.querySelector('.center-quote');
 		const rightQuote = <HTMLDivElement>document.querySelector('.right-quote');
 		const outerRightQuote = <HTMLDivElement>document.querySelector('.outer-right-quote');
+		visuallyCenterQuote = leftQuote;
 
 		outerLeftQuote.classList.add('left-quote');
 		outerLeftQuote.style.left = '-100%';
@@ -342,10 +467,10 @@
 					break;
 			}
 
-			if (data.indexOf(currentQuotes[lastQuoteIndex]) < data.length - 1) {
-				newQuote = data[data.indexOf(currentQuotes[lastQuoteIndex]) + 1];
+			if (quotes.indexOf(currentQuotes[lastQuoteIndex]) < quotes.length - 1) {
+				newQuote = quotes[quotes.indexOf(currentQuotes[lastQuoteIndex]) + 1];
 			} else {
-				newQuote = data[0];
+				newQuote = quotes[0];
 			}
 
 			currentQuotes[nextQuoteIndex] = newQuote;
@@ -382,10 +507,10 @@
 					break;
 			}
 
-			if (data.indexOf(currentQuotes[firstQuoteIndex]) > 0) {
-				newQuote = data[data.indexOf(currentQuotes[firstQuoteIndex]) - 1];
+			if (quotes.indexOf(currentQuotes[firstQuoteIndex]) > 0) {
+				newQuote = quotes[quotes.indexOf(currentQuotes[firstQuoteIndex]) - 1];
 			} else {
-				newQuote = data[data.length - 1];
+				newQuote = quotes[quotes.length - 1];
 			}
 
 			currentQuotes[prevQuoteIndex] = newQuote;
@@ -393,87 +518,100 @@
 	}
 
 	function showNext() {
-		if (currentQuoteIndex < data.length - 1) {
+		if (currentQuoteIndex < quotes.length - 1) {
 			currentQuoteIndex++;
 		} else {
 			currentQuoteIndex = 0;
 		}
-
-		singleQuote = data[currentQuoteIndex];
 	}
 
 	function showPrev() {
 		if (currentQuoteIndex > 0) {
 			currentQuoteIndex--;
 		} else {
-			currentQuoteIndex = data.length - 1;
+			currentQuoteIndex = quotes.length - 1;
 		}
 
-		singleQuote = data[currentQuoteIndex];
+		singleQuote = quotes[currentQuoteIndex];
 	}
 </script>
 
 <Header title="Collection X" theme={Themes.PINK_GRADIENT} state={NavBarState.SUB} />
-<svelte:window on:keydown|preventDefault={onKeyDown} />
+
 <div class="quotes">
-	{#if data.length > 4}
-		<div
-			class="outer-left-quote quote-wrapper"
-			style="left: -200%; right: 200%; margin-right: -1rem;"
-		>
-			<Quote quote={currentQuotes[0].quote} quoted={currentQuotes[0].quotedBy} />
-		</div>
+	{#if quotes}
+		{#if quotes.length > 4}
+			<div
+				class="outer-left-quote {quoteWrapperClasses}"
+				style="left: -200%; right: 200%; margin-right: -1rem;"
+			>
+				<Quote quote={currentQuotes[0].attributes.content} quoted={currentQuotes[0].attributes.quoted} />
+			</div>
 
-		<div class="left-quote quote-wrapper" style="left: -100%; right: 100%; margin-right: -1rem;">
-			<Quote quote={currentQuotes[1].quote} quoted={currentQuotes[1].quotedBy} />
-		</div>
+			<div class="left-quote {quoteWrapperClasses}" style="left: -100%; right: 100%; margin-right: -1rem;">
+				<Quote quote={currentQuotes[1].attributes.content} quoted={currentQuotes[1].attributes.quoted} />
+			</div>
 
-		<div class="center-quote quote-wrapper" style="left: 0; right: 0">
-			<Quote quote={currentQuotes[2].quote} quoted={currentQuotes[2].quotedBy} />
-		</div>
+			<div class="center-quote {quoteWrapperClasses}" style="left: 0; right: 0">
+				<Quote quote={currentQuotes[2].attributes.content} quoted={currentQuotes[2].attributes.quoted} />
+			</div>
 
-		<div class="right-quote quote-wrapper" style="left: 100%; right: -100%; margin-left: -1rem;">
-			<Quote quote={currentQuotes[3].quote} quoted={currentQuotes[3].quotedBy} />
-		</div>
+			<div class="right-quote {quoteWrapperClasses}" style="left: 100%; right: -100%; margin-left: -1rem;">
+				<Quote quote={currentQuotes[3].attributes.content} quoted={currentQuotes[3].attributes.quoted} />
+			</div>
 
-		<div
-			class="outer-right-quote quote-wrapper"
-			style="left: 200%; right: -200%; margin-left: -1rem;"
-		>
-			<Quote quote={currentQuotes[4].quote} quoted={currentQuotes[4].quotedBy} />
-		</div>
-	{:else if data.length > 0}
-		<div class="left-quote quote-wrapper" style="left: -100%; right: 100%; margin-right: -1rem;">
-			<Quote quote={''} quoted={''} />
-		</div>
+			<div
+				class="outer-right-quote {quoteWrapperClasses}"
+				style="left: 200%; right: -200%; margin-left: -1rem;"
+			>
+				<Quote quote={currentQuotes[4].attributes.content} quoted={currentQuotes[4].attributes.quoted} />
+			</div>
+		{:else if quotes.length > 0}
+			<div class="left-quote {quoteWrapperClasses}" style="left: -100%; right: 100%; margin-right: -1rem;">
+				<Quote quote={''} quoted={''} />
+			</div>
 
-		<div class="center-quote quote-wrapper" style="left: 0; right: 0">
-			<Quote quote={singleQuote.quote} quoted={singleQuote.quotedBy} />
-		</div>
+			<div class="center-quote {quoteWrapperClasses}" style="left: 0; right: 0">
+				<Quote quote={singleQuote.quote} quoted={singleQuote.attributes.quoted} />
+			</div>
 
-		<div class="right-quote quote-wrapper" style="left: 100%; right: -100%; margin-left: -1rem;">
-			<Quote quote={''} quoted={''} />
-		</div>
-	{:else}
-		<div class="center-quote quote-wrapper" style="left: 0; right: 0">
-			<p class="nothing-here">Looks like there are no quotes here yet. Be the first to add one!</p>
+			<div class="right-quote {quoteWrapperClasses}" style="left: 100%; right: -100%; margin-left: -1rem;">
+				<Quote quote={''} quoted={''} />
+			</div>
+		{:else}
+			<div class="center-quote {quoteWrapperClasses}" style="left: 0; right: 0">
+				<p class="nothing-here">Looks like there are no quotes here yet. Be the first to add one!</p>
+			</div>
+		{/if}
+
+		<div id="delete-message" class="invisible">
+			<p class="pink-gradient colored-text"><b>Delete?</b> Are you sure?</p>
 		</div>
 	{/if}
 </div>
 
-<div id="actions-wrapper">
-	<span id="nav-hint"></span>
+<div id="actions-wrapper" class="visible">
+	{#if quotes}
+		<span id="nav-hint"></span>
 
-	<div class="actions primary-actions">
-		<button id="random" class="default small" disabled={data.length === 0}><span class="icon-shuffle" /></button>
-		<button id="prev" class="default" disabled={data.length === 0}><span class="icon-chevron-left" /></button>
-		<button id="next" class="default left-right-animation animation-inactive" disabled={data.length === 0}><span class="icon-chevron-right" /></button>
-	</div>
+		<div class="actions primary-actions">
+			<button id="random" class="default small" disabled={quotes.length === 0}><span class="icon-shuffle" /></button>
+			<button id="prev" class="default" disabled={quotes.length === 0}><span class="icon-chevron-left" /></button>
+			<button id="next" class="default left-right-animation animation-inactive" disabled={quotes.length === 0}><span class="icon-chevron-right" /></button>
+		</div>
 
-	<div class="actions secondary-actions">
-		<button class="default small"><span class="icon-plus" /></button>
-		<button class="default small"><span class="icon-edit" /></button>
-		<button class="default small"><span class="icon-delete pink-gradient colored-text" /></button>
+		<div class="actions secondary-actions">
+			<button id="add" class="default small"><span class="icon-plus" /></button>
+			<button id="edit" class="default small"><span class="icon-edit" /></button>
+			<button id="delete" class="default small"><span class="icon-delete pink-gradient colored-text" /></button>
+		</div>
+	{/if}
+</div>
+
+<div id="confirm-dismiss-actions-wrapper" class="invisible">
+	<div class="actions">
+		<button id="dismiss" class="default"><span class="icon-dismiss pink-gradient colored-text"></span></button>
+		<button id="confirm" class="default"><span class="icon-check green-gradient colored-text"></span></button>
 	</div>
 </div>
 
@@ -509,8 +647,35 @@
 			transform: translateX(-1rem);
 		}
 	}
+
 	#actions-wrapper {
 		position: relative;
+		transition: opacity 250ms ease;
+		opacity: 0;
+
+		&.visible {
+			opacity: 1;
+		}
+
+		.actions {
+			animation: animateNavigaionBump 1s linear 3s 1;
+		}
+	}
+
+	#confirm-dismiss-actions-wrapper {
+		position: fixed;
+		bottom: -6rem;
+		left: 0;
+		right: 0;
+		
+		transition: bottom 250ms cubic-bezier(0, 0.5, 0.5, 1.25);
+
+		&:not(.invisible) {
+			bottom: 0;
+		}
+	}
+
+	#actions-wrapper, #confirm-dismiss-actions-wrapper {
 		display: flex;
 		overflow-x: scroll;
 		scroll-snap-type: x mandatory;
@@ -554,7 +719,6 @@
 			gap: 12px;
 			width: 100%;
 			scroll-snap-align: start;
-			animation: animateNavigaionBump 1s linear 3s 1;
 
 			.left-right-animation {
 				position: relative;
@@ -577,6 +741,7 @@
 					z-index: 1;
 					transition-delay: 0.2s;
 					transition-duration: 0.8s;
+					border-radius: var(--radius);
 				}
 
 				&.animation-inactive:before {
@@ -595,6 +760,7 @@
 		margin: var(--app-padding-lr);
 		display: flex;
 		box-sizing: border-box;
+		z-index: 1;
 
 		transition-duration: 200ms;
 		transition-property: all;
@@ -602,6 +768,58 @@
 
 		&:not(.center-quote) {
 			scale: 0.98;
+		}
+
+		&.center-quote {
+
+			&:not(.not-delete), &:not(.not-editable), &:not(.not-add) {
+				scale: 0.95;
+				&::after {
+					content: '';
+					position: absolute;
+					top: -.25rem;
+					right: -.25rem;
+					bottom: -.25rem;
+					left: -.25rem;
+					z-index: 1;
+					border-radius: var(--radius);
+				}
+
+			}
+
+			&:not(.not-add) {
+				&::after {
+					background: var(--green-gradient);
+				}
+			}
+
+			&:not(.not-editable) {
+				&::after {
+					background: var(--blue-gradient);
+				}
+			}
+			&:not(.not-delete) {
+				transform: translateY(-1.5rem);
+				&::after {
+					background: var(--pink-gradient);
+				}
+			}
+		}
+	}
+
+	#delete-message {
+		position: absolute;
+		bottom: .5rem;
+		left: 3rem;
+		right: 3rem;
+		text-align: center;
+		transform: translateY(-100%);
+		z-index: 0;
+		font-size: 1.125rem;
+		display: block;
+
+		&.invisible {
+			display: none;
 		}
 	}
 
@@ -611,16 +829,4 @@
 		color: var(--text-primary);
 		text-align: center;
 	}
-
-	// .quote-spacer {
-	//   min-width: 100px;
-	//   height: 100%;
-	//   display: block;
-	//   background-color: red;
-	//   border-radius: var(--radius);
-	//   background-color: var(--foreground);
-	//   background-image: url('/watermark.svg');
-	//   background-size: cover;
-	//   opacity: 0;
-	// }
 </style>
