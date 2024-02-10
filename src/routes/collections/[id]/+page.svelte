@@ -11,6 +11,9 @@
 	
 	const quoteWrapperClasses = 'quote-wrapper not-delete not-editable not-add';
 
+	
+	const quoteWrapperClasses = 'quote-wrapper not-delete not-editable not-add';
+
 	// Start Index (altough traks index of current none carusel quote)
 	let currentQuoteIndex = 0;
 
