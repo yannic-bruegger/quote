@@ -3,14 +3,31 @@
 	import Quote from '../../../components/quote.svelte';
 	import Header from '../../../components/header.svelte';
 	import { Themes, NavBarState } from '$lib/constants';
+	import { getQuotesOfCollection } from '$lib/api'
 
-	export let data;
-
-	let quotes = [];
-
+	import type { PageData } from './$types';
 	
-	const quoteWrapperClasses = 'quote-wrapper not-delete not-editable not-add';
+	export let data: PageData;
 
+	function initCurrentQuotes(quotes: any, startIndex: number) {
+		console.log(quotes, startIndex);
+		
+		if (quotes.length > 4) {
+			for (let i = -2; i <= 2; i++) {
+				let index = startIndex + i;
+
+				if (index < 0) {
+					index += quotes.length;
+				} else if (index >= quotes.length) {
+					index -= quotes.length;
+				}
+
+				currentQuotes.push(quotes[index]);
+			}
+		} else {
+			singleQuote = quotes[startIndex];
+		}
+	}
 	
 	const quoteWrapperClasses = 'quote-wrapper not-delete not-editable not-add';
 
@@ -24,32 +41,22 @@
 	let currentQuotes: any[] = [];
 	let currentCaruselQuoteIndex = 2;
 
-	initCurrentQuotes(quotes, currentQuoteIndex);
-	function initCurrentQuotes(data: any, startIndex: number) {
-		if (data.length > 4) {
-			for (let i = -2; i <= 2; i++) {
-				let index = startIndex + i;
-
-				if (index < 0) {
-					index += data.length;
-				} else if (index >= data.length) {
-					index -= data.length;
-				}
-
-				currentQuotes.push(data[index]);
-			}
-		} else {
-			singleQuote = data[startIndex];
-		}
-	}
-
 	let navigationHappend = false;
 	let timeoutId: any = 0;
 	let quoteActionClass = '';
 	let visuallyCenterQuote: HTMLDivElement;
 	let editedQuote: HTMLDivElement;
 
-	onMount(() => {
+	let quotes: any[] = [];
+
+	onMount(async () => {
+
+		quotes = await getQuotesOfCollection(data.id);
+
+		currentQuoteIndex = Math.round(Math.random() * quotes.length);
+
+		initCurrentQuotes(quotes, currentQuoteIndex);
+		
 		const actionsWrapper = <HTMLDivElement>document.querySelector('div#actions-wrapper');
 		const confirmDismissActionsWrapper = <HTMLDivElement>document.querySelector('div#confirm-dismiss-actions-wrapper');
 		visuallyCenterQuote = <HTMLDivElement>document.querySelector('div.center-quote');
@@ -238,56 +245,56 @@
 
 			switch (type) {
 				case 'newest':
-					newQuotes.push(data[data.length - 1]);
-					newQuotes.push(data[0]);
-					newQuotes.push(data[1]);
-					newQuotes.push(data[data.length - 3]);
-					newQuotes.push(data[data.length - 2]);
+					newQuotes.push(quotes[quotes.length - 1]);
+					newQuotes.push(quotes[0]);
+					newQuotes.push(quotes[1]);
+					newQuotes.push(quotes[quotes.length - 3]);
+					newQuotes.push(quotes[quotes.length - 2]);
 					break;
 
 				case 'oldest':
-					newQuotes.push(data[0]);
-					newQuotes.push(data[1]);
-					newQuotes.push(data[2]);
-					newQuotes.push(data[data.length - 2]);
-					newQuotes.push(data[data.length - 1]);
+					newQuotes.push(quotes[0]);
+					newQuotes.push(quotes[1]);
+					newQuotes.push(quotes[2]);
+					newQuotes.push(quotes[quotes.length - 2]);
+					newQuotes.push(quotes[quotes.length - 1]);
 					break;
 
 				case 'random':
-					let randomIndex = Math.floor(Math.random() * data.length);
+					let randomIndex = Math.floor(Math.random() * quotes.length);
 					
-					newQuotes.push(data[randomIndex]);
+					newQuotes.push(quotes[randomIndex]);
 
-					if (randomIndex + 1 < data.length - 1 && randomIndex > 2) {
-						newQuotes.push(data[randomIndex + 1]);
-						newQuotes.push(data[randomIndex + 2]);
-						newQuotes.push(data[randomIndex - 2]);
-						newQuotes.push(data[randomIndex - 1]);
-					} else if (randomIndex < data.length - 1 && randomIndex > 2) {
-						newQuotes.push(data[randomIndex + 1]);
-						newQuotes.push(data[0]);
-						newQuotes.push(data[randomIndex - 2]);
-						newQuotes.push(data[randomIndex - 1]);
+					if (randomIndex + 1 < quotes.length - 1 && randomIndex > 2) {
+						newQuotes.push(quotes[randomIndex + 1]);
+						newQuotes.push(quotes[randomIndex + 2]);
+						newQuotes.push(quotes[randomIndex - 2]);
+						newQuotes.push(quotes[randomIndex - 1]);
+					} else if (randomIndex < quotes.length - 1 && randomIndex > 2) {
+						newQuotes.push(quotes[randomIndex + 1]);
+						newQuotes.push(quotes[0]);
+						newQuotes.push(quotes[randomIndex - 2]);
+						newQuotes.push(quotes[randomIndex - 1]);
 					} else if (randomIndex === 2) {
-						newQuotes.push(data[randomIndex + 1]);
-						newQuotes.push(data[randomIndex + 2]);
-						newQuotes.push(data[0]);
-						newQuotes.push(data[1]);
+						newQuotes.push(quotes[randomIndex + 1]);
+						newQuotes.push(quotes[randomIndex + 2]);
+						newQuotes.push(quotes[0]);
+						newQuotes.push(quotes[1]);
 					} else if (randomIndex === 1) {
-						newQuotes.push(data[randomIndex + 1]);
-						newQuotes.push(data[randomIndex + 2]);
-						newQuotes.push(data[data.length - 1]);
-						newQuotes.push(data[0]);
+						newQuotes.push(quotes[randomIndex + 1]);
+						newQuotes.push(quotes[randomIndex + 2]);
+						newQuotes.push(quotes[quotes.length - 1]);
+						newQuotes.push(quotes[0]);
 					} else if (randomIndex === 0) {
-						newQuotes.push(data[1]);
-						newQuotes.push(data[2]);
-						newQuotes.push(data[data.length - 2]);
-						newQuotes.push(data[data.length - 1]);
+						newQuotes.push(quotes[1]);
+						newQuotes.push(quotes[2]);
+						newQuotes.push(quotes[quotes.length - 2]);
+						newQuotes.push(quotes[quotes.length - 1]);
 					} else {
-						newQuotes.push(data[0]);
-						newQuotes.push(data[1]);
-						newQuotes.push(data[randomIndex - 2]);
-						newQuotes.push(data[randomIndex - 1]);
+						newQuotes.push(quotes[0]);
+						newQuotes.push(quotes[1]);
+						newQuotes.push(quotes[randomIndex - 2]);
+						newQuotes.push(quotes[randomIndex - 1]);
 					}
 					break;
 			}
@@ -315,7 +322,7 @@
 	});
 
 	function navigatePrev() {
-		if (data.length > 4) {
+		if (quotes.length > 4) {
 			slidePrev();
 			updateCurrentQuotes('prev');
 		} else {
@@ -324,7 +331,7 @@
 	}
 
 	function navigateNext() {
-		if (data.length > 4) {
+		if (quotes.length > 4) {
 			slideNext();
 			updateCurrentQuotes('next');
 		} else {
@@ -460,10 +467,10 @@
 					break;
 			}
 
-			if (data.indexOf(currentQuotes[lastQuoteIndex]) < data.length - 1) {
-				newQuote = data[data.indexOf(currentQuotes[lastQuoteIndex]) + 1];
+			if (quotes.indexOf(currentQuotes[lastQuoteIndex]) < quotes.length - 1) {
+				newQuote = quotes[quotes.indexOf(currentQuotes[lastQuoteIndex]) + 1];
 			} else {
-				newQuote = data[0];
+				newQuote = quotes[0];
 			}
 
 			currentQuotes[nextQuoteIndex] = newQuote;
@@ -500,10 +507,10 @@
 					break;
 			}
 
-			if (data.indexOf(currentQuotes[firstQuoteIndex]) > 0) {
-				newQuote = data[data.indexOf(currentQuotes[firstQuoteIndex]) - 1];
+			if (quotes.indexOf(currentQuotes[firstQuoteIndex]) > 0) {
+				newQuote = quotes[quotes.indexOf(currentQuotes[firstQuoteIndex]) - 1];
 			} else {
-				newQuote = data[data.length - 1];
+				newQuote = quotes[quotes.length - 1];
 			}
 
 			currentQuotes[prevQuoteIndex] = newQuote;
@@ -511,7 +518,7 @@
 	}
 
 	function showNext() {
-		if (currentQuoteIndex < data.length - 1) {
+		if (currentQuoteIndex < quotes.length - 1) {
 			currentQuoteIndex++;
 		} else {
 			currentQuoteIndex = 0;
@@ -522,79 +529,83 @@
 		if (currentQuoteIndex > 0) {
 			currentQuoteIndex--;
 		} else {
-			currentQuoteIndex = data.length - 1;
+			currentQuoteIndex = quotes.length - 1;
 		}
 
-		singleQuote = data[currentQuoteIndex];
+		singleQuote = quotes[currentQuoteIndex];
 	}
 </script>
 
 <Header title="Collection X" theme={Themes.PINK_GRADIENT} state={NavBarState.SUB} />
 
 <div class="quotes">
-	{#if data.length > 4}
-		<div
-			class="outer-left-quote {quoteWrapperClasses}"
-			style="left: -200%; right: 200%; margin-right: -1rem;"
-		>
-			<Quote quote={currentQuotes[0].quote} quoted={currentQuotes[0].quotedBy} />
-		</div>
+	{#if quotes}
+		{#if quotes.length > 4}
+			<div
+				class="outer-left-quote {quoteWrapperClasses}"
+				style="left: -200%; right: 200%; margin-right: -1rem;"
+			>
+				<Quote quote={currentQuotes[0].attributes.content} quoted={currentQuotes[0].attributes.quoted} />
+			</div>
 
-		<div class="left-quote {quoteWrapperClasses}" style="left: -100%; right: 100%; margin-right: -1rem;">
-			<Quote quote={currentQuotes[1].quote} quoted={currentQuotes[1].quotedBy} />
-		</div>
+			<div class="left-quote {quoteWrapperClasses}" style="left: -100%; right: 100%; margin-right: -1rem;">
+				<Quote quote={currentQuotes[1].attributes.content} quoted={currentQuotes[1].attributes.quoted} />
+			</div>
 
-		<div class="center-quote {quoteWrapperClasses}" style="left: 0; right: 0">
-			<Quote quote={currentQuotes[2].quote} quoted={currentQuotes[2].quotedBy} />
-		</div>
+			<div class="center-quote {quoteWrapperClasses}" style="left: 0; right: 0">
+				<Quote quote={currentQuotes[2].attributes.content} quoted={currentQuotes[2].attributes.quoted} />
+			</div>
 
-		<div class="right-quote {quoteWrapperClasses}" style="left: 100%; right: -100%; margin-left: -1rem;">
-			<Quote quote={currentQuotes[3].quote} quoted={currentQuotes[3].quotedBy} />
-		</div>
+			<div class="right-quote {quoteWrapperClasses}" style="left: 100%; right: -100%; margin-left: -1rem;">
+				<Quote quote={currentQuotes[3].attributes.content} quoted={currentQuotes[3].attributes.quoted} />
+			</div>
 
-		<div
-			class="outer-right-quote {quoteWrapperClasses}"
-			style="left: 200%; right: -200%; margin-left: -1rem;"
-		>
-			<Quote quote={currentQuotes[4].quote} quoted={currentQuotes[4].quotedBy} />
-		</div>
-	{:else if data.length > 0}
-		<div class="left-quote {quoteWrapperClasses}" style="left: -100%; right: 100%; margin-right: -1rem;">
-			<Quote quote={''} quoted={''} />
-		</div>
+			<div
+				class="outer-right-quote {quoteWrapperClasses}"
+				style="left: 200%; right: -200%; margin-left: -1rem;"
+			>
+				<Quote quote={currentQuotes[4].attributes.content} quoted={currentQuotes[4].attributes.quoted} />
+			</div>
+		{:else if quotes.length > 0}
+			<div class="left-quote {quoteWrapperClasses}" style="left: -100%; right: 100%; margin-right: -1rem;">
+				<Quote quote={''} quoted={''} />
+			</div>
 
-		<div class="center-quote {quoteWrapperClasses}" style="left: 0; right: 0">
-			<Quote quote={singleQuote.quote} quoted={singleQuote.quotedBy} />
-		</div>
+			<div class="center-quote {quoteWrapperClasses}" style="left: 0; right: 0">
+				<Quote quote={singleQuote.quote} quoted={singleQuote.attributes.quoted} />
+			</div>
 
-		<div class="right-quote {quoteWrapperClasses}" style="left: 100%; right: -100%; margin-left: -1rem;">
-			<Quote quote={''} quoted={''} />
-		</div>
-	{:else}
-		<div class="center-quote {quoteWrapperClasses}" style="left: 0; right: 0">
-			<p class="nothing-here">Looks like there are no quotes here yet. Be the first to add one!</p>
+			<div class="right-quote {quoteWrapperClasses}" style="left: 100%; right: -100%; margin-left: -1rem;">
+				<Quote quote={''} quoted={''} />
+			</div>
+		{:else}
+			<div class="center-quote {quoteWrapperClasses}" style="left: 0; right: 0">
+				<p class="nothing-here">Looks like there are no quotes here yet. Be the first to add one!</p>
+			</div>
+		{/if}
+
+		<div id="delete-message" class="invisible">
+			<p class="pink-gradient colored-text"><b>Delete?</b> Are you sure?</p>
 		</div>
 	{/if}
-
-	<div id="delete-message" class="invisible">
-		<p class="pink-gradient colored-text"><b>Delete?</b> Are you sure?</p>
-	</div>
 </div>
 
 <div id="actions-wrapper" class="visible">
-	<span id="nav-hint"></span>
+	{#if quotes}
+		<span id="nav-hint"></span>
 
-	<div class="actions primary-actions">
-		<button id="random" class="default small" disabled={data.length === 0}><span class="icon-shuffle" /></button>
-		<button id="prev" class="default" disabled={data.length === 0}><span class="icon-chevron-left" /></button>
-		<button id="next" class="default left-right-animation animation-inactive" disabled={data.length === 0}><span class="icon-chevron-right" /></button>
-	</div>
+		<div class="actions primary-actions">
+			<button id="random" class="default small" disabled={quotes.length === 0}><span class="icon-shuffle" /></button>
+			<button id="prev" class="default" disabled={quotes.length === 0}><span class="icon-chevron-left" /></button>
+			<button id="next" class="default left-right-animation animation-inactive" disabled={quotes.length === 0}><span class="icon-chevron-right" /></button>
+		</div>
 
-	<div class="actions secondary-actions">
-		<button id="add" class="default small"><span class="icon-plus" /></button>
-		<button id="edit" class="default small"><span class="icon-edit" /></button>
-		<button id="delete" class="default small"><span class="icon-delete pink-gradient colored-text" /></button>
-	</div>
+		<div class="actions secondary-actions">
+			<button id="add" class="default small"><span class="icon-plus" /></button>
+			<button id="edit" class="default small"><span class="icon-edit" /></button>
+			<button id="delete" class="default small"><span class="icon-delete pink-gradient colored-text" /></button>
+		</div>
+	{/if}
 </div>
 
 <div id="confirm-dismiss-actions-wrapper" class="invisible">
