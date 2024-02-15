@@ -4,13 +4,10 @@
   import Input from "../../../components/input.svelte";
   import Header from "../../../components/header.svelte";
   import user from '$lib/user';
-	import { goto } from "$app/navigation";
 
   const theme = Themes.PINK_GRADIENT;
 
   const passPlaceholder = "**********";
-
-  if (!$user) goto('/signin')
 </script>
 
 <Header
