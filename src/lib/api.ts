@@ -209,7 +209,7 @@ export async function updateUserInfo(userId: string, userInfo: User, bearerToken
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
-      displayname: userInfo.displayName,
+      displayName: userInfo.displayName,
       email: userInfo.email,
     }),
   });
