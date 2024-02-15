@@ -21,10 +21,10 @@
   <!-- svelte-ignore a11y-autofocus -->
   <input
     autofocus={autofocus}
-    type={type}
+    type='text'
     placeholder={placeholder}
     readonly={readonly}
-    value={value}
+    bind:value={value}
   >
 </div>
 

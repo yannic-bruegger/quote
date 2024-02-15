@@ -1,13 +1,13 @@
 <script lang="ts">
 	import { Themes } from "$lib/constants";
-	import type { Follower } from "$lib/types";
+	import type { PotentialModerator } from "$lib/types";
   export let label: string = 'Label';
   export let theme: Themes = Themes.PINK_GRADIENT;
   let search = '';
-  export let followers: Array<Follower> = [];
+  export let potentialModerators: Array<PotentialModerator> = [];
 
-  $: filteredFollowers = followers.filter((follower) => {
-    return JSON.stringify(Object.values(follower)).indexOf(search) > -1;
+  $: filteredPotentialModerators = potentialModerators.filter((potentialModerator) => {
+    return JSON.stringify(Object.values(potentialModerator)).indexOf(search) > -1;
   });
 </script>
 
@@ -15,17 +15,17 @@
 <div class={theme + ` label`}>{label}</div>
 <input type="search" placeholder="Search" bind:value={search}>
 <ul>
-  {#each filteredFollowers as follower }
+  {#each filteredPotentialModerators as potentialModerator }
     <li>
-      <img src={follower.profilePicture} alt={follower.displayName}>
-      <span class="displayName">{follower.displayName}</span>
+      <img src={potentialModerator.profilePicture ? potentialModerator.profilePicture : `https://ui-avatars.com/api/?name=${potentialModerator?.displayName}`} alt={potentialModerator.displayName}>
+      <span class="displayName">{potentialModerator.displayName}</span>
       <input
         type="checkbox"
         class={theme}
-        class:icon-megaphone-mute={!follower.isModerator}
-        class:icon-megaphone={follower.isModerator}
-        class:is-moderator={follower.isModerator}
-        bind:checked={follower.isModerator}>
+        class:icon-megaphone-mute={!potentialModerator.isModerator}
+        class:icon-megaphone={potentialModerator.isModerator}
+        class:is-moderator={potentialModerator.isModerator}
+        bind:checked={potentialModerator.isModerator}>
     </li>
   {/each}
 </ul>

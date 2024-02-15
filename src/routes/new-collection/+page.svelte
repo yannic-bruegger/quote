@@ -7,13 +7,29 @@
   import Input from "../../components/input.svelte";
 	import Button from "../../components/button.svelte";
 	import UserSearch from "../../components/user-search.svelte";
+  import { createCollection } from '$lib/api';
+  import user from '$lib/user';
+	import { goto } from "$app/navigation";
 
-  let newCollection: Collection = {
+  let newCollection: Partial<Collection> = {
     id: undefined,
     name: '',
     theme: Themes.PINK_GRADIENT,
     quotes: [],
     followers: [],
+  }
+
+  let name = ''
+
+  function createCollectionAction() {
+    const bearerToken = localStorage.getItem('token');
+    if (!bearerToken) throw Error('Could not load bearer token from local storage.')
+    const userId = $user?.id;
+    if (!$user) throw Error('Could not load user id from store.')
+    newCollection.owner = $user.id;
+    newCollection.name = name;
+    createCollection(bearerToken, newCollection as Collection)
+    goto('/')
   }
 </script>
 
@@ -26,15 +42,15 @@
   <CollectionComponent
     showMenu="{false}"
     description={`${newCollection.quotes.length} quotes`}
-    name={newCollection.name ? newCollection.name : "New Collection"}
+    name={name ? name : 'New Collection'}
     theme={newCollection.theme}
     link="#"
   >
   </CollectionComponent>
-  <Input label="Test" bind:value={newCollection.name} placeholder="New Collection" theme={newCollection.theme} autofocus></Input>
+  <Input label="Name" bind:value={name} placeholder="New Collection" theme={newCollection.theme} autofocus></Input>
   <ThemeSelector theme={newCollection.theme} bind:userSelected={newCollection.theme}></ThemeSelector>
   <UserSearch
-    label="Followers"
+    label="Moderators"
     followers={newCollection.followers}
     theme={newCollection.theme}
   >
@@ -43,7 +59,7 @@
 <div class="button-group">
   <button class="default small"><span class="icon-delete"></span></button>
   <button class="default"><span class="icon-dismiss"></span></button>
-  <button class="default"><span class="icon-check"></span></button>
+  <button class="default" on:click={createCollectionAction}><span class="icon-check"></span></button>
 </div>
 
 <style scoped>

@@ -143,7 +143,7 @@ input[type="password"] {
   text-align: left;
 }
 
-input:read-only, button:disabled {
+input:not([type="radio"]):read-only, button:disabled {
   user-select: none;
   opacity: .4;
 }

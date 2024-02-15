@@ -7,7 +7,7 @@
   export let showMenu: boolean = false;
   export let id: string = '';
   
-  let link: string= `/collections/${id}`;
+  export let link: string= `/collections/${id}`;
 
   if (!theme) theme = Themes.BLUE_GRADIENT;
 </script>
