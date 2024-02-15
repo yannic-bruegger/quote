@@ -3,12 +3,22 @@
 	import type { PotentialModerator } from "$lib/types";
   export let label: string = 'Label';
   export let theme: Themes = Themes.PINK_GRADIENT;
+  export let selectedModerators = []
   let search = '';
   export let potentialModerators: Array<PotentialModerator> = [];
 
   $: filteredPotentialModerators = potentialModerators.filter((potentialModerator) => {
     return JSON.stringify(Object.values(potentialModerator)).indexOf(search) > -1;
   });
+
+  $: selectedModerators = potentialModerators.filter((pm) => pm.isModerator).map((m) => m.id)
+
+  function updatePotentialModeratorsList(e, id) {
+    console.log('TEST')
+    const mod = potentialModerators.find((pm) => pm.id === id);
+    if(!mod) return;
+    mod.isModerator = e.target.checked
+  }
 </script>
 
 
@@ -25,7 +35,8 @@
         class:icon-megaphone-mute={!potentialModerator.isModerator}
         class:icon-megaphone={potentialModerator.isModerator}
         class:is-moderator={potentialModerator.isModerator}
-        bind:checked={potentialModerator.isModerator}>
+        bind:checked={potentialModerator.isModerator}
+        on:change={(e) => updatePotentialModeratorsList(e, potentialModerator.id)}>
     </li>
   {/each}
 </ul>

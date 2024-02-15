@@ -1,25 +1,37 @@
 <script lang="ts">
   import Header from "../../../../components/header.svelte";
   import { NavBarState } from "$lib/constants";
-  import { emptyCollection, type Collection } from "$lib/types";
+  import { emptyCollection, type Collection, type PotentialModerator } from "$lib/types";
   import CollectionComponent from "../../../../components/collection.svelte";
   import ThemeSelector from "../../../../components/theme-selector.svelte";
   import Input from "../../../../components/input.svelte";
 	import UserSearch from "../../../../components/user-search.svelte";
-  import { getCollection, getCollectionFollowers } from '$lib/api';
+  import { getCollection, updateCollection } from '$lib/api';
 	import { onMount } from "svelte";
 	import type { PageData } from './$types';
+	import { getLocalToken } from "$lib/auth";
+	import { goto } from "$app/navigation";
 	
 	export let data: PageData;
+
   let collection: Collection = emptyCollection;
-  $: potentialModerators = [...collection.followers, ...collection.moderators?.map((mod) => ({...mod, isModerator: true}))]
+  let potentialModerators: PotentialModerator[] = [];
 
   onMount(async () => {
     const token = localStorage.getItem('token');
     if (!token) throw Error('Could not load bearer token from local storage.');
     collection = await getCollection(data.id, token);
-    console.log(collection)
+    potentialModerators = [...collection.moderators?.map((mod) => ({...mod, isModerator: true})), ...collection.followers.map((mod) => ({...mod, isModerator: false}))]
+    console.log(collection);
   })
+
+  async function performUpdate() {
+    const token = getLocalToken();
+    await updateCollection(collection.id, collection.name, selectedModerators, collection.theme, token);
+    //goto('/')
+  }
+
+  $: selectedModerators = potentialModerators.filter((pm) => pm.isModerator).map((m) => m.id);
 </script>
 
 <Header
@@ -40,15 +52,15 @@
   <ThemeSelector theme={collection.theme} bind:userSelected={collection.theme}></ThemeSelector>
   <UserSearch
     label="Moderators"
-    potentialModerators={potentialModerators}
+    bind:potentialModerators={potentialModerators}
     theme={collection.theme}
   >
   </UserSearch>
 </div>
 <div class="button-group">
   <button class="default small"><span class="icon-delete"></span></button>
-  <button class="default"><span class="icon-dismiss"></span></button>
-  <button class="default" on:click={() => {}}><span class="icon-check"></span></button>
+  <button class="default" on:click={() => goto('/')}><span class="icon-dismiss"></span></button>
+  <button class="default" on:click={performUpdate}><span class="icon-check"></span></button>
 </div>
 
 <style scoped>
