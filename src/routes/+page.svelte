@@ -65,13 +65,14 @@
     flex-direction: column;
     padding: var(--app-padding-lr);
     flex-grow: 1;
-    gap: 12px;
+    overflow-y: scroll;
+    gap: .75rem;
   }
   
   .collections {
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: .75rem;
     flex-grow: 1;
   }
 

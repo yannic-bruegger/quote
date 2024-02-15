@@ -65,6 +65,7 @@
     background-color: var(--foreground);
     border-radius: 0.75rem;
     height: 15rem;
+    width: 15rem;
     box-shadow: var(--shadow);
     & img {
       border-radius: 0.375rem;
@@ -74,17 +75,6 @@
       object-fit: cover;
       object-position: center center;
     }
-  }
-
-  div.form-container {
-    display: flex;
-    flex-direction: column;
-    padding: 1em;
-    gap: 1em;
-    flex-grow: 1;
-    overflow-x: scroll;
-    height: 100%;
-    align-items: center;
   }
 
   div.button-group:after {
