@@ -20,7 +20,7 @@ export type Collection = {
   name: string,
   theme: Themes,
   quotes: Array<Quote>,
-  ownerId: string,
+  owner: string,
   followers: Array<Follower>
   moderators: Array<User>
 }

@@ -9,6 +9,7 @@
 	import UserSearch from "../../components/user-search.svelte";
   import { createCollection } from '$lib/api';
   import user from '$lib/user';
+	import { goto } from "$app/navigation";
 
   let newCollection: Partial<Collection> = {
     id: undefined,
@@ -25,9 +26,10 @@
     if (!bearerToken) throw Error('Could not load bearer token from local storage.')
     const userId = $user?.id;
     if (!$user) throw Error('Could not load user id from store.')
-    newCollection.ownerId = $user.id;
-    const reply = createCollection(bearerToken, newCollection as Collection)
-    console.log(reply)
+    newCollection.owner = $user.id;
+    newCollection.name = name;
+    createCollection(bearerToken, newCollection as Collection)
+    goto('/')
   }
 </script>
 
