@@ -2,12 +2,24 @@
 	import { Themes, NavBarState } from "$lib/constants";
 	import { goto } from '$app/navigation';
 	import user from '$lib/user'
+	import { getLocalToken, isAuthenticated } from "$lib/auth";
+	import { getOwnUser } from "$lib/api";
 
 	export let title: string;
 	export let theme: Themes;
 	export let state: NavBarState = NavBarState.MAIN;	
 
-	if (!$user) goto('/signin');
+	checkForAuthState()
+
+	async function checkForAuthState() {
+		if (await isAuthenticated() && !$user) {
+      const token = getLocalToken();
+      const response = await getOwnUser(token);
+      $user = response;
+    } else {
+			if (!$user) goto('/signin');
+		}
+	}
 
 	function goBack(defaultRoute = '/') {
 		const ref = document.referrer;
