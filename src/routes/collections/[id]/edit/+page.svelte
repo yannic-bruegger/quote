@@ -28,7 +28,7 @@
   async function performUpdate() {
     const token = getLocalToken();
     await updateCollection(collection.id, collection.name, selectedModerators, collection.theme, token);
-    //goto('/')
+    goto('/')
   }
 
   $: selectedModerators = potentialModerators.filter((pm) => pm.isModerator).map((m) => m.id);
