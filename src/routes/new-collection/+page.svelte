@@ -14,7 +14,8 @@
     id: undefined,
     name: '',
     theme: Themes.PINK_GRADIENT,
-    quotes: []
+    quotes: [],
+    followers: [],
   }
 
   let name = ''
@@ -26,6 +27,7 @@
     if (!$user) throw Error('Could not load user id from store.')
     newCollection.ownerId = $user.id;
     const reply = createCollection(bearerToken, newCollection as Collection)
+    console.log(reply)
   }
 </script>
 
@@ -46,7 +48,7 @@
   <Input label="Name" bind:value={name} placeholder="New Collection" theme={newCollection.theme} autofocus></Input>
   <ThemeSelector theme={newCollection.theme} bind:userSelected={newCollection.theme}></ThemeSelector>
   <UserSearch
-    label="Followers"
+    label="Moderators"
     followers={newCollection.followers}
     theme={newCollection.theme}
   >
@@ -55,7 +57,7 @@
 <div class="button-group">
   <button class="default small"><span class="icon-delete"></span></button>
   <button class="default"><span class="icon-dismiss"></span></button>
-  <button class="default"><span class="icon-check"></span></button>
+  <button class="default" on:click={createCollectionAction}><span class="icon-check"></span></button>
 </div>
 
 <style scoped>

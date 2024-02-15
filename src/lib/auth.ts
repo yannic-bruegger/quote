@@ -1,4 +1,3 @@
-import { error } from "@sveltejs/kit";
 import { getOwnUser } from "./api";
 
 export async function isAuthenticated() {
