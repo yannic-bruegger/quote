@@ -52,16 +52,6 @@
 </div>
 
 <style scoped>
-  div.form-container {
-    display: flex;
-    flex-direction: column;
-    padding: 1em;
-    gap: 1em;
-    flex-grow: 1;
-    overflow-x: scroll;
-    height: 100%;
-  }
-
   div.button-group:after {
     content: "";
     position: absolute;

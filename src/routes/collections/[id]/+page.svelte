@@ -9,6 +9,17 @@
 	
 	export let data: PageData;
 
+	// const heightOutput: any = document.querySelector("#height");
+	// const widthOutput : any= document.querySelector("#width");
+
+	// function updateSize() {
+	// 	heightOutput.textContent = window.innerHeight;
+	// 	widthOutput.textContent = window.innerWidth;
+	// }
+
+	// updateSize();
+	// window.addEventListener("resize", updateSize);
+
 	function initCurrentQuotes(quotes: any, startIndex: number) {
 		currentQuotes = [];
 
