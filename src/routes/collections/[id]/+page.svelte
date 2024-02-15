@@ -10,8 +10,6 @@
 	export let data: PageData;
 
 	function initCurrentQuotes(quotes: any, startIndex: number) {
-		console.log(quotes, startIndex);
-		
 		if (quotes.length > 4) {
 			for (let i = -2; i <= 2; i++) {
 				let index = startIndex + i;
@@ -534,6 +532,10 @@
 
 		singleQuote = quotes[currentQuoteIndex];
 	}
+
+	function getQuoteId(quote: any) {
+		return quotes.indexOf(quote)+1;
+	}
 </script>
 
 <Header title="Collection X" theme={Themes.PINK_GRADIENT} state={NavBarState.SUB} />
@@ -545,26 +547,26 @@
 				class="outer-left-quote {quoteWrapperClasses}"
 				style="left: -200%; right: 200%; margin-right: -1rem;"
 			>
-				<Quote quote={currentQuotes[0].attributes.content} quoted={currentQuotes[0].attributes.quoted} />
+				<Quote quoteId={getQuoteId(currentQuotes[0])} quote={currentQuotes[0].attributes.content} quoted={currentQuotes[0].attributes.quoted} />
 			</div>
 
 			<div class="left-quote {quoteWrapperClasses}" style="left: -100%; right: 100%; margin-right: -1rem;">
-				<Quote quote={currentQuotes[1].attributes.content} quoted={currentQuotes[1].attributes.quoted} />
+				<Quote quoteId={getQuoteId(currentQuotes[1])} quote={currentQuotes[1].attributes.content} quoted={currentQuotes[1].attributes.quoted} />
 			</div>
 
 			<div class="center-quote {quoteWrapperClasses}" style="left: 0; right: 0">
-				<Quote quote={currentQuotes[2].attributes.content} quoted={currentQuotes[2].attributes.quoted} />
+				<Quote quoteId={getQuoteId(currentQuotes[2])} quote={currentQuotes[2].attributes.content} quoted={currentQuotes[2].attributes.quoted} />
 			</div>
 
 			<div class="right-quote {quoteWrapperClasses}" style="left: 100%; right: -100%; margin-left: -1rem;">
-				<Quote quote={currentQuotes[3].attributes.content} quoted={currentQuotes[3].attributes.quoted} />
+				<Quote quoteId={getQuoteId(currentQuotes[3])}  quote={currentQuotes[3].attributes.content} quoted={currentQuotes[3].attributes.quoted} />
 			</div>
 
 			<div
 				class="outer-right-quote {quoteWrapperClasses}"
 				style="left: 200%; right: -200%; margin-left: -1rem;"
 			>
-				<Quote quote={currentQuotes[4].attributes.content} quoted={currentQuotes[4].attributes.quoted} />
+				<Quote quoteId={getQuoteId(currentQuotes[4])} quote={currentQuotes[4].attributes.content} quoted={currentQuotes[4].attributes.quoted} />
 			</div>
 		{:else if quotes.length > 0}
 			<div class="left-quote {quoteWrapperClasses}" style="left: -100%; right: 100%; margin-right: -1rem;">
@@ -572,7 +574,7 @@
 			</div>
 
 			<div class="center-quote {quoteWrapperClasses}" style="left: 0; right: 0">
-				<Quote quote={singleQuote.quote} quoted={singleQuote.attributes.quoted} />
+				<Quote quoteId={1} quote={singleQuote.quote} quoted={singleQuote.attributes.quoted} />
 			</div>
 
 			<div class="right-quote {quoteWrapperClasses}" style="left: 100%; right: -100%; margin-left: -1rem;">
