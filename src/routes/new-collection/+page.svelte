@@ -7,13 +7,25 @@
   import Input from "../../components/input.svelte";
 	import Button from "../../components/button.svelte";
 	import UserSearch from "../../components/user-search.svelte";
+  import { createCollection } from '$lib/api';
+  import user from '$lib/user';
 
-  let newCollection: Collection = {
+  let newCollection: Partial<Collection> = {
     id: undefined,
     name: '',
     theme: Themes.PINK_GRADIENT,
-    quotes: [],
-    followers: [],
+    quotes: []
+  }
+
+  let name = ''
+
+  function createCollectionAction() {
+    const bearerToken = localStorage.getItem('token');
+    if (!bearerToken) throw Error('Could not load bearer token from local storage.')
+    const userId = $user?.id;
+    if (!$user) throw Error('Could not load user id from store.')
+    newCollection.ownerId = $user.id;
+    const reply = createCollection(bearerToken, newCollection as Collection)
   }
 </script>
 
@@ -26,12 +38,12 @@
   <CollectionComponent
     showMenu="{false}"
     description={`${newCollection.quotes.length} quotes`}
-    name={newCollection.name ? newCollection.name : "New Collection"}
+    name={name ? name : 'New Collection'}
     theme={newCollection.theme}
     link="#"
   >
   </CollectionComponent>
-  <Input label="Test" bind:value={newCollection.name} placeholder="New Collection" theme={newCollection.theme} autofocus></Input>
+  <Input label="Name" bind:value={name} placeholder="New Collection" theme={newCollection.theme} autofocus></Input>
   <ThemeSelector theme={newCollection.theme} bind:userSelected={newCollection.theme}></ThemeSelector>
   <UserSearch
     label="Followers"

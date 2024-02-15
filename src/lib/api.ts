@@ -147,7 +147,7 @@ export async function getMyCollections(bearerToken: string) {
   return myCollections;
 }
 
-export async function createCollection(bearerToken: string, name: string, moderators: string, userId: string) {
+export async function createCollection(bearerToken: string, newCollection: Collection) {
   const reply = await fetch(`${PUBLIC_API_URL}/collections`, {
     method: 'POST',
     headers: {
@@ -155,11 +155,7 @@ export async function createCollection(bearerToken: string, name: string, modera
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
-      data: {
-        name: name,
-        owner: userId,
-        moderators: moderators,
-      }
+      data: newCollection
     }),
   });
   const data = await reply.json();

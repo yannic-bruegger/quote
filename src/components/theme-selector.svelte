@@ -3,11 +3,10 @@
   const themes = Object.values(Themes);
   export let userSelected = themes[0];
   export let theme: Themes = Themes.PINK_GRADIENT;
-  
 </script>
 
 <span class={`${theme}`}>Theme</span>
-<div class="container">
+<div>
   {#each themes as theme }
     <input class={`${theme}`} type="radio" name="theme" value={theme} bind:group={userSelected}>
   {/each }
@@ -17,7 +16,7 @@
   div {
     display: flex;
     flex-direction: row;
-    justify-content: space-between;
+    justify-content: flex-start;
     gap: 1em;
   }
   span {

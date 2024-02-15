@@ -7,6 +7,7 @@
 	export let theme: Themes;
 	export let state: NavBarState = NavBarState.MAIN;	
 
+	if (!$user) goto('/signin');
 
 	function goBack(defaultRoute = '/') {
 		const ref = document.referrer;
