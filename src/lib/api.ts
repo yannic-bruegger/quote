@@ -79,6 +79,16 @@ export async function getCollection(collectionId: string, bearerToken?: string) 
   };
 }
 
+export async function getCollectionProperties(collectionId: string) {
+  const reply = await fetch(`${PUBLIC_API_URL}/collections/${collectionId}?populate[0]=name&populate[1]=theme`);
+  const data = (await reply.json()).data;
+  
+  return {
+    ...data.attributes,
+    id: data.id
+  };
+}
+
 export async function getCollectionModerators(collectionId: string, bearerToken: string) {
   const reply = await fetch(`${PUBLIC_API_URL}/collections/${collectionId}?populate=moderators`, {
     headers: {
