@@ -2,23 +2,13 @@
 	import { onMount } from 'svelte';
 	import Quote from '../../../components/quote.svelte';
 	import Header from '../../../components/header.svelte';
-	import { Themes, NavBarState } from '$lib/constants';
-	import { getQuotesOfCollection, createQuote, updateQuote, deleteQuote } from '$lib/api';
-
+	import { NavBarState } from '$lib/constants';
+	import { getQuotesOfCollection, createQuote, updateQuote, deleteQuote, getCollectionProperties} from '$lib/api';
 	import type { PageData } from './$types';
-	
+
 	export let data: PageData;
 
-	// const heightOutput: any = document.querySelector("#height");
-	// const widthOutput : any= document.querySelector("#width");
-
-	// function updateSize() {
-	// 	heightOutput.textContent = window.innerHeight;
-	// 	widthOutput.textContent = window.innerWidth;
-	// }
-
-	// updateSize();
-	// window.addEventListener("resize", updateSize);
+	let collectionProperties: any;
 
 	function initCurrentQuotes(quotes: any, startIndex: number) {
 		currentQuotes = [];
@@ -39,7 +29,6 @@
 		} else {
 			singleQuote = quotes[startIndex];
 		}
-
 	}
 	
 	const quoteWrapperClasses = 'quote-wrapper not-delete not-editable not-add';
@@ -70,12 +59,10 @@
 	let quoteIdOuterRight: number;
 
 	onMount(async () => {
-
 		quotes = await getQuotesOfCollection(data.id);
-
 		currentQuoteIndex = Math.round(Math.random() * quotes.length);
-
 		initCurrentQuotes(quotes, currentQuoteIndex);
+		collectionProperties = await getCollectionProperties(data.id);
 		
 		const actionsWrapper = <HTMLDivElement>document.querySelector('div#actions-wrapper');
 		const confirmDismissActionsWrapper = <HTMLDivElement>document.querySelector('div#confirm-dismiss-actions-wrapper');
@@ -188,26 +175,19 @@
 			switch (quoteActionClass) {
 				case 'add':
 					editableContentOnOff(false);
-
 					visuallyCenterQuote = <HTMLDivElement>document.querySelector('.center-quote');
 					visuallyCenterQuote.replaceWith(editedQuote);
 					visuallyCenterQuote = <HTMLDivElement>document.querySelector('.center-quote');
-						
 					visuallyCenterQuote.classList.toggle('not-add');
-					console.log('add');
 					break;
 				case 'edit':
 					editableContentOnOff(false);
-					
 					visuallyCenterQuote = <HTMLDivElement>document.querySelector('.center-quote');
 					visuallyCenterQuote.replaceWith(editedQuote);
 					visuallyCenterQuote = <HTMLDivElement>document.querySelector('.center-quote');
-
 					visuallyCenterQuote.classList.toggle('not-editable');
-					console.log('edit');
 					break;
 				case 'delete':
-					console.log('delete');
 					visuallyCenterQuote.classList.toggle('not-delete');
 					deleteMessage.classList.toggle('invisible');
 					break;
@@ -233,19 +213,16 @@
 					editableContentOnOff(false);
 					visuallyCenterQuote.classList.toggle('not-add');
 					addQuote(content, quoted);
-					console.log('add');
 					break;
 				case 'edit':
 					editableContentOnOff(false);
 					visuallyCenterQuote.classList.toggle('not-editable');
 					editQuote(quotes[currentQuoteIndex].id, content, quoted);
-					console.log('edit');
 					break;
 				case 'delete':
 					visuallyCenterQuote.classList.toggle('not-delete');
 					deleteMessage.classList.toggle('invisible');
 					dropQuote(quotes[currentQuoteIndex]);
-					console.log('delete');
 					break;
 			}
 
@@ -654,7 +631,9 @@
 	}
 </script>
 
-<Header title="Collection X" theme={Themes.PINK_GRADIENT} state={NavBarState.SUB} />
+{#if collectionProperties}
+	<Header title="{collectionProperties.name}" theme={collectionProperties.theme} state={NavBarState.SUB} />
+{/if}
 
 <div class="quotes">
 	{#if quotes}
