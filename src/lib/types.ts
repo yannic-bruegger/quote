@@ -6,6 +6,11 @@ export type User = {
   email: string,
   displayName: string,
   profilePicture: string,
+  provider: string,
+  confirmed: boolean,
+  blocked: boolean,
+  createdAt: string,
+  updatedAt: string,
 }
 
 export type PotentialModerator = User & { isModerator: boolean };

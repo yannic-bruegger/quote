@@ -5,12 +5,35 @@
   import Header from "../../../components/header.svelte";
   import user from '$lib/user';
 	import { goto } from "$app/navigation";
+	import { getOwnUser, updateUserInfo } from "$lib/api";
+	import { getLocalToken } from "$lib/auth";
+	import type { User } from "$lib/types";
+	import { onMount } from "svelte";
+
+  if(!$user) throw new Error('Could not identify logged in user.')
+
+  let newUser: User = $user
 
   const theme = Themes.PINK_GRADIENT;
-
+  const token = getLocalToken();
   const passPlaceholder = "**********";
 
-  if (!$user) goto('/signin')
+  onMount(async () => {
+    newUser = await getOwnUser(token)
+  })
+
+  async function updateUser() {
+    const token = getLocalToken();
+    if(!$user) return;
+    await updateUserInfo($user.id, newUser as User, token);
+    $user = newUser
+    goto('/')
+  }
+
+  function dismiss() {
+    goto('/')
+  }
+
 </script>
 
 <Header
@@ -20,16 +43,16 @@
 ></Header>
 <div class="form-container">
   <div class="profile-picture-wrapper">
-    <img src={$user?.profilePicture ? $user?.profilePicture : `https://ui-avatars.com/api/?name=${$user?.displayName}`} alt="That's me!">
+    <img src={newUser?.profilePicture ? newUser?.profilePicture : `https://ui-avatars.com/api/?name=${newUser?.displayName}`} alt="That's me!">
   </div>
-  <Input label="Display Name" theme={theme} autofocus={false} placeholder="" bind:value={$user.displayName}></Input>
-  <Input label="Email" theme={theme} autofocus={false} placeholder="" bind:value={$user.email}></Input>
-  <Input label="Username" theme={theme} autofocus={false} placeholder="" bind:value={$user.username}></Input>
+  <Input label="Display Name" theme={theme} autofocus={false} placeholder="" bind:value={newUser.displayName}></Input>
+  <Input label="Email" theme={theme} autofocus={false} placeholder="" bind:value={newUser.email}></Input>
+  <Input label="Username" theme={theme} autofocus={false} placeholder="" bind:value={newUser.username}></Input>
   <Input label="Password" theme={theme} autofocus={false} placeholder="" value={passPlaceholder} readonly={true}></Input>
 </div>
 <div class="button-group">
-  <button class="default"><span class="icon-dismiss"></span></button>
-  <button class="default"><span class="icon-check"></span></button>
+  <button class="default" on:click={dismiss}><span class="icon-dismiss"></span></button>
+  <button class="default" on:click={updateUser}><span class="icon-check"></span></button>
 </div>
 
 <style scoped>
