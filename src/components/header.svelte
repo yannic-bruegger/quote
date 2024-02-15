@@ -26,7 +26,7 @@
 
 	{#if state === NavBarState.MAIN}
 	<a href="/users/me">
-		<img src="{$user.profilePicture ? $user.profilePicture : `https://ui-avatars.com/api/?name=${$user?.displayName}`}" alt="user" />
+		<img src="{$user?.profilePicture ? $user.profilePicture : `https://ui-avatars.com/api/?name=${$user?.displayName}`}" alt="user" />
 	</a>
 	{/if}
 </header>
