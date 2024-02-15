@@ -1,11 +1,25 @@
 <script lang="ts">
-	import { goto } from '$app/navigation'
+	import { goto } from '$app/navigation';
   import { authenticate, getOwnUser } from '$lib/api';
-  import user from '$lib/user' 
+  import { getLocalToken, isAuthenticated } from '$lib/auth'
+  import user from '$lib/user';
   let username = '';
   let password = '';
+
+  updateAuthenticatedStatus();
+
+  export async function updateAuthenticatedStatus() {
+    if (await isAuthenticated()) {
+      const token = getLocalToken();
+      const response = await getOwnUser(token);
+      $user = response;
+      goto('/')
+    }
+  }
+
   async function loginButtonPresses() {
     const response = await authenticate(username, password);
+    console.log(response)
     localStorage.setItem('token', response.jwt);
     $user = response.user;
     goto('/');
