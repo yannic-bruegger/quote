@@ -89,7 +89,7 @@ html, body {
 button {
   background: none;
   border: none;
-
+  cursor: pointer;
   transition: transform 0.2s ease-in-out;
 
   &:active {
@@ -150,7 +150,7 @@ input[type="password"] {
   text-align: left;
 }
 
-input:not([type="radio"]):read-only, button:disabled {
+input:not([type="radio"], [type="checkbox"]):read-only, button:disabled {
   user-select: none;
   opacity: .4;
 }

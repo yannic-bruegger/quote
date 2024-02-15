@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { goto } from "$app/navigation";
 	import { Themes } from "$lib/constants";
 
   export let name: string = "Collection Name";
@@ -8,26 +9,27 @@
   export let id: string = '';
   
   export let link: string= `/collections/${id}`;
+  export let editLink: string= `/collections/${id}/edit`;
 
   if (!theme) theme = Themes.BLUE_GRADIENT;
 </script>
 
-<a href={link}>
-  <div class="collection">
-    <div class={`color-indicator ${theme}`}></div>
-    <div class="details">
-      <h1>{name}</h1>
-      <p>{description}</p>
-    </div>
-    <div class="actions">
-      {#if showMenu}
-        <button>
-          <span class="icon-context-vertical"></span>
-        </button>
-      {/if}
-    </div>
+
+<div class="collection">
+  <div class={`color-indicator ${theme}`}></div>
+  <div class="details" on:click={() => goto(link)} on:keydown={() => {}} role="button" tabindex="0">
+    <h1>{name}</h1>
+    <p>{description}</p>
   </div>
-</a>
+  <div class="actions">
+    {#if showMenu}
+      <button on:click={() => goto(editLink)}>
+        <span class="icon-context-vertical"></span>
+      </button>
+    {/if}
+  </div>
+</div>
+
 
 
 <style scoped lang="scss">
@@ -50,6 +52,7 @@
   }
 
   .details {
+    cursor: pointer;
     display: flex;
     flex-direction: column;
     justify-content: center;

@@ -1,4 +1,5 @@
 import { PUBLIC_API_URL } from '$env/static/public';
+import type { Themes } from './constants';
 import { flatten } from './helper';
 import type { Collection, Quote, User } from './types';
 
@@ -182,7 +183,7 @@ export async function createCollection(bearerToken: string, newCollection: Colle
   return data;
 }
 
-export async function updateCollection(collectionId: string, name: string, moderatorIds: Array<string>, bearerToken: string) {
+export async function updateCollection(collectionId: string, name: string, moderatorIds: Array<string>, theme: Themes,bearerToken: string) {
   const reply = await fetch(`${PUBLIC_API_URL}/collections/${collectionId}`, {
     method: 'PUT',
     headers: {
@@ -191,7 +192,8 @@ export async function updateCollection(collectionId: string, name: string, moder
     },
     body: JSON.stringify({
       data: {
-        name: name,
+        name,
+        theme,
         moderators: moderatorIds,
       }
     }),

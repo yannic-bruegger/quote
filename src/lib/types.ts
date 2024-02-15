@@ -21,17 +21,17 @@ export type Quote = {
 }
 
 export type Collection = {
-  id: string | undefined
+  id: string,
   name: string,
   theme: Themes,
   quotes: Array<Quote>,
   owner: string,
-  followers: Array<Follower>
+  followers: Array<User>
   moderators: Array<User>
 }
 
 export const emptyCollection: Collection = {
-  id: undefined,
+  id: '',
   followers: [],
   moderators: [],
   name: 'loading...',
