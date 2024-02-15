@@ -29,8 +29,8 @@
   <div class="collections">
     {#each ownedCollections as ownedCollection }
       <Collection
-        id="{ownedCollection.id}"
-        name="{ownedCollection.name}"
+        id={ownedCollection.id}
+        name={ownedCollection.name}
         theme={ownedCollection.theme}
         showMenu
       ></Collection>
@@ -39,7 +39,6 @@
       <Collection
         id="{moderatedCollection.id}"
         name="{moderatedCollection.name}"
-        description="12 Quotes"
         theme={moderatedCollection.theme}
       ></Collection>
     {/each}
@@ -47,7 +46,6 @@
       <Collection
         id="{followedCollection.id}"
         name="{followedCollection.name}"
-        description="12 Quotes"
         theme={followedCollection.theme}
       ></Collection>
     {/each}

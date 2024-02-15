@@ -1,4 +1,4 @@
-import type { Themes } from './constants';
+import { Themes } from './constants';
 
 export type User = {
   id: string
@@ -8,7 +8,7 @@ export type User = {
   profilePicture: string,
 }
 
-export type Follower = User & { isModerator: boolean };
+export type PotentialModerator = User & { isModerator: boolean };
 
 export type Quote = {
   quote: string,
@@ -23,4 +23,14 @@ export type Collection = {
   owner: string,
   followers: Array<Follower>
   moderators: Array<User>
+}
+
+export const emptyCollection: Collection = {
+  id: undefined,
+  followers: [],
+  moderators: [],
+  name: 'loading...',
+  owner: 'loading...',
+  quotes: [],
+  theme: Themes.BLUE_GRADIENT  
 }

@@ -1,5 +1,6 @@
 import { PUBLIC_API_URL } from '$env/static/public';
-import type { Collection, User } from './types';
+import { flatten } from './helper';
+import type { Collection, Quote, User } from './types';
 
 export async function authenticate(username: string, password: string) {
   const reply = await fetch(`${PUBLIC_API_URL}/auth/local`, {
@@ -63,10 +64,19 @@ export async function getSingleQuote(quoteId: string, bearerToken: string) {
   return data;
 }
 
-export async function getCollection(collectionId: string) {
-  const reply = await fetch(`${PUBLIC_API_URL}/collections/${collectionId}?populate=moderators`);
+export async function getCollection(collectionId: string, bearerToken?: string) {
+  let additional = {}
+  if (bearerToken) additional = { headers: { Authorization: `Bearer ${bearerToken}` }  }
+  const reply = await fetch(`${PUBLIC_API_URL}/collections/${collectionId}?populate=*`, additional);
   const data = (await reply.json()).data;
-  return data;
+  return {
+    ...data.attributes,
+    id: data.id,
+    followers: data.attributes.followers.data.map(flatten),
+    quotes: data.attributes.quotes.data.map(flatten),
+    moderators: data.attributes.moderators.data.map(flatten),
+    owner: flatten(data.attributes.owner.data)
+  };
 }
 
 export async function getCollectionModerators(collectionId: string, bearerToken: string) {

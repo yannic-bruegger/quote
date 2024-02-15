@@ -1,0 +1,1 @@
+export const flatten = (o: {id: number, attributes: any}) => ({id: o.id, ...o.attributes});

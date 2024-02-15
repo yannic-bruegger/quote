@@ -20,7 +20,7 @@
 ></Header>
 <div class="form-container">
   <div class="profile-picture-wrapper">
-    <img src={$user.profilePicture ? $user.profilePicture : `https://ui-avatars.com/api/?name=${$user?.displayName}`} alt="That's me!">
+    <img src={$user?.profilePicture ? $user?.profilePicture : `https://ui-avatars.com/api/?name=${$user?.displayName}`} alt="That's me!">
   </div>
   <Input label="Display Name" theme={theme} autofocus={false} placeholder="" bind:value={$user.displayName}></Input>
   <Input label="Email" theme={theme} autofocus={false} placeholder="" bind:value={$user.email}></Input>

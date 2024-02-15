@@ -6,7 +6,7 @@
 	import { getOwnUser } from "$lib/api";
 
 	export let title: string;
-	export let theme: Themes;
+	export let theme: Themes | undefined;
 	export let state: NavBarState = NavBarState.MAIN;	
 
 	checkForAuthState()
