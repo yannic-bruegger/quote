@@ -157,3 +157,23 @@ input:not([type="radio"]):read-only, button:disabled {
   overflow-x: scroll;
   align-items: center;
 }
+
+@keyframes shake {
+  0%, 100% {
+    transform: translateX(0);
+  }
+  20%, 60% {
+    transform: translateX(-.5rem);
+  }
+  40%, 80% {
+    transform: translateX(.5rem);
+  }
+}
+
+.shake {
+  animation: shake 300ms ease;
+}
+
+.opacity-05 {
+  opacity: .5;
+}

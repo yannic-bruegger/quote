@@ -234,7 +234,7 @@ export async function changePassword(currentPassword: string, newPassword: strin
   return result;
 }
 
-export async function createQuote(bearerToken: string, quote: Quote) {
+export async function createQuote(bearerToken: string, quote: Quote, collectionId: number) {
   const reply = await fetch(`${PUBLIC_API_URL}/quotes`, {
     method: 'POST',
     headers: {
@@ -245,16 +245,15 @@ export async function createQuote(bearerToken: string, quote: Quote) {
       data: {
         content: quote.content,
         quoted: quote.quoted,
-        collection: quote.collection,
+        collection: collectionId,
       }
     }),
   });
-  const result = await reply.json();
-  return result;
+  return reply;
 }
 
-export async function updateQuote(bearerToken: string, quote: Quote) {
-  const reply = await fetch(`${PUBLIC_API_URL}/quotes/${quote.id}`, {
+export async function updateQuote(bearerToken: string, quote: Quote, quoteId: number, collectionId: number) {
+  const reply = await fetch(`${PUBLIC_API_URL}/quotes/${quoteId}`, {
     method: 'PUT',
     headers: {
       Authorization: `Bearer ${bearerToken}`,
@@ -264,16 +263,15 @@ export async function updateQuote(bearerToken: string, quote: Quote) {
       data: {
         content: quote.content,
         quoted: quote.quoted,
-        collection: quote.collection,
+        collection: collectionId,
       }
     }),
   });
-  const data = await reply.json();
-  return data;
+  return reply;
 }
 
-export async function deleteQuote(quote: Quote, bearerToken: string) {
-  const reply = await fetch(`${PUBLIC_API_URL}/quotes/${quote.id}`, {
+export async function deleteQuote(bearerToken: string, quoteId: number) {
+  const reply = await fetch(`${PUBLIC_API_URL}/quotes/${quoteId}`, {
     method: 'DELETE',
     headers: {
       Authorization: `Bearer ${bearerToken}`,
