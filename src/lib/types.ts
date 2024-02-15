@@ -11,7 +11,7 @@ export type User = {
 export type Follower = User & { isModerator: boolean };
 
 export type Quote = {
-  quote: string,
+  content: string,
   quoted: string,
 }
 

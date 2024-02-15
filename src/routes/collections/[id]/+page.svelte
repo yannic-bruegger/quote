@@ -3,13 +3,15 @@
 	import Quote from '../../../components/quote.svelte';
 	import Header from '../../../components/header.svelte';
 	import { Themes, NavBarState } from '$lib/constants';
-	import { getQuotesOfCollection } from '$lib/api'
+	import { getQuotesOfCollection, createQuote, updateQuote, deleteQuote } from '$lib/api';
 
 	import type { PageData } from './$types';
 	
 	export let data: PageData;
 
 	function initCurrentQuotes(quotes: any, startIndex: number) {
+		currentQuotes = [];
+
 		if (quotes.length > 4) {
 			for (let i = -2; i <= 2; i++) {
 				let index = startIndex + i;
@@ -22,9 +24,11 @@
 
 				currentQuotes.push(quotes[index]);
 			}
+			updateQuoteIds(currentQuotes);
 		} else {
 			singleQuote = quotes[startIndex];
 		}
+
 	}
 	
 	const quoteWrapperClasses = 'quote-wrapper not-delete not-editable not-add';
@@ -47,6 +51,13 @@
 
 	let quotes: any[] = [];
 
+	// Visible Quote Ids
+	let quoteIdOuterLeft: number;
+	let quoteIdLeft: number;
+	let quoteIdCenter: number;
+	let quoteIdRight: number;
+	let quoteIdOuterRight: number;
+
 	onMount(async () => {
 
 		quotes = await getQuotesOfCollection(data.id);
@@ -57,7 +68,6 @@
 		
 		const actionsWrapper = <HTMLDivElement>document.querySelector('div#actions-wrapper');
 		const confirmDismissActionsWrapper = <HTMLDivElement>document.querySelector('div#confirm-dismiss-actions-wrapper');
-		visuallyCenterQuote = <HTMLDivElement>document.querySelector('div.center-quote');
 
 		const buttonPrev = <HTMLButtonElement>document.querySelector('button#prev');
 		const buttonNext = <HTMLButtonElement>document.querySelector('button#next');
@@ -130,16 +140,18 @@
 		});
 
 		buttonAdd.addEventListener('click', () => {
+			visuallyCenterQuote = <HTMLDivElement>document.querySelector('div.center-quote');
 			actionsWrapper.classList.toggle('visible');
 			confirmDismissActionsWrapper.classList.toggle('invisible');
 			visuallyCenterQuote.classList.toggle('not-add');
-
 			editedQuote = visuallyCenterQuote.cloneNode(true) as HTMLDivElement;
+			
 			editableContentOnOff(true, 'add');
 			quoteActionClass = 'add';
 		});
 
 		buttonEdit.addEventListener('click', () => {
+			visuallyCenterQuote = <HTMLDivElement>document.querySelector('div.center-quote');
 			actionsWrapper.classList.toggle('visible');
 			confirmDismissActionsWrapper.classList.toggle('invisible');
 			visuallyCenterQuote.classList.toggle('not-editable');
@@ -150,6 +162,7 @@
 		});
 
 		buttonDelete.addEventListener('click', () => {
+			visuallyCenterQuote = <HTMLDivElement>document.querySelector('div.center-quote');
 			actionsWrapper.classList.toggle('visible');
 			confirmDismissActionsWrapper.classList.toggle('invisible');
 			visuallyCenterQuote.classList.toggle('not-delete');
@@ -193,45 +206,94 @@
 		});
 
 		buttonConfirm.addEventListener('click', () => {
-			actionsWrapper.classList.toggle('visible');
-			confirmDismissActionsWrapper.classList.toggle('invisible');
+			if (checkForEmptyInputs()) {
+				actionsWrapper.classList.toggle('visible');
+				confirmDismissActionsWrapper.classList.toggle('invisible');
+			} else {
+				shakeButtonAndReselectEmptyInput();
+				return 0;
+			}
+
+			let content = <string> visuallyCenterQuote.querySelector('.content')?.textContent;
+			let quoted = <string> visuallyCenterQuote.querySelector('.quoted')?.textContent
 
 			switch (quoteActionClass) {
 				case 'add':
 					editableContentOnOff(false);
 					visuallyCenterQuote.classList.toggle('not-add');
+					addQuote(content, quoted);
 					console.log('add');
 					break;
 				case 'edit':
 					editableContentOnOff(false);
 					visuallyCenterQuote.classList.toggle('not-editable');
+					editQuote(quotes[currentQuoteIndex].id, content, quoted);
 					console.log('edit');
 					break;
 				case 'delete':
-					console.log('delete');
 					visuallyCenterQuote.classList.toggle('not-delete');
 					deleteMessage.classList.toggle('invisible');
-					navigateNext();
+					dropQuote(quotes[currentQuoteIndex]);
+					console.log('delete');
 					break;
 			}
 
 			quoteActionClass = '';
 		});
 
+		function checkForEmptyInputs() {
+			if (visuallyCenterQuote) {
+				let content = visuallyCenterQuote.querySelector('.quote .content')?.textContent?.length;
+				let quoted = visuallyCenterQuote.querySelector('.quote .quoted')?.textContent?.length;
+
+				if (content && quoted) {
+					return content > 0 && quoted > 0
+				}
+				
+				return false;
+			}
+		}
+
+		function shakeButtonAndReselectEmptyInput() {
+			if (visuallyCenterQuote) {
+				let content = <HTMLInputElement>visuallyCenterQuote.querySelector('.quote .content');
+				let contentLength = content?.textContent?.length;
+				let quoted = <HTMLInputElement>visuallyCenterQuote.querySelector('.quote .quoted');
+
+				if (content && quoted) {
+					if (contentLength === 0) {
+						content.focus();
+					} else {
+						quoted.focus();
+					}
+				}
+
+				buttonConfirm.classList.toggle('shake');
+				visuallyCenterQuote.classList.toggle('shake');
+
+				setTimeout(() => {
+					buttonConfirm.classList.toggle('shake');
+					visuallyCenterQuote.classList.toggle('shake');
+				}, 300);
+			}
+		}
+
 		function editableContentOnOff(state: boolean, type?: string) {
 			let editQuote = <HTMLInputElement>visuallyCenterQuote.querySelector('.quote .content');
 			let editQuoted = <HTMLInputElement>visuallyCenterQuote.querySelector('.quote .quoted');
-
+				
 			if (editQuote && editQuoted) {
 				editQuote.setAttribute('contenteditable', state ? 'true' : 'false');
 				editQuoted.setAttribute('contenteditable', state ? 'true' : 'false');
 				editQuote.focus();
-			}
 
-			if (type === 'add') {
-				editQuote.textContent = '';
-				editQuoted.textContent = '';
-				editQuote.placeholder = 'Quote';
+				if (type === 'add') {
+					let newQuoteId = <HTMLInputElement>visuallyCenterQuote.querySelector('.quote .quote-id')
+
+					newQuoteId.textContent = `Quote #${(quotes.length + 1)}`;
+					editQuote.textContent = '';
+					editQuoted.textContent = '';
+				}
 			}
 		}
 
@@ -315,6 +377,39 @@
 
 			if (!buttonNext.classList.contains('animation-inactive')) {
 				buttonNext.classList.toggle('animation-inactive');
+			}
+		}
+
+		async function addQuote(quote: string, quoted: string) {
+			let result = await createQuote(<string> localStorage.getItem('token'), {content: quote, quoted: quoted}, parseInt(data.id));
+			if (result.ok) {
+				let response = await result.json(); 
+				quotes.push(response.data);
+				redrawQuotes('newest');
+			} else {
+				console.error(result);
+			}
+		}
+
+		async function editQuote(quoteId: number, quote: string, quoted: string) {
+			let result = await updateQuote(<string> localStorage.getItem('token'), {content: quote, quoted: quoted}, quoteId, parseInt(data.id));
+			if (!result.ok) {
+				console.error(result);
+			}
+		}
+
+		async function dropQuote(quote: Quote) {
+			let result = await deleteQuote(<string> localStorage.getItem('token'), quote.id);
+			if (result.ok) {
+				let localQuoteId = quotes.indexOf(quote);
+				
+				if (localQuoteId > -1) {
+					quotes.splice(localQuoteId, 1);
+				}
+				
+				redrawQuotes('oldest');				
+			} else {
+				console.error(result);
 			}
 		}
 	});
@@ -511,8 +606,10 @@
 				newQuote = quotes[quotes.length - 1];
 			}
 
-			currentQuotes[prevQuoteIndex] = newQuote;
+			currentQuotes[prevQuoteIndex] = newQuote;			
 		}
+		currentQuoteIndex = quotes.indexOf(currentQuotes[currentCaruselQuoteIndex]);
+		updateQuoteIds(currentQuotes);
 	}
 
 	function showNext() {
@@ -533,8 +630,16 @@
 		singleQuote = quotes[currentQuoteIndex];
 	}
 
-	function getQuoteId(quote: any) {
-		return quotes.indexOf(quote)+1;
+	function updateQuoteIds(quotes: any[]) {
+		quoteIdOuterLeft = getLocalQuoteId(quotes[0]);
+		quoteIdLeft = getLocalQuoteId(quotes[1]);
+		quoteIdCenter = getLocalQuoteId(quotes[2]);
+		quoteIdRight = getLocalQuoteId(quotes[3]);
+		quoteIdOuterRight = getLocalQuoteId(quotes[4]);
+	}
+
+	function getLocalQuoteId(quote: any) {
+		return quotes.indexOf(quote) + 1;
 	}
 </script>
 
@@ -543,30 +648,24 @@
 <div class="quotes">
 	{#if quotes}
 		{#if quotes.length > 4}
-			<div
-				class="outer-left-quote {quoteWrapperClasses}"
-				style="left: -200%; right: 200%; margin-right: -1rem;"
-			>
-				<Quote quoteId={getQuoteId(currentQuotes[0])} quote={currentQuotes[0].attributes.content} quoted={currentQuotes[0].attributes.quoted} />
+			<div class="outer-left-quote {quoteWrapperClasses}" style="left: -200%; right: 200%; margin-right: -1rem;">
+				<Quote quoteId={quoteIdOuterLeft} quote={currentQuotes[0].attributes.content} quoted={currentQuotes[0].attributes.quoted} />
 			</div>
 
 			<div class="left-quote {quoteWrapperClasses}" style="left: -100%; right: 100%; margin-right: -1rem;">
-				<Quote quoteId={getQuoteId(currentQuotes[1])} quote={currentQuotes[1].attributes.content} quoted={currentQuotes[1].attributes.quoted} />
+				<Quote quoteId={quoteIdLeft} quote={currentQuotes[1].attributes.content} quoted={currentQuotes[1].attributes.quoted} />
 			</div>
 
 			<div class="center-quote {quoteWrapperClasses}" style="left: 0; right: 0">
-				<Quote quoteId={getQuoteId(currentQuotes[2])} quote={currentQuotes[2].attributes.content} quoted={currentQuotes[2].attributes.quoted} />
+				<Quote quoteId={quoteIdCenter} quote={currentQuotes[2].attributes.content} quoted={currentQuotes[2].attributes.quoted} />
 			</div>
 
 			<div class="right-quote {quoteWrapperClasses}" style="left: 100%; right: -100%; margin-left: -1rem;">
-				<Quote quoteId={getQuoteId(currentQuotes[3])}  quote={currentQuotes[3].attributes.content} quoted={currentQuotes[3].attributes.quoted} />
+				<Quote quoteId={quoteIdRight}  quote={currentQuotes[3].attributes.content} quoted={currentQuotes[3].attributes.quoted} />
 			</div>
 
-			<div
-				class="outer-right-quote {quoteWrapperClasses}"
-				style="left: 200%; right: -200%; margin-left: -1rem;"
-			>
-				<Quote quoteId={getQuoteId(currentQuotes[4])} quote={currentQuotes[4].attributes.content} quoted={currentQuotes[4].attributes.quoted} />
+			<div class="outer-right-quote {quoteWrapperClasses}" style="left: 200%; right: -200%; margin-left: -1rem;">
+				<Quote quoteId={quoteIdOuterRight} quote={currentQuotes[4].attributes.content} quoted={currentQuotes[4].attributes.quoted} />
 			</div>
 		{:else if quotes.length > 0}
 			<div class="left-quote {quoteWrapperClasses}" style="left: -100%; right: 100%; margin-right: -1rem;">

@@ -1,7 +1,7 @@
 <script lang="ts">
   export let quoteId: number = 0; 
   export let quote: string;
-  export let quoted: string;
+  export let quoted: string; 
 </script>
 
 <div class="quote">
