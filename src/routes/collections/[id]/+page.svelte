@@ -8,7 +8,32 @@
 
 	export let data: PageData;
 
+	let slideMode = true;
 	let collectionProperties: any;
+
+	const quoteWrapperClasses = 'quote-wrapper not-delete not-editable not-add';
+
+	// Start Index (altough traks index of current none carusel quote)
+	let currentQuoteIndex = 0;
+
+	// Carusel
+	let currentQuotes: any[];
+	let currentCaruselQuoteIndex = 2;
+
+	let navigationHappend = false;
+	let timeoutId: any = 0;
+	let quoteActionClass = '';
+	let visuallyCenterQuote: HTMLDivElement;
+	let editedQuote: HTMLDivElement;
+
+	let quotes: any[];
+
+	// Visible Quote Ids
+	let quoteIdOuterLeft: number;
+	let quoteIdLeft: number;
+	let quoteIdCenter: number;
+	let quoteIdRight: number;
+	let quoteIdOuterRight: number;
 
 	function initCurrentQuotes(quotes: any, startIndex: number) {
 		currentQuotes = [];
@@ -25,42 +50,25 @@
 
 				currentQuotes.push(quotes[index]);
 			}
-			updateQuoteIds(currentQuotes);
+			updateSlideQuoteIds(currentQuotes);
 		} else {
-			singleQuote = quotes[startIndex];
+			slideMode = false;
+
+			if (quotes.length === 0) {
+				quotes.push({'attributes': {'content': '', 'quoted': ''}});
+				currentQuotes.push(quotes[0]);
+			} else {
+				currentQuotes.push(quotes[startIndex]);
+			}
+
+			getLocalQuoteId(quotes[startIndex]);
 		}
 	}
-	
-	const quoteWrapperClasses = 'quote-wrapper not-delete not-editable not-add';
-
-	// Start Index (altough traks index of current none carusel quote)
-	let currentQuoteIndex = 0;
-
-	// Single
-	let singleQuote: any = {};
-
-	// Carusel
-	let currentQuotes: any[] = [];
-	let currentCaruselQuoteIndex = 2;
-
-	let navigationHappend = false;
-	let timeoutId: any = 0;
-	let quoteActionClass = '';
-	let visuallyCenterQuote: HTMLDivElement;
-	let editedQuote: HTMLDivElement;
-
-	let quotes: any[] = [];
-
-	// Visible Quote Ids
-	let quoteIdOuterLeft: number;
-	let quoteIdLeft: number;
-	let quoteIdCenter: number;
-	let quoteIdRight: number;
-	let quoteIdOuterRight: number;
 
 	onMount(async () => {
 		quotes = await getQuotesOfCollection(data.id);
-		currentQuoteIndex = Math.round(Math.random() * quotes.length);
+		currentQuoteIndex = Math.max(0, Math.round(Math.random() * quotes.length - 1));
+
 		initCurrentQuotes(quotes, currentQuoteIndex);
 		collectionProperties = await getCollectionProperties(data.id);
 		
@@ -82,6 +90,12 @@
 
 		const deleteMessage = <HTMLDivElement>document.querySelector('div#delete-message');
 
+		if (!slideMode) {
+			if (!collectionContainsQuotes()) {
+				triggerAddQuote();
+			}
+		}
+
 		navHint.addEventListener('click', () => {
 			const actionsWrapper = <HTMLDivElement>document.querySelector('div#actions-wrapper');
 				actionsWrapper.scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -93,7 +107,7 @@
 			}
 		});
 
-		buttonRandom.addEventListener('click', () => {
+		buttonRandom?.addEventListener('click', () => {
 			redrawQuotes('random');
 		});
 
@@ -113,31 +127,42 @@
 			}
 		});
 
-		buttonNext.addEventListener('mousedown', function (e) {
-			timeoutId = setTimeout(() => {redrawQuotes('newest')}, 1000);
-			buttonNext.classList.toggle('animation-inactive');
+		buttonNext.addEventListener('mousedown', () => {
+			if (slideMode) {
+				timeoutId = setTimeout(() => {redrawQuotes('newest')}, 1000);
+				buttonNext.classList.toggle('animation-inactive');
+			}
 		});
 
-		buttonNext.addEventListener('mouseup', function () {
+		buttonNext.addEventListener('mouseup', () => {
 			clearTimeout(timeoutId);
 			if (!buttonNext.classList.contains('animation-inactive')) {
 				buttonNext.classList.toggle('animation-inactive');
 			}
 		});
 
-		buttonNext.addEventListener('touchstart', function () {
-			timeoutId = setTimeout(() => {redrawQuotes('newest')}, 1000);
-			buttonNext.classList.toggle('animation-inactive');
+		buttonNext.addEventListener('touchstart', () => {
+			if (slideMode) {
+				timeoutId = setTimeout(() => {redrawQuotes('newest')}, 1000);
+				buttonNext.classList.toggle('animation-inactive');
+			}
 		});
 
-		buttonNext.addEventListener('touchend', function () {
+		buttonNext.addEventListener('touchend', () => {
 			clearTimeout(timeoutId);
 			if (!buttonNext.classList.contains('animation-inactive')) {
 				buttonNext.classList.toggle('animation-inactive');
 			}
 		});
 
-		buttonAdd.addEventListener('click', () => {
+		buttonAdd?.addEventListener('click', () => {
+			triggerAddQuote();
+		});
+
+		function triggerAddQuote() {
+			if (!collectionContainsQuotes()) {
+				currentQuoteIndex = 1;
+			}
 			visuallyCenterQuote = <HTMLDivElement>document.querySelector('div.center-quote');
 			actionsWrapper.classList.toggle('visible');
 			confirmDismissActionsWrapper.classList.toggle('invisible');
@@ -146,9 +171,9 @@
 			
 			editableContentOnOff(true, 'add');
 			quoteActionClass = 'add';
-		});
+		}
 
-		buttonEdit.addEventListener('click', () => {
+		buttonEdit?.addEventListener('click', () => {
 			visuallyCenterQuote = <HTMLDivElement>document.querySelector('div.center-quote');
 			actionsWrapper.classList.toggle('visible');
 			confirmDismissActionsWrapper.classList.toggle('invisible');
@@ -159,7 +184,7 @@
 			quoteActionClass = 'edit';
 		});
 
-		buttonDelete.addEventListener('click', () => {
+		buttonDelete?.addEventListener('click', () => {
 			visuallyCenterQuote = <HTMLDivElement>document.querySelector('div.center-quote');
 			actionsWrapper.classList.toggle('visible');
 			confirmDismissActionsWrapper.classList.toggle('invisible');
@@ -169,8 +194,15 @@
 		});
 
 		buttonDismiss.addEventListener('click', () => {
-			actionsWrapper.classList.toggle('visible');
-			confirmDismissActionsWrapper.classList.toggle('invisible');
+			if (collectionContainsQuotes()) {
+				actionsWrapper.classList.toggle('visible');
+				confirmDismissActionsWrapper.classList.toggle('invisible');
+			} else {
+				console.log(collectionContainsQuotes());
+				
+				shakeButtonAndReselectEmptyInput();
+				return 0;
+			}
 
 			switch (quoteActionClass) {
 				case 'add':
@@ -217,12 +249,22 @@
 				case 'edit':
 					editableContentOnOff(false);
 					visuallyCenterQuote.classList.toggle('not-editable');
-					editQuote(quotes[currentQuoteIndex].id, content, quoted);
+					
+					if (slideMode) {
+						editQuote(quotes[currentQuoteIndex].id, content, quoted);
+					} else {
+						editQuote(quotes[quotes.indexOf(currentQuotes[0])].id, content, quoted);
+					}
 					break;
 				case 'delete':
 					visuallyCenterQuote.classList.toggle('not-delete');
 					deleteMessage.classList.toggle('invisible');
-					dropQuote(quotes[currentQuoteIndex]);
+
+					if (slideMode) {
+						dropQuote(quotes[currentQuoteIndex]);
+					} else {
+						dropQuote(quotes[quotes.indexOf(currentQuotes[0])]);
+					}
 					break;
 			}
 
@@ -278,7 +320,12 @@
 				if (type === 'add') {
 					let newQuoteId = <HTMLInputElement>visuallyCenterQuote.querySelector('.quote .quote-id')
 
-					newQuoteId.textContent = `Quote #${(quotes.length + 1)}`;
+					if (collectionContainsQuotes()) {
+						newQuoteId.textContent = `Quote #${(quotes.length + 1)}`;
+					} else {
+						newQuoteId.textContent = `Quote #1`;
+					}
+
 					editQuote.textContent = '';
 					editQuoted.textContent = '';
 				}
@@ -373,7 +420,17 @@
 			if (result.ok) {
 				let response = await result.json(); 
 				quotes.push(response.data);
-				redrawQuotes('newest');
+
+				if (quotes.length > 4) {
+					location.reload();
+				}
+
+				if (slideMode) {
+					redrawQuotes('newest');
+				} else {
+					currentQuotes[0] = response.data;
+					currentQuoteIndex = quotes.indexOf(response.data);
+				}
 			} else {
 				console.error(result);
 			}
@@ -394,8 +451,21 @@
 				if (localQuoteId > -1) {
 					quotes.splice(localQuoteId, 1);
 				}
-				
-				redrawQuotes('oldest');				
+
+				if (quotes.length < 5) {
+					location.reload();
+				}
+
+				if (slideMode) {
+					redrawQuotes('oldest');				
+				} else {
+					if (quotes.length === 0) {
+						quotes.push({'attributes': {'content': '', 'quoted': ''}});
+						triggerAddQuote();
+					}
+					currentQuotes[0] = quotes[quotes.length - 1];
+					currentQuoteIndex = quotes.length;
+				}
 			} else {
 				console.error(result);
 			}
@@ -403,7 +473,7 @@
 	});
 
 	function navigatePrev() {
-		if (quotes.length > 4) {
+		if (slideMode) {
 			slidePrev();
 			updateCurrentQuotes('prev');
 		} else {
@@ -412,7 +482,7 @@
 	}
 
 	function navigateNext() {
-		if (quotes.length > 4) {
+		if (slideMode) {
 			slideNext();
 			updateCurrentQuotes('next');
 		} else {
@@ -597,7 +667,7 @@
 			currentQuotes[prevQuoteIndex] = newQuote;			
 		}
 		currentQuoteIndex = quotes.indexOf(currentQuotes[currentCaruselQuoteIndex]);
-		updateQuoteIds(currentQuotes);
+		updateSlideQuoteIds(currentQuotes);
 	}
 
 	function showNext() {
@@ -606,6 +676,8 @@
 		} else {
 			currentQuoteIndex = 0;
 		}
+		
+		currentQuotes[0] = quotes[currentQuoteIndex];
 	}
 
 	function showPrev() {
@@ -614,11 +686,11 @@
 		} else {
 			currentQuoteIndex = quotes.length - 1;
 		}
-
-		singleQuote = quotes[currentQuoteIndex];
+		
+		currentQuotes[0] = quotes[currentQuoteIndex];
 	}
 
-	function updateQuoteIds(quotes: any[]) {
+	function updateSlideQuoteIds(quotes: any[]) {
 		quoteIdOuterLeft = getLocalQuoteId(quotes[0]);
 		quoteIdLeft = getLocalQuoteId(quotes[1]);
 		quoteIdCenter = getLocalQuoteId(quotes[2]);
@@ -627,7 +699,15 @@
 	}
 
 	function getLocalQuoteId(quote: any) {
-		return quotes.indexOf(quote) + 1;
+		if (collectionContainsQuotes()) {
+			return quotes.indexOf(quote) + 1;
+		} else {
+			return 1;
+		}
+	}
+
+	function collectionContainsQuotes(updatedQuotes: any[] = quotes) {
+		return updatedQuotes[0].hasOwnProperty('id') && updatedQuotes[0].attributes.quoted !== '';
 	}
 </script>
 
@@ -657,21 +737,17 @@
 			<div class="outer-right-quote {quoteWrapperClasses}" style="left: 200%; right: -200%; margin-left: -1rem;">
 				<Quote quoteId={quoteIdOuterRight} quote={currentQuotes[4].attributes.content} quoted={currentQuotes[4].attributes.quoted} />
 			</div>
-		{:else if quotes.length > 0}
+		{:else}
 			<div class="left-quote {quoteWrapperClasses}" style="left: -100%; right: 100%; margin-right: -1rem;">
 				<Quote quote={''} quoted={''} />
 			</div>
 
 			<div class="center-quote {quoteWrapperClasses}" style="left: 0; right: 0">
-				<Quote quoteId={1} quote={singleQuote.quote} quoted={singleQuote.attributes.quoted} />
+				<Quote quoteId={currentQuoteIndex + 1} quote={currentQuotes[0].attributes.content} quoted={currentQuotes[0].attributes.quoted} />
 			</div>
 
 			<div class="right-quote {quoteWrapperClasses}" style="left: 100%; right: -100%; margin-left: -1rem;">
 				<Quote quote={''} quoted={''} />
-			</div>
-		{:else}
-			<div class="center-quote {quoteWrapperClasses}" style="left: 0; right: 0">
-				<p class="nothing-here">Looks like there are no quotes here yet. Be the first to add one!</p>
 			</div>
 		{/if}
 
@@ -686,7 +762,9 @@
 		<span id="nav-hint"></span>
 
 		<div class="actions primary-actions">
-			<button id="random" class="default small" disabled={quotes.length === 0}><span class="icon-shuffle" /></button>
+			{#if slideMode}
+				<button id="random" class="default small" disabled={quotes.length === 0}><span class="icon-shuffle" /></button>
+			{/if}
 			<button id="prev" class="default" disabled={quotes.length === 0}><span class="icon-chevron-left" /></button>
 			<button id="next" class="default left-right-animation animation-inactive" disabled={quotes.length === 0}><span class="icon-chevron-right" /></button>
 		</div>
@@ -699,6 +777,7 @@
 	{/if}
 </div>
 
+<!-- make only visible if user is moderator or owner -->
 <div id="confirm-dismiss-actions-wrapper" class="invisible">
 	<div class="actions">
 		<button id="dismiss" class="default"><span class="icon-dismiss pink-gradient colored-text"></span></button>
