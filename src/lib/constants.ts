@@ -10,4 +10,5 @@ export enum Themes {
 export enum NavBarState {
   MAIN,
   SUB,
+  COL
 }

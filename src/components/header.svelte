@@ -1,45 +1,90 @@
 <script lang="ts">
-	import { Themes, NavBarState } from "$lib/constants";
+	import { Themes, NavBarState } from '$lib/constants';
 	import { goto } from '$app/navigation';
-	import user from '$lib/user'
-	import { getLocalToken, isAuthenticated } from "$lib/auth";
-	import { getOwnUser } from "$lib/api";
+	import user from '$lib/user';
+	import { getLocalToken, isAuthenticated } from '$lib/auth';
+	import { getOwnUser, bookmarkCollection, removeBookmarkedCollection } from '$lib/api';
 
 	export let title: string;
 	export let theme: Themes | undefined;
-	export let state: NavBarState = NavBarState.MAIN;	
+	export let collectionId: number = -1;
+	export let state: NavBarState = NavBarState.MAIN;
+	export let role: any = undefined;
 
-	checkForAuthState()
+	checkForAuthState();
 
 	async function checkForAuthState() {
-		if (await isAuthenticated() && !$user) {
-      const token = getLocalToken();
-      const response = await getOwnUser(token);
-      $user = response;
-    } else {
-			if (!$user) goto('/signin');
+		if ((await isAuthenticated()) && !$user) {
+			const token = getLocalToken();
+			const response = await getOwnUser(token);
+			$user = response;
+		} else {
+			if (state !== NavBarState.COL && !$user) goto('/signin');
 		}
 	}
 
 	function goBack(defaultRoute = '/') {
 		const ref = document.referrer;
-		goto(ref.length > 0 ? ref : defaultRoute)
+		goto(ref.length > 0 ? ref : defaultRoute);
 	}
+
+	function toggleFollow() {
+		if (role.isFollower) {
+			if (confirm("Unfollow this collection?")) {
+				removeBookmarkedCollection((collectionId).toString(), getLocalToken());
+				role.isFollower = false;
+			}
+		} else {
+			bookmarkCollection((collectionId).toString(), getLocalToken());
+			role.isFollower = true;
+		}
+	}
+	
 </script>
 
-<header class:around={state === NavBarState.SUB}>
-	{#if state === NavBarState.SUB}
-		<button class="back" on:click={() => { goBack() }}>
-			<span class="icon-arrow-left"></span>
+<header class:around={state !== NavBarState.MAIN}>
+	{#if $user && (state === NavBarState.SUB || state === NavBarState.COL)}
+		<button
+			class="back"
+			on:click={() => {
+				goBack();
+			}}
+		>
+			<span class="icon-arrow-left" />
 		</button>
 	{/if}
 
-	<h1 class={`${theme}`}>{ title }</h1>
+	<h1 class={`${theme}`}>{title}</h1>
 
-	{#if state === NavBarState.MAIN}
-	<a href="/users/me">
-		<img src="{$user?.profilePicture ? $user.profilePicture : `https://ui-avatars.com/api/?name=${$user?.displayName}`}" alt="user" />
-	</a>
+	{#if $user && state === NavBarState.MAIN}
+		<a href="/users/me">
+			<img
+				src={$user?.profilePicture
+					? $user.profilePicture
+					: `https://ui-avatars.com/api/?name=${$user?.displayName}`}
+				alt="user"
+			/>
+		</a>
+	{/if}
+
+	{#if state === NavBarState.COL}
+		<div class="context">
+			{#if $user && role.isFollower && !role.isOwner && !role.isModerator}
+				<button class="bookmark" on:click={() => toggleFollow()}>
+					<span class="icon-bookmark-delete" />
+				</button>
+			{/if}
+			{#if $user && !role.isFollower && !role.isOwner && !role.isModerator}
+				<button class="bookmark" on:click={() => toggleFollow()}>
+					<span class="icon-bookmark" />
+				</button>
+			{/if}
+			{#if !$user && !role.isFollower && !role.isOwner && !role.isModerator}
+				<button class="bookmark" on:click={() => goto('/signin')}>
+					login
+				</button>
+			{/if}
+		</div>
 	{/if}
 </header>
 
@@ -49,13 +94,13 @@
 		display: flex;
 		flex-direction: row;
 		justify-content: space-between;
-    align-items: center;
-    padding: 12px var(--app-padding-lr);
-		height:  64px;
+		align-items: center;
+		padding: 12px var(--app-padding-lr);
+		height: 64px;
 	}
 
 	h1 {
-    font-size: inherit;
+		font-size: inherit;
 		color: #d27d91;
 		background-clip: text;
 		-webkit-background-clip: text;
@@ -69,9 +114,16 @@
 		box-shadow: var(--shadow);
 	}
 
-	button.back {
+	button {
+		&.back {
+			position: absolute;
+			left: var(--app-padding-lr);
+		}
+	}
+
+	div.context {
 		position: absolute;
-		left: var(--app-padding-lr);
+		right: var(--app-padding-lr);
 	}
 
 	.around {

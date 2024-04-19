@@ -213,6 +213,27 @@ export async function deleteCollection(collectionId: string, bearerToken: string
   return reply;
 }
 
+function isParticipantInCollection(collections: Array<Collection>, collectionId: string) {
+  if(!collections) return false;
+  return collections.find((collection) => collection.id == collectionId) != undefined;
+}
+
+export async function getMyRoleForCollection(collectionId: string, bearerToken: string) {
+  if (!bearerToken) return {
+    isOwner: false,
+    isModerator: false,
+    isFollower: false
+  }
+
+  const me = await getMe(bearerToken);
+
+  return {
+    isOwner: isParticipantInCollection(me.owns, collectionId),
+    isModerator: isParticipantInCollection(me.moderates, collectionId),
+    isFollower: isParticipantInCollection(me.follows, collectionId)
+  }
+}
+
 export async function updateUserInfo(userId: string, userInfo: User, bearerToken: string) {
   const reply = await fetch(`${PUBLIC_API_URL}/users/${userId}`, {
     method: 'PUT',
@@ -293,15 +314,17 @@ export async function deleteQuote(bearerToken: string, quoteId: number) {
   return reply;
 }
 
-export async function bookmarkCollection(collection: Collection, user: User, bearerToken: string) {
-  const collections = (await getMyCollections(bearerToken)).follows;
-  const collectionIds = collections.map((collection: Collection) => collection.id);
-  collectionIds.push(collection.id);
+export async function bookmarkCollection(collectionId: string, token: string) {
+  let collections = (await getMyCollections(token)).follows;
+  const collectionIds = collections.map((collection) => collection.id);
+  collectionIds.push(collectionId);
 
-  const reply = await fetch(`${PUBLIC_API_URL}/users/${user.id}`, {
+  const myUserId = (await getMe(token)).id;
+
+  const reply = await fetch(`${PUBLIC_API_URL}/users/${myUserId}`, {
       method: 'PUT',
       headers: {
-        Authorization: `Bearer ${bearerToken}`,
+        Authorization: `Bearer ${token}`,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
@@ -312,15 +335,17 @@ export async function bookmarkCollection(collection: Collection, user: User, bea
     return data;
 }
 
-export async function removeBookmarkedCollection(collection: Collection, user: User, bearerToken: string) {
-  const collections: Array<Collection> = (await getMyCollections(bearerToken)).follows;
+export async function removeBookmarkedCollection(collectionId: string, token: string) {
+  let collections = (await getMyCollections(token)).follows;
   const collectionIds = collections.map((collection) => collection.id);
-  const collectionIdsWithoutCollection = collectionIds.filter((id) => id !== collection.id);
+  const collectionIdsWithoutCollection = collectionIds.filter((id) => id != collectionId);
 
-  const reply = await fetch(`${PUBLIC_API_URL}/users/${user.id}`, {
+  const myUserId = (await getMe(token)).id;
+
+  const reply = await fetch(`${PUBLIC_API_URL}/users/${myUserId}`, {
       method: 'PUT',
       headers: {
-        Authorization: `Bearer ${bearerToken}`,
+        Authorization: `Bearer ${token}`,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
