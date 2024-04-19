@@ -13,6 +13,6 @@ export async function isAuthenticated() {
 
 export function getLocalToken() {
   const token = localStorage.getItem('token');
-  if(!token) throw new Error('Could not read toaken from local storage.')
+  if(!token) return '';
   return token;
 }

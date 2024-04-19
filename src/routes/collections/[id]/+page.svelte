@@ -3,13 +3,16 @@
 	import Quote from '../../../components/quote.svelte';
 	import Header from '../../../components/header.svelte';
 	import { NavBarState } from '$lib/constants';
-	import { getQuotesOfCollection, createQuote, updateQuote, deleteQuote, getCollectionProperties} from '$lib/api';
+	import { getLocalToken } from '$lib/auth';
+	import { getQuotesOfCollection, createQuote, updateQuote, deleteQuote, getCollectionProperties, getMyRoleForCollection} from '$lib/api';
 	import type { PageData } from './$types';
+	import Collection from '../../../components/collection.svelte';
 
 	export let data: PageData;
 
 	let slideMode = true;
 	let collectionProperties: any;
+	let collectionRole: any;
 
 	const quoteWrapperClasses = 'quote-wrapper not-delete not-editable not-add';
 
@@ -71,6 +74,7 @@
 
 		initCurrentQuotes(quotes, currentQuoteIndex);
 		collectionProperties = await getCollectionProperties(data.id);
+		collectionRole = await getMyRoleForCollection(collectionProperties.id, getLocalToken());
 		
 		const actionsWrapper = <HTMLDivElement>document.querySelector('div#actions-wrapper');
 		const confirmDismissActionsWrapper = <HTMLDivElement>document.querySelector('div#confirm-dismiss-actions-wrapper');
@@ -106,6 +110,10 @@
 				actionsWrapper.scrollTo({ left: 0, behavior: 'smooth' });
 			}
 		});
+
+		if (!collectionRole.isOwner && !collectionRole.isModerator) {
+			navHint.remove();
+		}
 
 		buttonRandom?.addEventListener('click', () => {
 			redrawQuotes('random');
@@ -711,8 +719,8 @@
 	}
 </script>
 
-{#if collectionProperties}
-	<Header title="{collectionProperties.name}" theme={collectionProperties.theme} state={NavBarState.SUB} />
+{#if collectionProperties && collectionRole}
+	<Header title="{collectionProperties.name}" theme={collectionProperties.theme} collectionId={collectionProperties.id} state={NavBarState.COL} role={collectionRole} />
 {/if}
 
 <div class="quotes">
@@ -761,7 +769,7 @@
 	{#if quotes}
 		<span id="nav-hint"></span>
 
-		<div class="actions primary-actions">
+		<div class="actions primary-actions" class:action-bump={collectionRole && (collectionRole.isOwner || collectionRole.isModerator)}>
 			{#if slideMode}
 				<button id="random" class="default small" disabled={quotes.length === 0}><span class="icon-shuffle" /></button>
 			{/if}
@@ -769,11 +777,13 @@
 			<button id="next" class="default left-right-animation animation-inactive" disabled={quotes.length === 0}><span class="icon-chevron-right" /></button>
 		</div>
 
-		<div class="actions secondary-actions">
-			<button id="add" class="default small"><span class="icon-plus" /></button>
-			<button id="edit" class="default small"><span class="icon-edit" /></button>
-			<button id="delete" class="default small"><span class="icon-delete pink-gradient colored-text" /></button>
-		</div>
+		{#if collectionRole && (collectionRole.isOwner || collectionRole.isModerator)}
+			<div class="actions secondary-actions action-bump">
+				<button id="add" class="default small"><span class="icon-plus" /></button>
+				<button id="edit" class="default small"><span class="icon-edit" /></button>
+				<button id="delete" class="default small"><span class="icon-delete pink-gradient colored-text" /></button>
+			</div>
+		{/if}
 	{/if}
 </div>
 
@@ -827,7 +837,7 @@
 			opacity: 1;
 		}
 
-		.actions {
+		.action-bump {
 			animation: animateNavigaionBump 1s linear 3s 1;
 		}
 	}
