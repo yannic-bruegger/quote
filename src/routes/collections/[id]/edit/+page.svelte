@@ -6,11 +6,12 @@
   import ThemeSelector from "../../../../components/theme-selector.svelte";
   import Input from "../../../../components/input.svelte";
 	import UserSearch from "../../../../components/user-search.svelte";
-  import { getCollection, updateCollection } from '$lib/api';
+  import { deleteCollection, getCollection, updateCollection } from '$lib/api';
 	import { onMount } from "svelte";
 	import type { PageData } from './$types';
 	import { getLocalToken } from "$lib/auth";
 	import { goto } from "$app/navigation";
+	import Dialog from "../../../../components/dialog.svelte";
 	
 	export let data: PageData;
 
@@ -28,12 +29,22 @@
   async function performUpdate() {
     const token = getLocalToken();
     await updateCollection(collection.id, collection.name, selectedModerators, collection.theme, token);
-    goto('/')
+    goto('/');
   }
+
+  async function performDelete() {
+    const token = getLocalToken();
+    await deleteCollection(collection.id, token);
+    goto('/');
+  }
+
+  let showDialog = false;
 
   $: selectedModerators = potentialModerators.filter((pm) => pm.isModerator).map((m) => m.id);
 </script>
 
+
+<Dialog text="Do you really want to delete the collection?" bind:open={showDialog} on:submit={performDelete}></Dialog>
 <Header
   title="Edit Collection"
   theme={collection?.theme}
@@ -58,7 +69,7 @@
   </UserSearch>
 </div>
 <div class="button-group">
-  <button class="default small"><span class="icon-delete"></span></button>
+  <button class="default small" on:click={() => showDialog = !showDialog}><span class="icon-delete pink-gradient colored-text"></span></button>
   <button class="default" on:click={() => goto('/')}><span class="icon-dismiss"></span></button>
   <button class="default" on:click={performUpdate}><span class="icon-check"></span></button>
 </div>

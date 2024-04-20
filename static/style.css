@@ -198,3 +198,11 @@ div.form-container {
   height: 100%;
   align-items: center;
 }
+
+dialog::backdrop {
+  background-color: var(--foreground);
+  backdrop-filter: blur(10px);
+  opacity: 0.75;
+  width: 100vw;
+  height: 100vh;
+}
