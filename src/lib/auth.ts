@@ -1,5 +1,9 @@
 import { getOwnUser } from "./api";
 
+export async function removeAUthenticatedStatus() {
+  localStorage.removeItem('token');
+}
+
 export async function isAuthenticated() {
   const token = localStorage.getItem('token');
   if (token === null) return false;

@@ -21,27 +21,38 @@
   }
 </script>
 
-
-<div class={theme + ` label`}>{label}</div>
-<input type="search" placeholder="Search" bind:value={search}>
-<ul>
-  {#each filteredPotentialModerators as potentialModerator }
-    <li>
-      <img src={potentialModerator.profilePicture ? potentialModerator.profilePicture : `https://ui-avatars.com/api/?name=${potentialModerator?.displayName}`} alt={potentialModerator.displayName}>
-      <span class="displayName">{potentialModerator.displayName}</span>
-      <input
-        type="checkbox"
-        class={theme}
-        class:icon-megaphone-mute={!potentialModerator.isModerator}
-        class:icon-megaphone={potentialModerator.isModerator}
-        class:is-moderator={potentialModerator.isModerator}
-        bind:checked={potentialModerator.isModerator}
-        on:change={(e) => updatePotentialModeratorsList(e, potentialModerator.id)}>
-    </li>
-  {/each}
-</ul>
+<div class="user-search">
+  <div class={theme + ` label`}>{label}</div>
+  <input type="search" placeholder="Search" bind:value={search}>
+  <ul>
+    {#each filteredPotentialModerators as potentialModerator }
+      <li>
+        <img src={potentialModerator.profilePicture ? potentialModerator.profilePicture : `https://ui-avatars.com/api/?name=${potentialModerator?.displayName}`} alt={potentialModerator.displayName}>
+        <span class="displayName">{potentialModerator.displayName}</span>
+        <input
+          type="checkbox"
+          class={theme}
+          class:icon-megaphone-mute={!potentialModerator.isModerator}
+          class:icon-megaphone={potentialModerator.isModerator}
+          class:is-moderator={potentialModerator.isModerator}
+          bind:checked={potentialModerator.isModerator}
+          on:change={(e) => updatePotentialModeratorsList(e, potentialModerator.id)}>
+      </li>
+    {/each}
+  </ul>
+</div>
 
 <style scoped>
+  div.user-search {
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+    width: 100%;
+    & > * {
+      width: 100%;
+    }
+  }
+
   ul {
     display: flex;
     flex-direction: column;
@@ -77,8 +88,6 @@
     width: 100%;
     flex-grow: 1;
   }
-
-
 
   input[type="checkbox"].is-moderator {
     background-clip: text;

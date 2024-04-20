@@ -11,7 +11,6 @@
   export let placeholder: string = '';
   export let autofocus: boolean | undefined;
   export let readonly: boolean = false;
-  export let type: HTMLInputElementType = 'text';
 </script>
 
 <div class="input-group">
