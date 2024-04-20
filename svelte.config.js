@@ -1,5 +1,5 @@
-import adapter from '@sveltejs/adapter-auto';
 import { vitePreprocess } from '@sveltejs/kit/vite';
+import adapter from '@sveltejs/adapter-static';
 
 const dev = process.argv.includes('dev');
 
