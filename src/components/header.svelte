@@ -81,7 +81,7 @@
 			{/if}
 			{#if !$user && !role.isFollower && !role.isOwner && !role.isModerator}
 				<button class="bookmark" on:click={() => goto('/signin')}>
-					login
+					<span class="icon-login"/>
 				</button>
 			{/if}
 		</div>
