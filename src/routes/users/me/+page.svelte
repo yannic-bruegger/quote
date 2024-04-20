@@ -53,7 +53,7 @@
   <Input label="Email" theme={theme} autofocus={false} placeholder="" bind:value={newUser.email}></Input>
   <Input label="Username" theme={theme} autofocus={false} placeholder="" bind:value={newUser.username} readonly></Input>
   <Input label="Password" theme={theme} autofocus={false} placeholder="" value={passPlaceholder} readonly={true}></Input>
-  <button class="default" on:click={signout}>Sign out<span class="icon-dismiss"></span></button>
+  <button class="default" on:click={signout}>Sign out<span class="icon-logout"></span></button>
 </div>
 <div class="button-group">
   <button class="default" on:click={dismiss}><span class="icon-dismiss"></span></button>
