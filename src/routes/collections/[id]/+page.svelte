@@ -6,7 +6,6 @@
 	import { getLocalToken } from '$lib/auth';
 	import { getQuotesOfCollection, createQuote, updateQuote, deleteQuote, getCollectionProperties, getMyRoleForCollection} from '$lib/api';
 	import type { PageData } from './$types';
-	import Collection from '../../../components/collection.svelte';
 
 	export let data: PageData;
 
@@ -84,6 +83,8 @@
 		const buttonRandom = <HTMLButtonElement>document.querySelector('button#random');
 
 		const navHint = <HTMLSpanElement>document.querySelector('span#nav-hint');
+		// const generalActions = <HTMLDivElement>document.querySelector('div#general-actions')
+		const modActions = <HTMLDivElement>document.querySelector('div#mod-actions')
 
 		const buttonAdd = <HTMLButtonElement>document.querySelector('button#add');
 		const buttonEdit = <HTMLButtonElement>document.querySelector('button#edit');
@@ -94,10 +95,20 @@
 
 		const deleteMessage = <HTMLDivElement>document.querySelector('div#delete-message');
 
+
+		function ownerOrMod() {
+			return collectionRole.isOwner || collectionRole.isModerator;
+		}		
+
 		if (!slideMode) {
-			if (!collectionContainsQuotes()) {
+			if (!collectionContainsQuotes() && ownerOrMod()) {
 				triggerAddQuote();
 			}
+		}
+
+		if (!ownerOrMod()) {
+			navHint.remove();
+			modActions.remove();
 		}
 
 		navHint.addEventListener('click', () => {
@@ -110,10 +121,6 @@
 				actionsWrapper.scrollTo({ left: 0, behavior: 'smooth' });
 			}
 		});
-
-		if (!collectionRole.isOwner && !collectionRole.isModerator) {
-			navHint.remove();
-		}
 
 		buttonRandom?.addEventListener('click', () => {
 			redrawQuotes('random');
@@ -163,7 +170,7 @@
 			}
 		});
 
-		buttonAdd?.addEventListener('click', () => {
+		buttonAdd.addEventListener('click', () => {
 			triggerAddQuote();
 		});
 
@@ -181,7 +188,7 @@
 			quoteActionClass = 'add';
 		}
 
-		buttonEdit?.addEventListener('click', () => {
+		buttonEdit.addEventListener('click', () => {
 			visuallyCenterQuote = <HTMLDivElement>document.querySelector('div.center-quote');
 			actionsWrapper.classList.toggle('visible');
 			confirmDismissActionsWrapper.classList.toggle('invisible');
@@ -192,7 +199,7 @@
 			quoteActionClass = 'edit';
 		});
 
-		buttonDelete?.addEventListener('click', () => {
+		buttonDelete.addEventListener('click', () => {
 			visuallyCenterQuote = <HTMLDivElement>document.querySelector('div.center-quote');
 			actionsWrapper.classList.toggle('visible');
 			confirmDismissActionsWrapper.classList.toggle('invisible');
@@ -206,8 +213,6 @@
 				actionsWrapper.classList.toggle('visible');
 				confirmDismissActionsWrapper.classList.toggle('invisible');
 			} else {
-				console.log(collectionContainsQuotes());
-				
 				shakeButtonAndReselectEmptyInput();
 				return 0;
 			}
@@ -424,6 +429,8 @@
 		}
 
 		async function addQuote(quote: string, quoted: string) {
+			if (!ownerOrMod()) return;
+
 			let result = await createQuote(<string> localStorage.getItem('token'), {content: quote, quoted: quoted}, parseInt(data.id));
 			if (result.ok) {
 				let response = await result.json(); 
@@ -445,6 +452,8 @@
 		}
 
 		async function editQuote(quoteId: number, quote: string, quoted: string) {
+			if (!ownerOrMod()) return;
+
 			let result = await updateQuote(<string> localStorage.getItem('token'), {content: quote, quoted: quoted}, quoteId, parseInt(data.id));
 			if (!result.ok) {
 				console.error(result);
@@ -452,6 +461,8 @@
 		}
 
 		async function dropQuote(quote: Quote) {
+			if (!ownerOrMod()) return;
+
 			let result = await deleteQuote(<string> localStorage.getItem('token'), quote.id);
 			if (result.ok) {
 				let localQuoteId = quotes.indexOf(quote);
@@ -769,7 +780,7 @@
 	{#if quotes}
 		<span id="nav-hint"></span>
 
-		<div class="actions primary-actions" class:action-bump={collectionRole && (collectionRole.isOwner || collectionRole.isModerator)}>
+		<div id="general-actions" class="actions primary-actions" class:action-bump={collectionRole && (collectionRole.isOwner || collectionRole.isModerator)}>
 			{#if slideMode}
 				<button id="random" class="default small" disabled={quotes.length === 0}><span class="icon-shuffle" /></button>
 			{/if}
@@ -777,13 +788,11 @@
 			<button id="next" class="default left-right-animation animation-inactive" disabled={quotes.length === 0}><span class="icon-chevron-right" /></button>
 		</div>
 
-		{#if collectionRole && (collectionRole.isOwner || collectionRole.isModerator)}
-			<div class="actions secondary-actions action-bump">
-				<button id="add" class="default small"><span class="icon-plus" /></button>
-				<button id="edit" class="default small"><span class="icon-edit" /></button>
-				<button id="delete" class="default small"><span class="icon-delete pink-gradient colored-text" /></button>
-			</div>
-		{/if}
+		<div id="mod-actions" class="actions secondary-actions action-bump">
+			<button id="add" class="default small"><span class="icon-plus" /></button>
+			<button id="edit" class="default small"><span class="icon-edit" /></button>
+			<button id="delete" class="default small"><span class="icon-delete pink-gradient colored-text" /></button>
+		</div>
 	{/if}
 </div>
 
