@@ -7,7 +7,7 @@
 
   export async function updateAuthenticatedStatus() {
     if (await isAuthenticated()) await removeAuthenticatedStatus()
-    goto('/')
+    goto('/signin')
   }
 </script>
 
