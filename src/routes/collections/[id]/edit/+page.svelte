@@ -64,6 +64,13 @@
 </div>
 
 <style scoped>
+  .form-container {
+    display: flex;
+    & > * {
+      width: 100%;
+    }
+  }
+
   div.button-group:after {
     content: "";
     position: absolute;

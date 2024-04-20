@@ -142,6 +142,7 @@ input[type="search"],
 input[type="email"],
 input[type="password"] {
   all: unset;
+  box-sizing: border-box;
   padding: 1rem 1rem ;
   background-color: var(--foreground, #FFFFFF);
   border-radius: .75rem;
