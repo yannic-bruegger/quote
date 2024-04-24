@@ -730,9 +730,11 @@
 	}
 </script>
 
-{#if quotes && collectionProperties && collectionRole}
+{#if collectionProperties && collectionRole}
 	<Header title="{collectionProperties.name}" theme={collectionProperties.theme} collectionId={collectionProperties.id} state={NavBarState.COL} role={collectionRole} />
-	
+{/if}
+
+{#if quotes}
 	<div class="quotes">
 		{#if quotes.length > 4}
 			<div class="outer-left-quote {quoteWrapperClasses}" style="left: -200%; right: 200%; margin-right: -1rem;">
