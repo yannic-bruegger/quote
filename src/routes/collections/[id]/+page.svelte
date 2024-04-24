@@ -74,7 +74,7 @@
 		initCurrentQuotes(quotes, currentQuoteIndex);
 		collectionProperties = await getCollectionProperties(data.id);
 		collectionRole = await getMyRoleForCollection(collectionProperties.id, getLocalToken());
-		
+
 		const actionsWrapper = <HTMLDivElement>document.querySelector('div#actions-wrapper');
 		const confirmDismissActionsWrapper = <HTMLDivElement>document.querySelector('div#confirm-dismiss-actions-wrapper');
 
@@ -730,12 +730,10 @@
 	}
 </script>
 
-{#if collectionProperties && collectionRole}
+{#if quotes && collectionProperties && collectionRole}
 	<Header title="{collectionProperties.name}" theme={collectionProperties.theme} collectionId={collectionProperties.id} state={NavBarState.COL} role={collectionRole} />
-{/if}
-
-<div class="quotes">
-	{#if quotes}
+	
+	<div class="quotes">
 		{#if quotes.length > 4}
 			<div class="outer-left-quote {quoteWrapperClasses}" style="left: -200%; right: 200%; margin-right: -1rem;">
 				<Quote quoteId={quoteIdOuterLeft} quote={currentQuotes[0].attributes.content} quoted={currentQuotes[0].attributes.quoted} />
@@ -773,11 +771,9 @@
 		<div id="delete-message" class="invisible">
 			<p class="pink-gradient colored-text"><b>Delete?</b> Are you sure?</p>
 		</div>
-	{/if}
-</div>
+	</div>
 
-<div id="actions-wrapper" class="visible">
-	{#if quotes}
+	<div id="actions-wrapper" class="visible">
 		<span id="nav-hint"></span>
 
 		<div id="general-actions" class="actions primary-actions" class:action-bump={collectionRole && (collectionRole.isOwner || collectionRole.isModerator)}>
@@ -793,8 +789,8 @@
 			<button id="edit" class="default small"><span class="icon-edit" /></button>
 			<button id="delete" class="default small"><span class="icon-delete pink-gradient colored-text" /></button>
 		</div>
-	{/if}
-</div>
+	</div>
+{/if}
 
 <!-- make only visible if user is moderator or owner -->
 <div id="confirm-dismiss-actions-wrapper" class="invisible">

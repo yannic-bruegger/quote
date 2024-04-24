@@ -54,7 +54,7 @@
 		</button>
 	{/if}
 
-	<h1 class={`${theme}`}>{title}</h1>
+	<h1 class={theme}>{title}</h1>
 
 	{#if $user && state === NavBarState.MAIN}
 		<a href="/users/me">
