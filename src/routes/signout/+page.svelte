@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
-  import { isAuthenticated, removeAUthenticatedStatus as removeAuthenticatedStatus } from '$lib/auth'
-
+  import { isAuthenticated, removeAUthenticatedStatus as removeAuthenticatedStatus } from '$lib/auth';
+	import background from '$lib/assets/background.svg';
 
   updateAuthenticatedStatus();
 
@@ -11,7 +11,7 @@
   }
 </script>
 
-<div class="signin-container">
+<div class="signin-container" style="background-image: url('{background}');">
   <div class="contents">
     <h1 class="colored-text blue-gradient">Signing you out</h1>
   </div>
@@ -24,7 +24,6 @@
     align-items: center;
     justify-content: center;
     height: 100%;
-    background-image: url('background.svg');
     background-size: cover;
     background-position: center center;
   }

@@ -6,6 +6,20 @@
   padding: 0;
   box-sizing: inherit;
 }
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover, 
+input:-webkit-autofill:focus, 
+input:-webkit-autofill:active,
+button:-webkit-autofill,
+button:-webkit-autofill:hover, 
+button:-webkit-autofill:focus, 
+button:-webkit-autofill:active {
+    -webkit-box-shadow: none !important;
+    -webkit-tap-highlight-color: transparent;
+    outline:none !important;
+}
+
   
 :root {
   --black: #333333;

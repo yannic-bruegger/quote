@@ -68,7 +68,16 @@
 	}
 
 	onMount(async () => {
-		quotes = await getQuotesOfCollection(data.id);
+
+		try {
+			quotes = await getQuotesOfCollection(data.id);
+		} catch (error) {
+			console.log(error);
+		}
+
+		console.log("data", data);
+		
+		
 		currentQuoteIndex = Math.max(0, Math.round(Math.random() * quotes.length - 1));
 
 		initCurrentQuotes(quotes, currentQuoteIndex);
