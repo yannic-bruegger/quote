@@ -67,6 +67,18 @@
 		}
 	}
 
+	function setUrlSearchParams(param: string, value : string) {
+		var searchParams = new URLSearchParams(window.location.search)
+
+		if (param == "id") {
+			value = (parseInt(value)+1).toString();
+		}
+
+		searchParams.set(param, value);
+		var newRelativePathQuery = window.location.pathname + '?' + searchParams.toString();
+		history.pushState(null, '', newRelativePathQuery);
+	}
+
 	onMount(async () => {
 
 		try {
@@ -74,11 +86,15 @@
 		} catch (error) {
 			console.log(error);
 		}
-
-		console.log("data", data);
 		
-		
-		currentQuoteIndex = Math.max(0, Math.round(Math.random() * quotes.length - 1));
+		const parsedUrl = new URL(window.location.href);
+		const urlQuoteId = parsedUrl.searchParams.get("id");
+		if (urlQuoteId !== null) {
+			currentQuoteIndex = parseInt(urlQuoteId) - 1;
+		} else {
+			currentQuoteIndex = Math.max(0, Math.round(Math.random() * quotes.length - 1));
+			setUrlSearchParams("id", (currentQuoteIndex).toString());
+		}
 
 		initCurrentQuotes(quotes, currentQuoteIndex);
 		collectionProperties = await getCollectionProperties(data.id);
@@ -445,7 +461,7 @@
 				let response = await result.json(); 
 				quotes.push(response.data);
 
-				if (quotes.length > 4) {
+				if (quotes.length < 5) {
 					location.reload();
 				}
 
@@ -507,6 +523,8 @@
 		} else {
 			showPrev();
 		}
+
+		setUrlSearchParams("id", (currentQuoteIndex).toString());
 	}
 
 	function navigateNext() {
@@ -516,6 +534,8 @@
 		} else {
 			showNext();
 		}
+
+		setUrlSearchParams("id", (currentQuoteIndex).toString());
 	}
 
 	function slideNext() {
