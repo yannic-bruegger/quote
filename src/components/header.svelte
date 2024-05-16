@@ -24,8 +24,7 @@
 	}
 
 	function goBack(defaultRoute = '/') {
-		const ref = document.referrer;
-		goto(ref.length > 0 ? ref : defaultRoute);
+		goto(defaultRoute);
 	}
 
 	function toggleFollow() {
