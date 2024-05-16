@@ -9,8 +9,8 @@ export type User = {
   provider: string,
   confirmed: boolean,
   blocked: boolean,
-  createdAt: string,
-  updatedAt: string,
+  createdAt: Date,
+  updatedAt: Date,
 }
 
 export type PotentialModerator = User & { isModerator: boolean };

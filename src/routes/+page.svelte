@@ -1,9 +1,10 @@
 <script lang="ts">
   import { onMount } from 'svelte';
-  import Collection from "../components/collection.svelte";
+  import CollectionTile from "../components/collection.svelte";
   import Header from "../components/header.svelte";
 	import { Themes, NavBarState } from "$lib/constants";
   import { getMyCollections } from '$lib/api'
+	import type { Collection } from "$lib/types";
 
   let ownedCollections: Array<Collection> = [];
   let moderatedCollections: Array<Collection> = [];
@@ -28,26 +29,26 @@
 <div class="collection-container">
   <div class="collections">
     {#each ownedCollections as ownedCollection }
-      <Collection
+      <CollectionTile
         id={ownedCollection.id}
         name={ownedCollection.name}
         theme={ownedCollection.theme}
         showMenu
-      ></Collection>
+      ></CollectionTile>
     {/each}
     {#each moderatedCollections as moderatedCollection }
-      <Collection
+      <CollectionTile
         id="{moderatedCollection.id}"
         name="{moderatedCollection.name}"
         theme={moderatedCollection.theme}
-      ></Collection>
+      ></CollectionTile>
     {/each}
     {#each followedCollections as followedCollection }
-      <Collection
+      <CollectionTile
         id="{followedCollection.id}"
         name="{followedCollection.name}"
         theme={followedCollection.theme}
-      ></Collection>
+      ></CollectionTile>
     {/each}
   </div>
 

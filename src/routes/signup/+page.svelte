@@ -1,8 +1,9 @@
 <script lang="ts">
 	import Input from '../../components/input.svelte';
+	import background from '$lib/assets/background.svg';
 </script>
 
-<div class="signin-container">
+<div class="signin-container" style="background-image: url('{background}');">
   <div class="contents">
     <h1 class="colored-text blue-gradient">Sign up</h1>
     <!-- svelte-ignore a11y-autofocus -->
@@ -22,7 +23,6 @@
     align-items: center;
     justify-content: center;
     height: 100%;
-    background-image: url('background.svg');
     background-size: cover;
     background-position: center center;
   }

@@ -74,6 +74,9 @@
 		} catch (error) {
 			console.log(error);
 		}
+
+		console.log("data", data);
+		
 		
 		currentQuoteIndex = Math.max(0, Math.round(Math.random() * quotes.length - 1));
 

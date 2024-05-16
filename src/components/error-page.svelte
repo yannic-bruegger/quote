@@ -1,4 +1,8 @@
-<div class="error-container">
+<script>
+	import background from '$lib/assets/background.svg';
+</script>
+
+<div class="error-container" style="background-image: url('{background}')">
 	<div class="contents">
 	  <h1 class="colored-text pink-gradient">404</h1>
 	  <h2 class="">Page Not Found</h2>
@@ -13,7 +17,6 @@
 	  align-items: center;
 	  justify-content: center;
 	  height: 100%;
-	  background-image: url('background.svg');
 	  background-size: cover;
 	  background-position: center center;
 	}

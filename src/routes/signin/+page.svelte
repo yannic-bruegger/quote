@@ -1,7 +1,8 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
   import { authenticate, getOwnUser } from '$lib/api';
-  import { getLocalToken, isAuthenticated } from '$lib/auth'
+  import { getLocalToken, isAuthenticated } from '$lib/auth';
+  import background from '$lib/assets/background.svg';
   import user from '$lib/user';
   let username = '';
   let password = '';
@@ -26,7 +27,7 @@
   }
 </script>
 
-<div class="signin-container">
+<div class="signin-container" style="background-image: url('{background}');">
   <div class="contents">
     <h1 class="colored-text blue-gradient">Sign in</h1>
     <input type="email" placeholder="Email" bind:value={username}/>
@@ -43,7 +44,6 @@
     align-items: center;
     justify-content: center;
     height: 100%;
-    background-image: url('background.svg');
     background-size: cover;
     background-position: center center;
   }
