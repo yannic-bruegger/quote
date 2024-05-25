@@ -1,0 +1,74 @@
+{
+  "name": "Quote",
+  "short_name": "Quote",
+  "start_url": ".",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#ffffff",
+  "theme_color": "#f6f5f9",
+  "description": "An app to keep all the precious quotes spoken by our beloved philosophers.",
+  "icons": [
+    {
+      "src": "icons/icon-white-72x72.png",
+      "sizes": "72x72",
+      "type": "image/png"
+    },
+    {
+      "src": "icons/icon-white-96x96.png",
+      "sizes": "96x96",
+      "type": "image/png"
+    },
+    {
+      "src": "icons/icon-white-144x144.png",
+      "sizes": "144x144",
+      "type": "image/png"
+    },
+    {
+      "src": "icons/icon-white-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "icons/icon-white-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "screenshots/quote.png",
+      "sizes": "390x844",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "See quotes of your best friends."
+    },
+    {
+      "src": "screenshots/login.png",
+      "sizes": "390x844",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Log in or sign up on our log in screen."
+    },
+    {
+      "src": "screenshots/collection-overview.png",
+      "sizes": "390x844",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Find all your collections."
+    },
+    {
+      "src": "screenshots/collection-settings.png",
+      "sizes": "390x844",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Tweak your collections settings."
+    },
+    {
+      "src": "screenshots/edit-profile.png",
+      "sizes": "390x844",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Let your friends know, who you are."
+    }
+  ]
+}
