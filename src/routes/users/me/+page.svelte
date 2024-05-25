@@ -4,6 +4,7 @@
   import Input from "../../../components/input.svelte";
   import Header from "../../../components/header.svelte";
   import user from '$lib/user';
+  import { getRandomTheme } from '$lib/helper';
 	import { goto } from "$app/navigation";
 	import { getOwnUser, updateUserInfo } from "$lib/api";
 	import { getLocalToken } from "$lib/auth";
@@ -14,7 +15,7 @@
 
   let newUser: User = $user
 
-  const theme = Themes.PINK_GRADIENT;
+  const theme = getRandomTheme(Themes);
   const token = getLocalToken();
   const passPlaceholder = "**********";
 

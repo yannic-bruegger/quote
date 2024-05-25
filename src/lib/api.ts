@@ -355,3 +355,22 @@ export async function removeBookmarkedCollection(collectionId: string, token: st
     const data = await reply.json();
     return data;
 }
+
+export async function register(username: string, email: string, password: string) {
+  const reply = await fetch(`${PUBLIC_API_URL}/auth/local/register`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      username: username,
+      email: email,
+      password: password,
+    }),
+  });
+
+  if (!reply.ok) throw Error(reply.statusText);
+
+  const data = await reply.json();
+  return data;
+}

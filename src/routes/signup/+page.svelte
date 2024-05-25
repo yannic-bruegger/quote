@@ -1,19 +1,42 @@
 <script lang="ts">
-	import Input from '../../components/input.svelte';
+	// import Input from '../../components/input.svelte';
+  import { goto } from '$app/navigation';
 	import background from '$lib/assets/background.svg';
+  import { register } from '$lib/api';
+
+  async function registerButtonPresses() {
+    try {
+      const username = (<HTMLInputElement>document.querySelector('input[type=text]')).value;
+      const email = (<HTMLInputElement>document.querySelector('input[type=email]')).value;
+      const password = (<HTMLInputElement>document.querySelector('input[type=password]')).value;
+
+        console.log();
+        
+
+      const response = await register(username, email, password);
+      goto('/');
+    } catch {
+      const form = <HTMLDivElement>document.querySelector('form.contents');
+
+      form.classList.toggle('shake');
+      setTimeout(() => {
+        form.classList.toggle('shake');
+      }, 300);
+    }
+  }
+
 </script>
 
 <div class="signin-container" style="background-image: url('{background}');">
-  <div class="contents">
+  <form class="contents">
     <h1 class="colored-text blue-gradient">Sign up</h1>
     <!-- svelte-ignore a11y-autofocus -->
-    <input type="text" placeholder="Display name" autofocus>
-    <input type="email" placeholder="Email">
-    <input type="password" placeholder="Password">
-    <input type="password" placeholder="Repeat password">
-    <button class="default">Register</button>
+    <input required type="text" placeholder="User name" autofocus>
+    <input required type="email" placeholder="Email">
+    <input required type="password" placeholder="Password">
+    <button type="submit" class="default" on:click={registerButtonPresses}>Register</button>
     <p>Already have an account?<br><a href="/signin" class="colored-text blue-gradient">Sign in here</a></p>
-  </div>
+  </form>
 </div>
 
 <style scoped>

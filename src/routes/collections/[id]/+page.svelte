@@ -467,6 +467,7 @@
 
 				if (slideMode) {
 					redrawQuotes('newest');
+					location.reload();
 				} else {
 					currentQuotes[0] = response.data;
 					currentQuoteIndex = quotes.indexOf(response.data);
@@ -759,6 +760,8 @@
 	}
 </script>
 
+<div id="loading-overlay"></div>
+
 {#if collectionProperties && collectionRole}
 	<Header title="{collectionProperties.name}" theme={collectionProperties.theme} collectionId={collectionProperties.id} state={NavBarState.COL} role={collectionRole} />
 {/if}
@@ -832,6 +835,30 @@
 </div>
 
 <style lang="scss">
+	#loading-overlay {
+		position: fixed;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		background: var(--gray);
+		display: flex;
+		z-index: 1000;
+
+		background-image: url('/watermark.svg');
+		background-position: center;
+		background-size: cover;
+
+		animation: loadFadeOut 200ms forwards 350ms;
+	}
+
+	@keyframes loadFadeOut {
+		to {
+			opacity: 0;
+			visibility: hidden;
+		}
+	}
+
 	.quotes {
 		flex-grow: 1;
 		position: relative;
