@@ -1,11 +1,14 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
+  import { Themes } from "$lib/constants";
+  import { getRandomTheme } from '$lib/helper';
   import { authenticate, getOwnUser } from '$lib/api';
   import { getLocalToken, isAuthenticated } from '$lib/auth';
   import background from '$lib/assets/background.svg';
   import user from '$lib/user';
   let username = '';
   let password = '';
+  const theme = getRandomTheme(Themes);
 
   updateAuthenticatedStatus();
 
@@ -19,22 +22,32 @@
   }
 
   async function loginButtonPresses() {
-    const response = await authenticate(username, password);
-    console.log(response)
-    localStorage.setItem('token', response.jwt);
-    $user = response.user;
-    goto('/');
+    try {
+      const response = await authenticate(username, password);
+      localStorage.setItem('token', response.jwt);
+      $user = response.user;
+      goto('/');
+    } catch {
+      const form = <HTMLDivElement>document.querySelector('form.contents');
+      const pw = <HTMLInputElement>document.querySelector('input[type=password]');
+      pw.focus();
+
+      form.classList.toggle('shake');
+      setTimeout(() => {
+        form.classList.toggle('shake');
+      }, 300);
+    }
   }
 </script>
 
 <div class="signin-container" style="background-image: url('{background}');">
-  <div class="contents">
-    <h1 class="colored-text blue-gradient">Sign in</h1>
-    <input type="email" placeholder="Email" bind:value={username}/>
-    <input type="password" placeholder="Password" bind:value={password}/>
-    <button class="default" on:click={loginButtonPresses}>Login</button>
-    <p>You don't have an account?<br><a href="/signup" class="colored-text blue-gradient">Register now</a></p>
-  </div>
+  <form class="contents">
+    <h1 class="colored-text {theme}">Sign in</h1>
+    <input required type="text" placeholder="Email" bind:value={username}/>
+    <input required type="password" placeholder="Password" bind:value={password}/>
+    <button type="submit" class="default" on:click={loginButtonPresses}>Login</button>
+    <p>You don't have an account?<br><a href="/signup" class="colored-text {theme}">Register now</a></p>
+  </form>
 </div>
 
 <style scoped>
