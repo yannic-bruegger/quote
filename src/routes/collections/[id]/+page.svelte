@@ -467,6 +467,7 @@
 
 				if (slideMode) {
 					redrawQuotes('newest');
+					location.reload();
 				} else {
 					currentQuotes[0] = response.data;
 					currentQuoteIndex = quotes.indexOf(response.data);
