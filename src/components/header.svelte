@@ -53,7 +53,7 @@
 		</button>
 	{/if}
 
-	<h1 class={theme}>{title}</h1>
+	<h1 class={theme} class:title={state == NavBarState.MAIN}>{title}</h1>
 
 	{#if $user && state === NavBarState.MAIN}
 		<a href="/users/me">
@@ -104,6 +104,10 @@
 		background-clip: text;
 		-webkit-background-clip: text;
 		-webkit-text-fill-color: transparent;
+
+		&.title {
+			font-size: 1.5rem;
+		}
 	}
 
 	img {

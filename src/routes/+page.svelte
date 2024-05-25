@@ -3,7 +3,8 @@
   import CollectionTile from "../components/collection.svelte";
   import Header from "../components/header.svelte";
 	import { Themes, NavBarState } from "$lib/constants";
-  import { getMyCollections } from '$lib/api'
+  import { getMyCollections } from '$lib/api';
+  import { getRandomTheme } from '$lib/helper';
 	import type { Collection } from "$lib/types";
 
   let ownedCollections: Array<Collection> = [];
@@ -12,20 +13,20 @@
 
   onMount(async () => {
     const bearerToken = localStorage.getItem('token');
-    if (!bearerToken) throw Error('Could not load bearer token from local storage.')
-    const {owns, moderates, follows} = await getMyCollections(bearerToken)
+    if (!bearerToken) throw Error('Could not load bearer token from local storage.');
+    const {owns, moderates, follows} = await getMyCollections(bearerToken);
     ownedCollections = owns;
     moderatedCollections = moderates;
-    followedCollections = follows
+    followedCollections = follows;
   })
 </script>
 
 <Header
   title="Quote"
-  theme={Themes.GREEN_GRADIENT}
+  theme={getRandomTheme(Themes)}
   state={NavBarState.MAIN}
->
-</Header>
+></Header>
+
 <div class="collection-container">
   <div class="collections">
     {#each ownedCollections as ownedCollection }
