@@ -34,7 +34,7 @@
 	{#if quotes}
 		<Carousel 
 			quotes={quotes} 
-			options={{generalActions: true, modActions: true}} 
+			options={{generalActions: true, modActions: collectionRole.isOwner || collectionRole.isModerator}} 
 			collectionRole={collectionRole}
 			pageData={data} />
 	{/if}

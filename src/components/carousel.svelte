@@ -35,6 +35,9 @@
 	let quoteIdCenter: number;
 	let quoteIdRight: number;
 	let quoteIdOuterRight: number;
+
+    // Toggle Elements
+    let activeConfirmDismissActionsWrapper = false;
     
 
 	onMount(async () => {
@@ -52,20 +55,6 @@
         const actionsWrapper = <HTMLDivElement>document.querySelector('div#actions-wrapper');
 		const confirmDismissActionsWrapper = <HTMLDivElement>document.querySelector('div#confirm-dismiss-actions-wrapper');
 
-		const buttonPrev = <HTMLButtonElement>document.querySelector('button#prev');
-		const buttonNext = <HTMLButtonElement>document.querySelector('button#next');
-		const buttonRandom = <HTMLButtonElement>document.querySelector('button#random');
-
-		const navHint = <HTMLSpanElement>document.querySelector('span#nav-hint');
-		// const generalActions = <HTMLDivElement>document.querySelector('div#general-actions')
-		const modActions = <HTMLDivElement>document.querySelector('div#mod-actions')
-
-		const buttonAdd = <HTMLButtonElement>document.querySelector('button#add');
-		const buttonEdit = <HTMLButtonElement>document.querySelector('button#edit');
-		const buttonDelete = <HTMLButtonElement>document.querySelector('button#delete');
-
-		const buttonDismiss = <HTMLButtonElement>document.querySelector('button#dismiss');
-		const buttonConfirm = <HTMLButtonElement>document.querySelector('button#confirm');
 
 		const deleteMessage = <HTMLDivElement>document.querySelector('div#delete-message');
 	
@@ -76,73 +65,175 @@
 			}
 		}
 
-		if (!ownerOrMod()) {
-			navHint.remove();
-			modActions.remove();
-		}
+        const navHint = <HTMLSpanElement>document.querySelector('span#nav-hint');
+            navHint?.addEventListener('click', () => {
+                const actionsWrapper = <HTMLDivElement>document.querySelector('div#actions-wrapper');
+                    actionsWrapper.scrollIntoView({ behavior: 'smooth', block: 'center' });
 
-		navHint.addEventListener('click', () => {
-			const actionsWrapper = <HTMLDivElement>document.querySelector('div#actions-wrapper');
-				actionsWrapper.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                if (actionsWrapper.scrollLeft === 0) {
+                    actionsWrapper.scrollTo({ left: actionsWrapper.scrollWidth, behavior: 'smooth' });
+                } else {
+                    actionsWrapper.scrollTo({ left: 0, behavior: 'smooth' });
+                }
+            });
 
-			if (actionsWrapper.scrollLeft === 0) {
-				actionsWrapper.scrollTo({ left: actionsWrapper.scrollWidth, behavior: 'smooth' });
-			} else {
-				actionsWrapper.scrollTo({ left: 0, behavior: 'smooth' });
-			}
-		});
+        const buttonAdd = <HTMLButtonElement>document.querySelector('button#add');
+            buttonAdd?.addEventListener('click', () => {
+                triggerAddQuote();
+            });
 
-		buttonRandom?.addEventListener('click', () => {
-			redrawQuotes('random');
-		});
+        const buttonEdit = <HTMLButtonElement>document.querySelector('button#edit');
+            buttonEdit?.addEventListener('click', () => {
+                visuallyCenterQuote = <HTMLDivElement>document.querySelector('div.center-quote');
+                actionsWrapper.classList.toggle('visible');
+                confirmDismissActionsWrapper.classList.toggle('invisible');
+                visuallyCenterQuote.classList.toggle('not-editable');
 
-		buttonPrev.addEventListener('click', () => {
-			if (navigationHappend) {
-				navigationHappend = false;
-			} else {
-				navigatePrev();
-			}
-		});
+                editedQuote = visuallyCenterQuote.cloneNode(true) as HTMLDivElement;
+                editableContentOnOff(true);
+                quoteActionClass = 'edit';
+            });
 
-		buttonNext.addEventListener('click', () => {
-			if (navigationHappend) {
-				navigationHappend = false;
-			} else {
-				navigateNext();
-			}
-		});
+        const buttonDelete = <HTMLButtonElement>document.querySelector('button#delete');
+            buttonDelete?.addEventListener('click', () => {
+                visuallyCenterQuote = <HTMLDivElement>document.querySelector('div.center-quote');
+                actionsWrapper.classList.toggle('visible');
+                confirmDismissActionsWrapper.classList.toggle('invisible');
+                visuallyCenterQuote.classList.toggle('not-delete');
+                deleteMessage.classList.toggle('invisible');
+                quoteActionClass = 'delete';
+            });
 
-		buttonNext.addEventListener('mousedown', () => {
-			if (slideMode) {
-				timeoutId = setTimeout(() => {redrawQuotes('newest')}, 1000);
-				buttonNext.classList.toggle('animation-inactive');
-			}
-		});
+		const buttonRandom = <HTMLButtonElement>document.querySelector('button#random');
+            buttonRandom?.addEventListener('click', () => {
+                redrawQuotes('random');
+            });
 
-		buttonNext.addEventListener('mouseup', () => {
-			clearTimeout(timeoutId);
-			if (!buttonNext.classList.contains('animation-inactive')) {
-				buttonNext.classList.toggle('animation-inactive');
-			}
-		});
 
-		buttonNext.addEventListener('touchstart', () => {
-			if (slideMode) {
-				timeoutId = setTimeout(() => {redrawQuotes('newest')}, 1000);
-				buttonNext.classList.toggle('animation-inactive');
-			}
-		});
+		const buttonPrev = <HTMLButtonElement>document.querySelector('button#prev');
+            buttonPrev.addEventListener('click', () => {
+                if (navigationHappend) {
+                    navigationHappend = false;
+                } else {
+                    navigatePrev();
+                }
+            });
 
-		buttonNext.addEventListener('touchend', () => {
-			clearTimeout(timeoutId);
-			if (!buttonNext.classList.contains('animation-inactive')) {
-				buttonNext.classList.toggle('animation-inactive');
-			}
-		});
 
-		buttonAdd.addEventListener('click', () => {
-			triggerAddQuote();
-		});
+		const buttonNext = <HTMLButtonElement>document.querySelector('button#next');
+            buttonNext.addEventListener('click', () => {
+                if (navigationHappend) {
+                    navigationHappend = false;
+                } else {
+                    navigateNext();
+                }
+            });
+
+            buttonNext.addEventListener('mousedown', () => {
+                if (slideMode) {
+                    timeoutId = setTimeout(() => {redrawQuotes('newest')}, 1000);
+                    buttonNext.classList.toggle('animation-inactive');
+                }
+            });
+
+            buttonNext.addEventListener('mouseup', () => {
+                clearTimeout(timeoutId);
+                if (!buttonNext.classList.contains('animation-inactive')) {
+                    buttonNext.classList.toggle('animation-inactive');
+                }
+            });
+
+            buttonNext.addEventListener('touchstart', () => {
+                if (slideMode) {
+                    timeoutId = setTimeout(() => {redrawQuotes('newest')}, 1000);
+                    buttonNext.classList.toggle('animation-inactive');
+                }
+            });
+
+            buttonNext.addEventListener('touchend', () => {
+                clearTimeout(timeoutId);
+                if (!buttonNext.classList.contains('animation-inactive')) {
+                    buttonNext.classList.toggle('animation-inactive');
+                }
+            });
+
+		const buttonDismiss = <HTMLButtonElement>document.querySelector('button#dismiss');
+            buttonDismiss.addEventListener('click', () => {
+                if (collectionContainsQuotes()) {
+                    actionsWrapper.classList.toggle('visible');
+                    confirmDismissActionsWrapper.classList.toggle('invisible');
+                } else {
+                    shakeButtonAndReselectEmptyInput();
+                    return 0;
+                }
+
+                switch (quoteActionClass) {
+                    case 'add':
+                        editableContentOnOff(false);
+                        visuallyCenterQuote = <HTMLDivElement>document.querySelector('.center-quote');
+                        visuallyCenterQuote.replaceWith(editedQuote);
+                        visuallyCenterQuote = <HTMLDivElement>document.querySelector('.center-quote');
+                        visuallyCenterQuote.classList.toggle('not-add');
+                        break;
+                    case 'edit':
+                        editableContentOnOff(false);
+                        visuallyCenterQuote = <HTMLDivElement>document.querySelector('.center-quote');
+                        visuallyCenterQuote.replaceWith(editedQuote);
+                        visuallyCenterQuote = <HTMLDivElement>document.querySelector('.center-quote');
+                        visuallyCenterQuote.classList.toggle('not-editable');
+                        break;
+                    case 'delete':
+                        visuallyCenterQuote.classList.toggle('not-delete');
+                        deleteMessage.classList.toggle('invisible');
+                        break;
+                }
+
+                quoteActionClass = '';
+            });
+
+        const buttonConfirm = <HTMLButtonElement>document.querySelector('button#confirm');
+            buttonConfirm.addEventListener('click', () => {
+                if (checkForEmptyInputs()) {
+                    actionsWrapper.classList.toggle('visible');
+                    confirmDismissActionsWrapper.classList.toggle('invisible');
+                } else {
+                    shakeButtonAndReselectEmptyInput();
+                    return 0;
+                }
+
+                let content = <string> visuallyCenterQuote.querySelector('.content')?.textContent;
+                let quoted = <string> visuallyCenterQuote.querySelector('.quoted')?.textContent
+
+                switch (quoteActionClass) {
+                    case 'add':
+                        editableContentOnOff(false);
+                        visuallyCenterQuote.classList.toggle('not-add');
+                        addQuote(content, quoted);
+                        break;
+                    case 'edit':
+                        editableContentOnOff(false);
+                        visuallyCenterQuote.classList.toggle('not-editable');
+                        
+                        if (slideMode) {
+                            editQuote(quotes[currentQuoteIndex].id, content, quoted);
+                        } else {
+                            editQuote(quotes[quotes.indexOf(currentQuotes[0])].id, content, quoted);
+                        }
+                        break;
+                    case 'delete':
+                        visuallyCenterQuote.classList.toggle('not-delete');
+                        deleteMessage.classList.toggle('invisible');
+
+                        if (slideMode) {
+                            dropQuote(quotes[currentQuoteIndex]);
+                        } else {
+                            dropQuote(quotes[quotes.indexOf(currentQuotes[0])]);
+                        }
+                        break;
+                }
+
+                quoteActionClass = '';
+            });
 
 		function triggerAddQuote() {
 			if (!collectionContainsQuotes()) {
@@ -157,102 +248,6 @@
 			editableContentOnOff(true, 'add');
 			quoteActionClass = 'add';
 		}
-
-		buttonEdit.addEventListener('click', () => {
-			visuallyCenterQuote = <HTMLDivElement>document.querySelector('div.center-quote');
-			actionsWrapper.classList.toggle('visible');
-			confirmDismissActionsWrapper.classList.toggle('invisible');
-			visuallyCenterQuote.classList.toggle('not-editable');
-
-			editedQuote = visuallyCenterQuote.cloneNode(true) as HTMLDivElement;
-			editableContentOnOff(true);
-			quoteActionClass = 'edit';
-		});
-
-		buttonDelete.addEventListener('click', () => {
-			visuallyCenterQuote = <HTMLDivElement>document.querySelector('div.center-quote');
-			actionsWrapper.classList.toggle('visible');
-			confirmDismissActionsWrapper.classList.toggle('invisible');
-			visuallyCenterQuote.classList.toggle('not-delete');
-			deleteMessage.classList.toggle('invisible');
-			quoteActionClass = 'delete';
-		});
-
-		buttonDismiss.addEventListener('click', () => {
-			if (collectionContainsQuotes()) {
-				actionsWrapper.classList.toggle('visible');
-				confirmDismissActionsWrapper.classList.toggle('invisible');
-			} else {
-				shakeButtonAndReselectEmptyInput();
-				return 0;
-			}
-
-			switch (quoteActionClass) {
-				case 'add':
-					editableContentOnOff(false);
-					visuallyCenterQuote = <HTMLDivElement>document.querySelector('.center-quote');
-					visuallyCenterQuote.replaceWith(editedQuote);
-					visuallyCenterQuote = <HTMLDivElement>document.querySelector('.center-quote');
-					visuallyCenterQuote.classList.toggle('not-add');
-					break;
-				case 'edit':
-					editableContentOnOff(false);
-					visuallyCenterQuote = <HTMLDivElement>document.querySelector('.center-quote');
-					visuallyCenterQuote.replaceWith(editedQuote);
-					visuallyCenterQuote = <HTMLDivElement>document.querySelector('.center-quote');
-					visuallyCenterQuote.classList.toggle('not-editable');
-					break;
-				case 'delete':
-					visuallyCenterQuote.classList.toggle('not-delete');
-					deleteMessage.classList.toggle('invisible');
-					break;
-			}
-
-			quoteActionClass = '';
-		});
-
-		buttonConfirm.addEventListener('click', () => {
-			if (checkForEmptyInputs()) {
-				actionsWrapper.classList.toggle('visible');
-				confirmDismissActionsWrapper.classList.toggle('invisible');
-			} else {
-				shakeButtonAndReselectEmptyInput();
-				return 0;
-			}
-
-			let content = <string> visuallyCenterQuote.querySelector('.content')?.textContent;
-			let quoted = <string> visuallyCenterQuote.querySelector('.quoted')?.textContent
-
-			switch (quoteActionClass) {
-				case 'add':
-					editableContentOnOff(false);
-					visuallyCenterQuote.classList.toggle('not-add');
-					addQuote(content, quoted);
-					break;
-				case 'edit':
-					editableContentOnOff(false);
-					visuallyCenterQuote.classList.toggle('not-editable');
-					
-					if (slideMode) {
-						editQuote(quotes[currentQuoteIndex].id, content, quoted);
-					} else {
-						editQuote(quotes[quotes.indexOf(currentQuotes[0])].id, content, quoted);
-					}
-					break;
-				case 'delete':
-					visuallyCenterQuote.classList.toggle('not-delete');
-					deleteMessage.classList.toggle('invisible');
-
-					if (slideMode) {
-						dropQuote(quotes[currentQuoteIndex]);
-					} else {
-						dropQuote(quotes[quotes.indexOf(currentQuotes[0])]);
-					}
-					break;
-			}
-
-			quoteActionClass = '';
-		});
 
 		function checkForEmptyInputs() {
 			if (visuallyCenterQuote) {
@@ -791,42 +786,42 @@
     {/if}
     
     
-		<div id="delete-message" class="invisible">
-			<p class="pink-gradient colored-text"><b>Delete?</b> Are you sure?</p>
-		</div>
+    <div id="delete-message" class="invisible">
+        <p class="pink-gradient colored-text"><b>Delete?</b> Are you sure?</p>
+    </div>
 
     
 </section>
 
 <div id="actions-wrapper" class="visible">
-		<span id="nav-hint"></span>
 
-	    {#if options.generalActions}
-		<div id="general-actions" class="actions primary-actions" class:action-bump={collectionRole.isOwner || collectionRole.isModerator}>
+    {#if options.generalActions}
+        <div id="general-actions" class="actions primary-actions" class:action-bump={collectionRole.isOwner || collectionRole.isModerator}>
             <button id="random" class="default small" disabled={quotes.length === 0}><span class="icon-shuffle" /></button>
-			<button id="prev" class="default" disabled={quotes.length === 0}><span class="icon-chevron-left" /></button>
-			<button id="next" class="default left-right-animation animation-inactive" disabled={quotes.length === 0}><span class="icon-chevron-right" /></button>
-		</div>
-        {/if}
-
-        {#if options.modActions}
-		<div id="mod-actions" class="actions secondary-actions action-bump">
-			<button id="add" class="default small"><span class="icon-plus" /></button>
-			<button id="edit" class="default small"><span class="icon-edit" /></button>
-			<button id="delete" class="default small"><span class="icon-delete pink-gradient colored-text" /></button>
-		</div>
-        {/if}
-
-        <div id="confirm-dismiss-actions-wrapper" class="invisible">
-            <div class="actions">
-                <button id="dismiss" class="default"><span class="icon-dismiss pink-gradient colored-text"></span></button>
-                <button id="confirm" class="default"><span class="icon-check green-gradient colored-text"></span></button>
-            </div>
+            <button id="prev" class="default" disabled={quotes.length === 0}><span class="icon-chevron-left" /></button>
+            <button id="next" class="default left-right-animation animation-inactive" disabled={quotes.length === 0}><span class="icon-chevron-right" /></button>
         </div>
-	</div>
+    {/if}
+
+    {#if options.modActions}
+        <span id="nav-hint"></span>
+
+        <div id="mod-actions" class="actions secondary-actions action-bump">
+            <button id="add" class="default small"><span class="icon-plus" /></button>
+            <button id="edit" class="default small"><span class="icon-edit" /></button>
+            <button id="delete" class="default small"><span class="icon-delete pink-gradient colored-text" /></button>
+        </div>
+    {/if}
+</div>
+
+<div id="confirm-dismiss-actions-wrapper" class="invisible">
+    <div class="actions">
+        <button id="dismiss" class="default"><span class="icon-dismiss pink-gradient colored-text"></span></button>
+        <button id="confirm" class="default"><span class="icon-check green-gradient colored-text"></span></button>
+    </div>
+</div>
 
 <style lang="scss">
-
     #loading-overlay {
 		position: fixed;
 		top: 0;
