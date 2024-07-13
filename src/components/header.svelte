@@ -53,7 +53,7 @@
 		</button>
 	{/if}
 
-	<h1 class={theme} class:title={state == NavBarState.MAIN}>{title}</h1>
+	<h1 class={theme ?? Themes.PURPLE_GRADIENT} class:title={state == NavBarState.MAIN}>{title}</h1>
 
 	{#if $user && state === NavBarState.MAIN}
 		<a href="/users/me">
