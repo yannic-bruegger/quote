@@ -67,7 +67,7 @@ button {
     --black: #333333;
     --white: #FFFFFF;
     --gray: #F6F5F9;
-    --shadow-color: rgba(124, 21, 255, 0.05);
+    --shadow-color: rgba(3, 2, 20, 0.05);
     --blue-gradient: linear-gradient(180deg, #4A80FF 0%, #8FEBFF 100%);
     --green-gradient: linear-gradient(180deg, #1EB063 0%, #CDFF3D 100%);
     --orange-gradient: linear-gradient(180deg, #FF7A20 0%, #FFF859 100%);
