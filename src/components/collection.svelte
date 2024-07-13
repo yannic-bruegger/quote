@@ -15,7 +15,7 @@
 
   const shareData = {
     title: name,
-    url: window.location.host + link,
+    url: link,
   };
   const share = async () => {
     await navigator.share(shareData);
