@@ -23,6 +23,7 @@
 	let currentCaruselQuoteIndex = 2;
 
 	let navigationHappend = false;
+	let navigatedToLatest = false;
 	let timeoutId: any = 0;
 	let quoteActionClass = '';
 	let visuallyCenterQuote: HTMLDivElement;
@@ -122,6 +123,11 @@
 
 		const buttonNext = <HTMLButtonElement>document.querySelector('button#next');
             buttonNext.addEventListener('click', () => {
+                if (navigatedToLatest) {
+                    navigatedToLatest = false;
+                    return;
+                }
+
                 if (navigationHappend) {
                     navigationHappend = false;
                 } else {
@@ -131,7 +137,10 @@
 
             buttonNext.addEventListener('mousedown', () => {
                 if (slideMode) {
-                    timeoutId = setTimeout(() => {redrawQuotes('newest')}, 1000);
+                    timeoutId = setTimeout(() => {
+                        redrawQuotes('newest');
+                        navigatedToLatest = true;
+                    }, 1000);
                     buttonNext.classList.toggle('animation-inactive');
                 }
             });
@@ -145,7 +154,10 @@
 
             buttonNext.addEventListener('touchstart', () => {
                 if (slideMode) {
-                    timeoutId = setTimeout(() => {redrawQuotes('newest')}, 1000);
+                    timeoutId = setTimeout(() => {
+                        redrawQuotes('newest');
+                        navigatedToLatest = true;
+                    }, 1000);
                     buttonNext.classList.toggle('animation-inactive');
                 }
             });
