@@ -41,7 +41,7 @@
 <div class="signin-container" style="background-image: url('{background}');">
   <form class="contents">
     <h1 class="colored-text {theme}">Sign in</h1>
-    <input required type="text" placeholder="Email" bind:value={username}/>
+    <input required type="text" placeholder="Username" bind:value={username}/>
     <input required type="password" minlength="6" placeholder="Password" bind:value={password}/>
     <button type="submit" class="default" on:click={loginButtonPresses}>Login</button>
     <p>You don't have an account?<br><a href="/signup" class="colored-text {theme}">Register now</a></p>
