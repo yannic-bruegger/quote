@@ -7,6 +7,8 @@
   box-sizing: inherit;
   -webkit-box-shadow: none;
   -webkit-tap-highlight-color: transparent;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
   outline:none;
 }
 
