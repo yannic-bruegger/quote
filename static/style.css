@@ -26,6 +26,7 @@ button {
   --black: #333333;
   --white: #FFFFFF;
   --gray: #F6F5F9;
+  --shadow-color: rgba(124, 21, 255, 0.05);
   --blue-gradient: linear-gradient(180deg, rgba(56, 103, 214, 1) 0%, rgba(69, 211, 242, 1) 100%);
   --green-gradient: linear-gradient(180deg, rgba(28, 182, 100, 1) 0%, rgba(234, 251, 46, 1) 100%);
   --orange-gradient: linear-gradient(180deg, rgba(255, 122, 32, 1) 0%, rgba(249, 194, 112, 1) 100%);
@@ -42,7 +43,7 @@ button {
   --teal-gradient-90: linear-gradient(90deg, #09A79F 0%, rgba(84, 172, 222, 0.50) 100%);
   
   --lato: 'Lato', sans-serif;
-  --shadow: 0px 4px 9px 0px rgba(124, 21, 255, 0.05);
+  --shadow: 0px 4px 9px 0px var(--shadow-color);
   
   --app-padding-lr: 24px;
   --background: var(--gray);
@@ -59,6 +60,33 @@ button {
   flex-direction: column;
   gap: 24px;
   height: 100%;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --black: #333333;
+    --white: #FFFFFF;
+    --gray: #F6F5F9;
+    --shadow-color: rgba(3, 2, 20, 0.05);
+    --blue-gradient: linear-gradient(180deg, #4A80FF 0%, #8FEBFF 100%);
+    --green-gradient: linear-gradient(180deg, #1EB063 0%, #CDFF3D 100%);
+    --orange-gradient: linear-gradient(180deg, #FF7A20 0%, #FFF859 100%);
+    --pink-gradient: linear-gradient(180deg, #FF1A42 0%, #F478FF 100%);
+    --purple-gradient: linear-gradient(180deg, #7a41ff 0%, #cc00ff 100%);
+    --teal-gradient: linear-gradient(180deg, #22FFCA 0%, #3C96D7 100%);
+  
+  
+    --blue-gradient-90: linear-gradient(90deg, #4A80FF 0%, #8FEBFF 100%);
+    --green-gradient-90: linear-gradient(90deg, #1EB063 0%, #CDFF3D 100%);
+    --orange-gradient-90: linear-gradient(90deg, #FF7A20 0%, #FFF859 100%);
+    --pink-gradient-90: linear-gradient(90deg, #FF1A42 0%, #F478FF 100%);
+    --purple-gradient-90: linear-gradient(90deg, #7a41ff 0%, #cc00ff 100%);
+    --teal-gradient-90: linear-gradient(90deg, #22FFCA 0%, #3C96D7 100%);
+    --background: #202529;
+    --foreground: #32383D;
+    --text-primary: #FEFEFE;
+    --text-muted: #E9E9F0;
+  }
 }
 
 body {

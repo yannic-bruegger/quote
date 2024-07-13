@@ -968,9 +968,7 @@
 				span {
 					position: relative;
 					z-index: 2;
-
-					color: var(--foreground);
-					mix-blend-mode: difference;
+					color: var(--text-primary);
 				}
 				&:before {
 					content: '';
