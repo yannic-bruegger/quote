@@ -48,7 +48,7 @@
 		left: 0;
 		width: 100%;
 		height: 100%;
-		background: var(--gray);
+		background: var(--background);
 		display: flex;
 		z-index: 1000;
 
