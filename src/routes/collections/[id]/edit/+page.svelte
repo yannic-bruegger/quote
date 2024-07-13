@@ -94,8 +94,8 @@
 
   div.button-group {
     display: flex;
-    gap: 1em;
-    padding: 1em;
+    gap: var(--app-padding-lr);
+    padding: var(--app-padding-lr);
     position: relative;
   }
 </style>
