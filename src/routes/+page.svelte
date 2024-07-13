@@ -67,7 +67,6 @@
     flex-direction: column;
     padding: var(--app-padding-lr);
     flex-grow: 1;
-    overflow-y: scroll;
     gap: .75rem;
   }
   

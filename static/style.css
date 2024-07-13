@@ -7,16 +7,19 @@
   box-sizing: inherit;
 }
 
+input,
 input:-webkit-autofill,
 input:-webkit-autofill:hover, 
 input:-webkit-autofill:focus, 
 input:-webkit-autofill:active,
+button,
 button:-webkit-autofill,
 button:-webkit-autofill:hover, 
 button:-webkit-autofill:focus, 
 button:-webkit-autofill:active {
     -webkit-box-shadow: none !important;
     -webkit-tap-highlight-color: transparent;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
     outline:none !important;
 }
 

@@ -2,10 +2,23 @@
   export let quoteId: number = 0; 
   export let quote: string;
   export let quoted: string; 
+
+  const read = () => {
+    const synth = window.speechSynthesis;
+    const voices = synth.getVoices().filter((voice) => voice.lang === 'de-DE')
+    const selectedVoice = voices.at(Math.floor(Math.random()*voices.length))
+    if(selectedVoice === undefined) return;
+    const utterThis = new SpeechSynthesisUtterance(quote + ' von '  + quoted);
+    utterThis.voice = selectedVoice;
+    synth.speak(utterThis);
+  }
 </script>
 
 <div class="quote">
-  <span class="quote-id">Quote #{quoteId}</span>
+  <!-- svelte-ignore missing-declaration -->
+  <!-- svelte-ignore a11y-click-events-have-key-events -->
+  <!-- svelte-ignore a11y-no-static-element-interactions -->
+  <span class="quote-id" on:click={read}>Quote #{quoteId}</span>
   <p class="content" contenteditable="false" bind:textContent={quote}>{quote}</p>
   <p class="quoted" contenteditable="false" bind:textContent={quoted}>{quoted}</p> 
 </div>

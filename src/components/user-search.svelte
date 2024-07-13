@@ -28,7 +28,7 @@
     {#each filteredPotentialModerators as potentialModerator }
       <li>
         <img src={potentialModerator.profilePicture ? potentialModerator.profilePicture : `https://ui-avatars.com/api/?name=${potentialModerator?.displayName}`} alt={potentialModerator.displayName}>
-        <span class="displayName">{potentialModerator.displayName}</span>
+        <span class="displayName">{potentialModerator.displayName} <small>- ({potentialModerator.username})</small></span>
         <input
           type="checkbox"
           class={theme}
@@ -43,6 +43,9 @@
 </div>
 
 <style scoped>
+  small {
+    opacity: .5;
+  }
   div.user-search {
     display: flex;
     flex-direction: column;

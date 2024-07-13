@@ -12,6 +12,14 @@
   export let editLink: string= `/collections/${id}/edit`;
 
   if (!theme) theme = Themes.BLUE_GRADIENT;
+
+  const shareData = {
+    title: name,
+    url: window.location.host + link,
+  };
+  const share = async () => {
+    await navigator.share(shareData);
+  }
 </script>
 
 
@@ -22,6 +30,11 @@
     <p>{description}</p>
   </div>
   <div class="actions">
+    {#if navigator.canShare && navigator.canShare(shareData)}
+    <button on:click={() => share()}>
+      <span class="icon-share"></span>
+    </button>
+    {/if}
     {#if showMenu}
       <button on:click={() => goto(editLink)}>
         <span class="icon-context-vertical"></span>
@@ -70,6 +83,7 @@
     display: flex;
     justify-content: center;
     flex-grow: 0;
+    gap: 1rem;
   }
 
   .icon-context-vertical {
