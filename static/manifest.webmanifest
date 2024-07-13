@@ -5,7 +5,7 @@
   "display": "standalone",
   "orientation": "portrait",
   "background_color": "#ffffff",
-  "theme_color": "#f6f5f9",
+  "theme_color": {"light": "#f6f5f9", "dark": "#202529"},
   "description": "An app to keep all the precious quotes spoken by our beloved philosophers.",
   "icons": [
     {
