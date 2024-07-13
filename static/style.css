@@ -174,7 +174,7 @@ input:not([type="radio"], [type="checkbox"]):read-only, button:disabled {
 .container {
   display: flex;
   flex-direction: column;
-  padding: 1em;
+  padding: var(--app-padding-lr);
   gap: 1em;
   flex-grow: 1;
   overflow-x: scroll;
@@ -206,7 +206,7 @@ input:not([type="radio"], [type="checkbox"]):read-only, button:disabled {
 div.form-container {
   display: flex;
   flex-direction: column;
-  padding: 1em;
+  padding: var(--app-padding-lr);
   gap: 1em;
   flex-grow: 1;
   overflow-x: scroll;
